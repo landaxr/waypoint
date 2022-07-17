@@ -1,4 +1,4 @@
-import LoginButton from "./LoginButton";
+import Web3Login from "./Web3Login";
 
 const Navbar = () => (
   <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
@@ -14,7 +14,7 @@ const Navbar = () => (
         </span>
       </a>
       <div className="flex md:order-2">
-        <LoginButton />
+        <Web3Login />
         <button
           data-collapse-toggle="navbar-cta"
           type="button"
