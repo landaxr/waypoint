@@ -14,6 +14,7 @@
     "@types/react-dom": "^18.0.6",
     "autoprefixer": "^9.8.8",
     "postcss": "^7.0.39",
+    "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "4.0.1",
@@ -25,7 +26,8 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "prettier": "npx prettier --write . '!(node_module|build)/**/*'"
   },
   "eslintConfig": {
     "extends": [
