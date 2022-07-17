@@ -143,31 +143,38 @@ const LoginButton = () => {
   );
 };
 
-const Web3Profile = ({
-  address
-}: {
-  address: string
-}) => {
+const Web3Profile = ({ address }: { address: string }) => {
   const { data, isError, isLoading } = useEnsName({
     address,
-  })
+  });
   const { data: avatarData } = useEnsAvatar({
     addressOrName: address,
-  })
+  });
 
-  if (isLoading) return <div>Fetching name…</div>
-  if (isError) return <div>Error fetching name</div>
-  return <><div className="text-sm">@{data} {avatarData}</div>
-  <div className="text-xs font-light w-20 truncate hover:text-clip">{address}</div>
-  </>
-}
+  if (isLoading) return <div>Fetching name…</div>;
+  if (isError) return <div>Error fetching name</div>;
+  return (
+    <>
+      <div className="text-sm">
+        @{data} {avatarData}
+      </div>
+      <div className="text-xs font-light w-20 truncate hover:text-clip">
+        {address}
+      </div>
+    </>
+  );
+};
 
 const Web3Login = () => {
   const { connector: activeConnector, isConnected, address } = useAccount();
 
   return (
     <>
-      {isConnected && address && <div><Web3Profile address={address}/></div>}
+      {isConnected && address && (
+        <div>
+          <Web3Profile address={address} />
+        </div>
+      )}
       {!isConnected && <LoginButton />}
     </>
   );

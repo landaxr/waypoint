@@ -7,7 +7,9 @@ function App() {
   return (
     <WagmiConfig client={client}>
       <Navbar />
-      <h1 className="text-3xl font-bold underline">hello world</h1>
+      <div className="container mx-auto flex items-center">
+        <h1 className="text-3xl font-bold underline">hello world</h1>
+      </div>
     </WagmiConfig>
   );
 }
