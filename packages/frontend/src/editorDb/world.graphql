@@ -1,0 +1,12 @@
+type Environment {
+  fileUrl: String!
+}
+
+type Scene {
+  environment: Environment
+}
+
+type World {
+  id: Int!
+  scene: Scene
+}

@@ -1,4 +1,4 @@
-import { Nullable } from "./shared";
+import { Optional } from "./shared";
 
 export enum ElementType {
   Model = "model",
@@ -20,9 +20,9 @@ export type Transform = {
 };
 
 export type BaseElement = {
-  transform?: Nullable<Transform>;
+  transform?: Optional<Transform>;
   elementType: ElementType;
-  children?: Nullable<ElementNodes>;
+  children?: Optional<ElementNodes>;
 };
 
 export type ModelElement = BaseElement & {
@@ -52,7 +52,7 @@ export type ElementNodes = {
 };
 
 export type ModelConfig = {
-  fileUrl?: Nullable<string>;
+  fileUrl?: Optional<string>;
 };
 
 export type ImageConfig = {
