@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { useCallback, useState } from "react";
 import { SceneConfiguration } from "../types/scene";
+import Controls from "./Controls";
 import DynamicEnvironment from "./DynamicEnvironment";
 import ElementsTree from "./ElementsTree";
 
@@ -26,6 +27,7 @@ const Scene = ({ scene }: { scene?: SceneConfiguration }) => {
               <ElementsTree elements={scene.elements} />
             </>
           )}
+          <Controls />
         </Canvas>
       </div>
     </>
