@@ -2,6 +2,7 @@ import { EnvironmentConfig, SceneConfiguration } from "../types/scene";
 import { Element } from "../types/elements";
 import { Optional } from "../types/shared";
 import { merge } from "lodash";
+import { newId } from "./utils";
 
 export type SceneUpdateFn = (scene: SceneConfiguration) => SceneConfiguration;
 
@@ -26,6 +27,19 @@ export const updateEnvironment =
 export const addElement =
   (id: string, elementConfig: Element): SceneUpdateFn =>
   (scene: SceneConfiguration) => {
+    return {
+      ...scene,
+      elements: {
+        ...(scene.elements || {}),
+        [id]: elementConfig,
+      },
+    };
+  };
+
+export const createNewElement =
+  (elementConfig: Element): SceneUpdateFn =>
+  (scene: SceneConfiguration) => {
+    const id = newId();
     return {
       ...scene,
       elements: {

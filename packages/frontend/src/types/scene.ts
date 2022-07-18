@@ -1,8 +1,8 @@
 import { ElementNodes } from "./elements";
-import { Optional } from "./shared";
+import { FileLocation, Optional } from "./shared";
 
 export type EnvironmentConfig = {
-  fileUrl?: string;
+  environmentMap?: FileLocation;
 };
 
 export type SceneConfiguration = {

@@ -1,8 +1,17 @@
 import { SceneConfiguration } from "../types/scene";
-import { Element } from "../types/elements";
+import { Element, ElementType } from "../types/elements";
+import Model from "./Elements/Model";
 
 const ElementNode = ({ element }: { element: Element }) => {
-  return null;
+  return (
+    <>
+      {element.elementType === ElementType.Model && (
+        <Model config={element.modelConfig} />
+      )}
+
+      {element.children && <ElementsTree elements={element.children} />}
+    </>
+  );
 };
 
 const ElementsTree = ({ elements }: Pick<SceneConfiguration, "elements">) => {
@@ -10,9 +19,7 @@ const ElementsTree = ({ elements }: Pick<SceneConfiguration, "elements">) => {
   return (
     <>
       {Object.entries(elements).map(([id, element]) => (
-        <>
-          <ElementNode element={element} key={id} />
-        </>
+        <ElementNode element={element} key={id} />
       ))}
     </>
   );

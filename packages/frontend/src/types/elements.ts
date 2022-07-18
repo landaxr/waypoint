@@ -1,4 +1,4 @@
-import { Optional } from "./shared";
+import { FileLocation, Optional } from "./shared";
 
 export enum ElementType {
   Model = "model",
@@ -40,37 +40,24 @@ export type VideoElement = BaseElement & {
   videoConfig: VideoConfig;
 };
 
-export type WaterElement = BaseElement & {
-  elementType: ElementType.Water;
-  waterConfig: WaterConfig;
-};
-
-export type Element = ModelElement | ImageElement | WaterElement | VideoElement;
+export type Element = ModelElement | ImageElement | VideoElement;
 
 export type ElementNodes = {
   [id: string]: Element;
 };
 
 export type ModelConfig = {
-  fileUrl?: Optional<string>;
+  file?: FileLocation;
 };
 
 export type ImageConfig = {
-  fileUrl: string;
+  file?: FileLocation;
 };
 
 export type VideoConfig = {
   file?: {
-    originalUrl?: string;
+    original?: FileLocation;
     streamUrl?: string;
   };
   volume?: number;
-};
-
-export type WaterConfig = {
-  width: number;
-  height: number;
-  flowSpeed: number;
-  color: string;
-  scale: number;
 };
