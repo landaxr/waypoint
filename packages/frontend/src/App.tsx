@@ -1,15 +1,27 @@
 import "./App.css";
 import Navbar from "./components/Navbar";
 import { WagmiConfig } from "wagmi";
-import client from "./web3/client";
+import web3Client from "./web3/client";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import Explore from "./components/Explore";
+import YourWorlds from "./components/YourWorlds";
+import NewWorld from "./World/New";
 
 function App() {
+  // const apolloClient = useApolloClient();
+
   return (
-    <WagmiConfig client={client}>
-      <Navbar />
-      <div className="container mx-auto flex items-center">
-        <h1 className="text-3xl font-bold underline">hello world</h1>
-      </div>
+    <WagmiConfig client={web3Client}>
+      <HashRouter>
+        <Navbar />
+        <div className="container mx-auto flex items-center">
+          <Routes>
+            <Route path="/" element={<Explore />} />
+            <Route path="/your-worlds" element={<YourWorlds />} />
+            <Route path="/worlds/new" element={<NewWorld />} />
+          </Routes>
+        </div>
+      </HashRouter>
     </WagmiConfig>
   );
 }

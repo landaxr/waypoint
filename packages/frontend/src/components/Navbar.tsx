@@ -1,7 +1,8 @@
 import Web3Login from "./Web3Login";
+import { Link } from "react-router-dom";
 
 const menuItems: { link: string; title: string }[] = [
-  { link: "/explore", title: "Explore" },
+  { link: "/", title: "Explore" },
   { link: "/your-worlds", title: "Your worlds" },
 ];
 
@@ -49,17 +50,14 @@ const Navbar = () => (
       >
         <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
           {menuItems.map((menuItem) => (
-            <>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
-                  aria-current="page"
-                >
-                  {menuItem.title}
-                </a>
-              </li>
-            </>
+            <li key={menuItem.link}>
+              <Link
+                className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
+                to={menuItem.link}
+              >
+                {menuItem.title}
+              </Link>
+            </li>
           ))}
         </ul>
       </div>
