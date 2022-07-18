@@ -1,3 +1,5 @@
+// source: https://stackoverflow.com/questions/64557638/how-to-polyfill-node-core-modules-in-webpack-5
+
 const webpack = require('webpack');
 module.exports = function override(config, env) {
     config.resolve.fallback = {

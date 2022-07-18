@@ -98,6 +98,9 @@
     "surge": "^0.21.5",
     "url": "^0.11.0"
   },
+  "resolutions": {
+    "react-query": "4.0.0-beta.23"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
