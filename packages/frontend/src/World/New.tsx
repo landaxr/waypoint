@@ -21,6 +21,11 @@ const randomEnvironment = (): EnvironmentConfig => {
 
 const marbleTheatorModel = (): Element => ({
   elementType: ElementType.Model,
+  transform: {
+    position: {
+      y: -4,
+    },
+  },
   modelConfig: {
     file: {
       kind: FileLocationKind.https,
