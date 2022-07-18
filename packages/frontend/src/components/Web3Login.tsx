@@ -144,9 +144,11 @@ const LoginButton = () => {
 };
 
 const Web3Profile = ({ address }: { address: string }) => {
+  // @ts-ignore
   const { data, isError, isLoading } = useEnsName({
     address,
   });
+  // @ts-ignore
   const { data: avatarData } = useEnsAvatar({
     addressOrName: address,
   });
