@@ -33,9 +33,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "craco build",
-    "test": "craco test",
-    "eject": "craco eject",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "prettier": "npx prettier --write . '!(node_module|build)/**/*'"
   },
   "eslintConfig": {
