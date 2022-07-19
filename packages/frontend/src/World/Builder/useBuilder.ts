@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Object3D, Raycaster } from "three";
-import { createContext } from "vm";
 import { Optional } from "../../types/shared";
 import useAddFile from "./useAddFile";
 import { SceneUpdater } from "./useSceneWithUpdater";
@@ -35,9 +34,9 @@ export const useBuilder = ({ createNewElement }: SceneUpdater) => {
 
   const selectTargetElement = useCallback(
     (selected: Object3D[] | null | undefined) => {
-      if (selected) {
+      if (selected && selected[0]) {
         setTargetElement(selected[0]);
-      } else setTargetElement(null);
+      }; //else setTargetElement(null);
     },
     []
   );
