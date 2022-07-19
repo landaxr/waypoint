@@ -22,13 +22,6 @@ const Controls = ({
 
   const showPointerLockControls = !isDragging && !enableTransform;
 
-  useEffect(() => {
-    console.log({
-      enableTransform,
-      targetElement: !!targetElement,
-    });
-  }, [enableTransform, targetElement]);
-
   const { gl } = useThree();
 
   return (
