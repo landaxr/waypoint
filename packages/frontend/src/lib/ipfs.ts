@@ -42,6 +42,22 @@ export const useHttpsUriForIpfs = (ipfsUrl?: Optional<string>) => {
   return result;
 };
 
+function readFileContents(file: File) {
+  return new Promise<string | ArrayBuffer | null>((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onabort = () => console.log("file reading was aborted");
+    reader.onerror = () => console.log("file reading has failed");
+    reader.onload = () => {
+      // Do whatever you want with the file contents
+      const binaryStr = reader.result;
+
+      resolve(binaryStr);
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
 export const useHttpsUrl = (file?: Optional<FileLocation>) => {
   const [result, setResult] = useState<string | null>(null);
 
@@ -53,8 +69,21 @@ export const useHttpsUrl = (file?: Optional<FileLocation>) => {
 
     if (file.kind === FileLocationKind.ipfs) {
       setResult(convertURIToHTTPS({ url: file.url }));
-    } else {
+    } else if (file.kind === FileLocationKind.https) {
       setResult(file.url);
+    } else if (file.kind === FileLocationKind.blob) {
+      (async () => {
+        const fileContents = await readFileContents(file.file);
+        if (fileContents) {
+          if (typeof fileContents === "string") {
+            setResult(fileContents);
+          } else {
+            const blobUrl = URL.createObjectURL(new Blob([fileContents]));
+
+            setResult(blobUrl);
+          }
+        }
+      })();
     }
   }, [file]);
 

@@ -1,6 +1,7 @@
 import { SceneConfiguration } from "../types/scene";
 import { Element, ElementType } from "../types/elements";
 import Model from "./Elements/Model";
+import Image from "./Elements/Image";
 
 const ElementNode = ({ element }: { element: Element }) => {
   const transform = element.transform;
@@ -21,6 +22,9 @@ const ElementNode = ({ element }: { element: Element }) => {
     >
       {element.elementType === ElementType.Model && (
         <Model config={element.modelConfig} />
+      )}
+      {element.elementType === ElementType.Image && (
+        <Image config={element.imageConfig} />
       )}
 
       {element.children && <ElementsTree elements={element.children} />}
