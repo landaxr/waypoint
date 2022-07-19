@@ -1,6 +1,7 @@
 import { Select } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
+import { Leva } from "leva";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Camera, Raycaster, Vector3 } from "three";
 import { SceneConfiguration } from "../types/scene";
@@ -67,6 +68,9 @@ const Scene = ({
           )}
           <Controls {...builderState} />
         </Canvas>
+        <div className="absolute right-5 top-20">
+          <Leva fill hidden={!builderState.transforming.isTransforming} />
+        </div>
       </div>
     </>
   );

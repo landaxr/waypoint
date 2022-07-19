@@ -1,13 +1,70 @@
 import { SceneConfiguration } from "../types/scene";
-import { Element, ElementType } from "../types/elements";
+import { Element, ElementType, IVector3, Transform } from "../types/elements";
 import Model from "./Elements/Model";
 import Image from "./Elements/Image";
 import { useEffect, useMemo, useState } from "react";
-import { Object3D } from "three";
+import { Object3D, Vector3 } from "three";
 import { BuilderState } from "./Builder/useBuilder";
 
 const pathsEqual = (a: string[], b: string[]) => {
   return a.join(",") === b.join(",");
+};
+
+const emptyTransform: Transform = {};
+
+export type isElementUserData = {
+  isElement?: true
+}
+
+export const isElementUserData: isElementUserData = {
+  isElement: true
+}
+
+const TransformedElement = ({
+  transform,
+  parentPath,
+  id,
+  builderState: {
+    transforming: { isTransforming, elementPath },
+    targetElement,
+    selectTargetElement,
+  },
+  children,
+}: {
+  transform?: Transform | null;
+  id: string;
+  parentPath: string[];
+  builderState: Pick<
+    BuilderState,
+    "transforming" | "selectTargetElement" | "targetElement"
+  >;
+  children: JSX.Element | JSX.Element[];
+}) => {
+  const [ref, setRef] = useState<Object3D | null>();
+
+  const { position, rotation, scale} = transform || emptyTransform;
+
+  // if (shouldApplyTransforms)
+  return (
+    <group
+      userData={isElementUserData}
+      name={id}
+      position-x={position?.x}
+      position-y={position?.y}
+      position-z={position?.z}
+      scale-x={scale?.x}
+      scale-y={scale?.y}
+      scale-z={scale?.z}
+      rotation-x={rotation?.x}
+      rotation-y={rotation?.y}
+      rotation-z={rotation?.z}
+      ref={setRef}
+    >
+      {children}
+    </group>
+  );
+
+  // return <group ref={setRef}>{children}</group>;
 };
 
 const ElementNode = ({
@@ -21,63 +78,31 @@ const ElementNode = ({
   parentPath: string[];
   builderState: BuilderState;
 }) => {
-  const transform = element.transform;
-  const position = transform?.position;
-  const scale = transform?.scale;
-  const rotation = transform?.rotation;
-  const [ref, setRef] = useState<Object3D | null>();
-
-  useEffect(() => {
-    if (!ref) return;
-
-    if (
-      !builderState.transforming.isTransforming ||
-      !builderState.transforming.elementPath
-    )
-      return;
-
-    const path = [...parentPath, id];
-
-    if (pathsEqual(builderState.transforming.elementPath, path)) {
-      builderState.selectTargetElement([ref]);
-    }
-  }, [
-    builderState.transforming,
-    builderState.selectTargetElement,
-    parentPath,
-    id,
-    ref,
-  ]);
-
   return (
-    <group
-      position-x={position?.x}
-      position-y={position?.y}
-      position-z={position?.z}
-      scale-x={scale?.x}
-      scale-y={scale?.y}
-      scale-z={scale?.z}
-      rotation-x={rotation?.x}
-      rotation-y={rotation?.y}
-      rotation-z={rotation?.z}
-      ref={setRef}
+    <TransformedElement
+      builderState={builderState}
+      id={id}
+      parentPath={parentPath}
+      transform={element.transform}
     >
-      {element.elementType === ElementType.Model && (
-        <Model config={element.modelConfig} />
-      )}
-      {element.elementType === ElementType.Image && (
-        <Image config={element.imageConfig} />
-      )}
+      <>
+        {element.elementType === ElementType.Model && (
+          <Model config={element.modelConfig} />
+        )}
+        {element.elementType === ElementType.Image && (
+          <Image config={element.imageConfig} />
+        )}
 
-      {element.children && (
-        <ElementsTree
-          elements={element.children}
-          parentId={id}
-          parentPath={parentPath}
-          builderState={builderState}
-        />
-      )}
-    </group>
+        {element.children && (
+          <ElementsTree
+            elements={element.children}
+            parentId={id}
+            parentPath={parentPath}
+            builderState={builderState}
+          />
+        )}
+      </>
+    </TransformedElement>
   );
 };
 
