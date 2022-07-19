@@ -21,7 +21,7 @@ const Navbar = () => (
           className="mr-3 h-6 sm:h-9"
           alt="Waypoint Logo"
         ></img>
-        <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+        <span className="self-center text-xl font-monospace font-bold whitespace-nowrap dark:text-white">
           w@y_point
         </span>
       </a>
@@ -61,10 +61,10 @@ const Navbar = () => (
                 className={({ isActive }) =>
                   clsx(
                     { ["font-bold active"]: isActive,
-                     ['rounded-full bg-green-600 text-md font-medium hover:bg-green-900 active:bg-green-700 focus:outline-none focus:ring focus:ring-green-300'] : menuItem.kind === LinkKind.button,
-                     ['bg-blue-700 rounded md:bg-transparent md:text-blue-700 dark:text-white'] : menuItem.kind !== LinkKind.button
+                     ['rounded-full bg-red text-md font-medium hover:bg-red-light active:bg-red focus:outline-none focus:ring focus:ring-black'] : menuItem.kind === LinkKind.button,
+                     ['bg-red-700 rounded md:bg-transparent md:text-red dark:text-white'] : menuItem.kind !== LinkKind.button
                      },
-                    "block py-2 pr-4 pl-3 text-white md:p-2"
+                    "block py-2 pr-4 pl-3 text-white md:p-2 font-monospace"
                   )
                 }
                 to={menuItem.link}
