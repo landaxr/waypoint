@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useState } from "react";
+import { RefObject, startTransition, useCallback, useState } from "react";
 import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
 import { Object3D, Raycaster } from "three";
 import {
@@ -7,8 +7,8 @@ import {
   ModelElement,
   Transform,
 } from "../../types/elements";
-import { FileLocationKind } from "../../types/shared";
-import { SceneUpdater } from "./useSceneUpdater";
+import { FileLocationKind, Optional } from "../../types/shared";
+import { SceneUpdater } from "./useSceneWithUpdater";
 
 enum FileType {
   image = "image",
@@ -53,11 +53,46 @@ const getAddElementTransform = (
   };
 };
 
+const newFileToElementConfig = (file: File, transform: Optional<Transform>) => {
+  const fileType = getFieType(file);
+  let elementConfig: Element | null = null;
+
+  if (fileType === FileType.glb) {
+    const result: ModelElement = {
+      elementType: ElementType.Model,
+      transform,
+      modelConfig: {
+        file: {
+          kind: FileLocationKind.blob,
+          file,
+        },
+      },
+    };
+    return result;
+  } else if (fileType === FileType.image) {
+    const result: ImageElement = {
+      elementType: ElementType.Image,
+      transform,
+      imageConfig: {
+        file: {
+          kind: FileLocationKind.blob,
+          file,
+        },
+      },
+    };
+    return result;
+  }
+
+  return null;
+};
+
 const useAddFile = ({
   createNewElement,
   raycasterRef,
+  startTransforming,
 }: Pick<SceneUpdater, "createNewElement"> & {
   raycasterRef: RefObject<Raycaster>;
+  startTransforming: (path: string[]) => void;
 }) => {
   const [isDragging, setIsDragging] = useState(false);
 
@@ -70,39 +105,20 @@ const useAddFile = ({
       // Do something with the files
       setIsDragging(false);
       acceptedFiles.forEach((file) => {
-        const fileType = getFieType(file);
         const transform = getAddElementTransform(raycasterRef.current);
 
-        if (fileType === FileType.glb) {
-          const elementConfig: ModelElement = {
-            elementType: ElementType.Model,
-            transform,
-            modelConfig: {
-              file: {
-                kind: FileLocationKind.blob,
-                file,
-              },
-            },
-          };
+        const elementConfig = newFileToElementConfig(file, transform);
 
-          createNewElement({
+        if (elementConfig) {
+          const newElementId = createNewElement({
             elementConfig,
           });
-        } else if (fileType === FileType.image) {
-          const elementConfig: ImageElement = {
-            elementType: ElementType.Image,
-            transform,
-            imageConfig: {
-              file: {
-                kind: FileLocationKind.blob,
-                file,
-              },
-            },
-          };
 
-          createNewElement({
-            elementConfig,
-          });
+          const pathToSelect: string[] = [newElementId];
+
+          console.log(pathToSelect);
+
+          startTransforming(pathToSelect);
         }
       });
 
@@ -110,7 +126,7 @@ const useAddFile = ({
         console.error(`${rejected.file.type}`);
       });
     },
-    [createNewElement]
+    [createNewElement, startTransforming]
   );
 
   const onDragEnter = useCallback(() => {

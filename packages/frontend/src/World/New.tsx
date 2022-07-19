@@ -8,7 +8,8 @@ import { EnvironmentConfig, SceneConfiguration } from "../types/scene";
 import { Element, ElementType } from "../types/elements";
 import { FileLocationKind } from "../types/shared";
 import Scene from "./Scene";
-import useSceneUpdater from "./Builder/useSceneUpdater";
+import useSceneWithUpdater from "./Builder/useSceneWithUpdater";
+import { useBuilder } from "./Builder/useBuilder";
 
 const randomEnvironment = (): EnvironmentConfig => {
   // todo: randomize
@@ -45,11 +46,15 @@ const makeNewScene = (): SceneConfiguration => {
 const New = () => {
   const [scene, setScene] = useState<SceneConfiguration>(() => makeNewScene());
 
-  const sceneUpdater = useSceneUpdater({
+  const sceneUpdater = useSceneWithUpdater({
     scene,
   });
 
-  return <Scene {...sceneUpdater} />;
+  const builderState = useBuilder(sceneUpdater.updater);
+
+  return (
+    <Scene builderState={builderState} scene={sceneUpdater.sceneWithUpdates} />
+  );
 };
 
 export default New;

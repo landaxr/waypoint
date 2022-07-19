@@ -76,13 +76,13 @@ export const updateElement =
 
     if (!toUpdate) throw new Error("no element exists with id");
 
-    const updated = merge({}, toUpdate, elementConfig) as Element;
+    const updatedElement = merge({}, toUpdate, elementConfig) as Element;
 
     return {
       ...scene,
       elements: {
         ...scene.elements,
-        [id]: updated,
+        [id]: updatedElement,
       },
     };
   };
