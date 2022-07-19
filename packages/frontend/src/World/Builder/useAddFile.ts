@@ -116,8 +116,6 @@ const useAddFile = ({
 
           const pathToSelect: string[] = [newElementId];
 
-          console.log(pathToSelect);
-
           startTransforming(pathToSelect);
         }
       });
