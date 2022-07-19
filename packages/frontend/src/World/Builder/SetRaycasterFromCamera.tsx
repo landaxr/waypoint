@@ -12,7 +12,7 @@ const SetCursorAndRaycaster = ({
   const meshRef = useRef<Mesh | null>(null);
 
   useFrame(({ mouse, camera }) => {
-    console.log(raycasterRef.current.ray.direction);
+    // console.log(raycasterRef.current.ray.direction);
     raycasterRef.current.setFromCamera(mouse, camera);
 
     if (meshRef.current) {
@@ -24,10 +24,12 @@ const SetCursorAndRaycaster = ({
 
   return (
     <>
-      {debug && (<mesh ref={meshRef}>
-        <boxBufferGeometry args={[0.1, 0.1, 0.1]} />
-        <meshBasicMaterial />
-      </mesh>)}
+      {debug && (
+        <mesh ref={meshRef}>
+          <boxBufferGeometry args={[0.1, 0.1, 0.1]} />
+          <meshBasicMaterial />
+        </mesh>
+      )}
     </>
   );
 };
