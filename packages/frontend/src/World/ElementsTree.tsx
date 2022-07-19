@@ -22,29 +22,17 @@ export const isElementUserData: isElementUserData = {
 
 const TransformedElement = ({
   transform,
-  parentPath,
   id,
-  builderState: {
-    transforming: { isTransforming, elementPath },
-    targetElement,
-    selectTargetElement,
-  },
   children,
 }: {
   transform?: Transform | null;
   id: string;
-  parentPath: string[];
-  builderState: Pick<
-    BuilderState,
-    "transforming" | "selectTargetElement" | "targetElement"
-  >;
   children: JSX.Element | JSX.Element[];
 }) => {
   const [ref, setRef] = useState<Object3D | null>();
 
   const { position, rotation, scale} = transform || emptyTransform;
 
-  // if (shouldApplyTransforms)
   return (
     <group
       userData={isElementUserData}
@@ -63,8 +51,6 @@ const TransformedElement = ({
       {children}
     </group>
   );
-
-  // return <group ref={setRef}>{children}</group>;
 };
 
 const ElementNode = ({
@@ -80,9 +66,7 @@ const ElementNode = ({
 }) => {
   return (
     <TransformedElement
-      builderState={builderState}
       id={id}
-      parentPath={parentPath}
       transform={element.transform}
     >
       <>
