@@ -8,6 +8,7 @@ import { EnvironmentConfig, SceneConfiguration } from "../types/scene";
 import { Element, ElementType } from "../types/elements";
 import { FileLocationKind } from "../types/shared";
 import Scene from "./Scene";
+import useSceneUpdater from "./Builder/useSceneUpdater";
 
 const randomEnvironment = (): EnvironmentConfig => {
   // todo: randomize
@@ -36,15 +37,19 @@ const marbleTheatorModel = (): Element => ({
 
 const makeNewScene = (): SceneConfiguration => {
   return applyUpdates({}, [
-    updateEnvironment(randomEnvironment()),
-    createNewElement(marbleTheatorModel()),
+    updateEnvironment({ environment: randomEnvironment() }),
+    // createNewElement({ elementConfig: marbleTheatorModel() }),
   ]);
 };
 
 const New = () => {
   const [scene, setScene] = useState<SceneConfiguration>(() => makeNewScene());
 
-  return <Scene scene={scene} />;
+  const sceneUpdater = useSceneUpdater({
+    scene,
+  });
+
+  return <Scene {...sceneUpdater} />;
 };
 
 export default New;

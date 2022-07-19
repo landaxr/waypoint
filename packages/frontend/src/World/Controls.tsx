@@ -1,6 +1,6 @@
-import { PointerLockControls, FlyControls } from "@react-three/drei";
+import { PointerLockControls, FlyControls, useCursor } from "@react-three/drei";
 
-const Controls = () => {
+const Controls = ({ isDragging }: { isDragging: boolean }) => {
   return (
     <>
       <PointerLockControls />

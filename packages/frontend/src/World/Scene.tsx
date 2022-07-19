@@ -1,11 +1,13 @@
 import { Canvas } from "@react-three/fiber";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { SceneConfiguration } from "../types/scene";
+import useAddFile from "./Builder/useAddFile";
+import { SceneUpdater } from "./Builder/useSceneUpdater";
 import Controls from "./Controls";
 import DynamicEnvironment from "./DynamicEnvironment";
 import ElementsTree from "./ElementsTree";
 
-const Scene = ({ scene }: { scene?: SceneConfiguration }) => {
+const Scene = ({ scene, createNewElement }: SceneUpdater) => {
   const [hasClicked, setHasClicked] = useState(false);
 
   const [listener, setListener] = useState<AudioListener>();
@@ -17,9 +19,18 @@ const Scene = ({ scene }: { scene?: SceneConfiguration }) => {
     setListener(new AudioListener());
   }, [hasClicked]);
 
+  const { getRootProps, getInputProps, isDragging } = useAddFile({
+    createNewElement,
+  });
+
+  const cursorClass = useMemo(() => {
+    return "cursor-pointer";
+  }, []);
+
   return (
     <>
-      <div className="w-screen h-screen">
+      <div className={`w-screen h-screen ${cursorClass}`} {...getRootProps()}>
+        <input type="hidden" {...getInputProps()} />
         <Canvas onClick={onClicked}>
           {scene && (
             <>
@@ -27,7 +38,7 @@ const Scene = ({ scene }: { scene?: SceneConfiguration }) => {
               <ElementsTree elements={scene.elements} />
             </>
           )}
-          <Controls />
+          <Controls isDragging={isDragging} />
         </Canvas>
       </div>
     </>

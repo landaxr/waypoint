@@ -6,6 +6,8 @@ import { newId } from "./utils";
 
 export type SceneUpdateFn = (scene: SceneConfiguration) => SceneConfiguration;
 
+export type CreateNewElmentUpdate = {};
+
 export const applyUpdates = (
   scene: SceneConfiguration,
   updates: SceneUpdateFn[]
@@ -16,7 +18,11 @@ export const applyUpdates = (
 };
 
 export const updateEnvironment =
-  (environment: Optional<EnvironmentConfig>): SceneUpdateFn =>
+  ({
+    environment,
+  }: {
+    environment: Optional<EnvironmentConfig>;
+  }): SceneUpdateFn =>
   (scene: SceneConfiguration) => {
     return {
       ...scene,
@@ -25,7 +31,13 @@ export const updateEnvironment =
   };
 
 export const addElement =
-  (id: string, elementConfig: Element): SceneUpdateFn =>
+  ({
+    id,
+    elementConfig,
+  }: {
+    id: string;
+    elementConfig: Element;
+  }): SceneUpdateFn =>
   (scene: SceneConfiguration) => {
     return {
       ...scene,
@@ -37,7 +49,7 @@ export const addElement =
   };
 
 export const createNewElement =
-  (elementConfig: Element): SceneUpdateFn =>
+  ({ elementConfig }: { elementConfig: Element }): SceneUpdateFn =>
   (scene: SceneConfiguration) => {
     const id = newId();
     return {
@@ -50,7 +62,13 @@ export const createNewElement =
   };
 
 export const updateElement =
-  (id: string, elementConfig: Partial<Element>): SceneUpdateFn =>
+  ({
+    id,
+    elementConfig,
+  }: {
+    id: string;
+    elementConfig: Partial<Element>;
+  }): SceneUpdateFn =>
   (scene: SceneConfiguration) => {
     if (!scene.elements) throw new Error("missing elements");
 
@@ -70,7 +88,7 @@ export const updateElement =
   };
 
 export const deleteElement =
-  (id: string): SceneUpdateFn =>
+  ({ id }: { id: string }): SceneUpdateFn =>
   (scene: SceneConfiguration) => {
     const elements = {
       ...(scene.elements || {}),
