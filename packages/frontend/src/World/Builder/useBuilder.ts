@@ -36,7 +36,7 @@ export const useBuilder = ({ createNewElement }: SceneUpdater) => {
     (selected: Object3D[] | null | undefined) => {
       if (selected && selected[0]) {
         setTargetElement(selected[0]);
-      }; //else setTargetElement(null);
+      } //else setTargetElement(null);
     },
     []
   );

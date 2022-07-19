@@ -75,10 +75,10 @@ const CreateWorldButton = () => {
 
 const YourWorlds = () => {
   return (
-    <>
+    <div className="container mx-auto flex items-center">
       <CreateWorldButton />
       <Drafts />
-    </>
+    </div>
   );
 };
 

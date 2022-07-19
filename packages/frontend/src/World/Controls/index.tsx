@@ -12,14 +12,12 @@ const Controls = ({
 
   const showPointerLockControls = !isDragging && !enableTransform;
 
-useEffect(() => {
-
-  console.log({
-    enableTransform,
-    targetElement: !!targetElement
-  })
-
-}, [enableTransform, targetElement])
+  useEffect(() => {
+    console.log({
+      enableTransform,
+      targetElement: !!targetElement,
+    });
+  }, [enableTransform, targetElement]);
 
   return (
     <>

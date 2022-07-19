@@ -14,13 +14,13 @@ function App() {
     <WagmiConfig client={web3Client}>
       <HashRouter>
         <Navbar />
-        <div className="container mx-auto flex items-center">
-          <Routes>
-            <Route path="/" element={<Explore />} />
-            <Route path="/your-worlds" element={<YourWorlds />} />
-            <Route path="/worlds/new" element={<NewWorld />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="/" element={<Explore />} />
+          <Route path="/your-worlds" element={<YourWorlds />} />
+          <Route path="/worlds">
+            <Route path="new" element={<NewWorld />} />
+          </Route>
+        </Routes>
       </HashRouter>
     </WagmiConfig>
   );
