@@ -3,7 +3,7 @@ import { PointerLockControls, FlyControls, useCursor } from "@react-three/drei";
 const Controls = ({ isDragging }: { isDragging: boolean }) => {
   return (
     <>
-      <PointerLockControls />
+      {!isDragging && <PointerLockControls />}
       <FlyControls />
     </>
   );

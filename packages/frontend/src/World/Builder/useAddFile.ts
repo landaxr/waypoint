@@ -1,6 +1,12 @@
-import { useCallback, useState } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
-import { ElementType, ImageElement, ModelElement } from "../../types/elements";
+import { RefObject, useCallback, useState } from "react";
+import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
+import { Object3D, Raycaster } from "three";
+import {
+  ElementType,
+  ImageElement,
+  ModelElement,
+  Transform,
+} from "../../types/elements";
 import { FileLocationKind } from "../../types/shared";
 import { SceneUpdater } from "./useSceneUpdater";
 
@@ -21,27 +27,56 @@ const getFieType = (file: File) => {
   alert("Unkown file type");
 };
 
+const getAddElementTransform = (
+  raycaster: Raycaster | null,
+  offsetFromCamera = 2
+): Transform | null => {
+  if (!raycaster) return null;
+
+  const { ray } = raycaster;
+
+  const offset = ray.direction.clone().multiplyScalar(offsetFromCamera);
+
+  const target = ray.origin.clone().add(offset);
+
+  const refObject = new Object3D();
+  refObject.position.copy(target);
+  refObject.lookAt(ray.origin);
+
+  return {
+    position: target,
+    rotation: {
+      x: refObject.rotation.x,
+      y: refObject.rotation.y,
+      z: refObject.rotation.z,
+    },
+  };
+};
+
 const useAddFile = ({
   createNewElement,
-}: Pick<SceneUpdater, "createNewElement">) => {
+  raycasterRef,
+}: Pick<SceneUpdater, "createNewElement"> & {
+  raycasterRef: RefObject<Raycaster>;
+}) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const onDrop = useCallback(
-    (acceptedFiles: File[], fileRejection: FileRejection[]) => {
+    (
+      acceptedFiles: File[],
+      fileRejection: FileRejection[],
+      event: DropEvent
+    ) => {
       // Do something with the files
       setIsDragging(false);
       acceptedFiles.forEach((file) => {
         const fileType = getFieType(file);
+        const transform = getAddElementTransform(raycasterRef.current);
+
         if (fileType === FileType.glb) {
           const elementConfig: ModelElement = {
             elementType: ElementType.Model,
-            transform: {
-              scale: {
-                x: 0.01,
-                y: 0.01,
-                z: 0.01,
-              },
-            },
+            transform,
             modelConfig: {
               file: {
                 kind: FileLocationKind.blob,
@@ -56,6 +91,7 @@ const useAddFile = ({
         } else if (fileType === FileType.image) {
           const elementConfig: ImageElement = {
             elementType: ElementType.Image,
+            transform,
             imageConfig: {
               file: {
                 kind: FileLocationKind.blob,
