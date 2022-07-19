@@ -13,12 +13,12 @@ const pathsEqual = (a: string[], b: string[]) => {
 const emptyTransform: Transform = {};
 
 export type isElementUserData = {
-  isElement?: true
-}
+  isElement?: true;
+};
 
 export const isElementUserData: isElementUserData = {
-  isElement: true
-}
+  isElement: true,
+};
 
 const TransformedElement = ({
   transform,
@@ -31,7 +31,7 @@ const TransformedElement = ({
 }) => {
   const [ref, setRef] = useState<Object3D | null>();
 
-  const { position, rotation, scale} = transform || emptyTransform;
+  const { position, rotation, scale } = transform || emptyTransform;
 
   return (
     <group
@@ -65,10 +65,7 @@ const ElementNode = ({
   builderState: BuilderState;
 }) => {
   return (
-    <TransformedElement
-      id={id}
-      transform={element.transform}
-    >
+    <TransformedElement id={id} transform={element.transform}>
       <>
         {element.elementType === ElementType.Model && (
           <Model config={element.modelConfig} />

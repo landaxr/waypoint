@@ -20,7 +20,8 @@ const transformOptions: { [key: string]: TransformMode } = {
 };
 
 function findParentElement(selectedMesh: Object3D): Object3D | null {
-  if ((selectedMesh.userData as isElementUserData).isElement) return selectedMesh;
+  if ((selectedMesh.userData as isElementUserData).isElement)
+    return selectedMesh;
 
   if (!selectedMesh.parent) return null;
 

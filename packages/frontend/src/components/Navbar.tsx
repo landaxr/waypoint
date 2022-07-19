@@ -1,9 +1,15 @@
 import Web3Login from "./Web3Login";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import clsx from "clsx";
 
-const menuItems: { link: string; title: string }[] = [
+enum LinkKind {
+  button = "button",
+}
+
+const homeMenuItems: { link: string; title: string; kind?: LinkKind }[] = [
   { link: "/", title: "Explore" },
-  { link: "/your-worlds", title: "Your worlds" },
+  { link: "/your-worlds", title: "Your Worlds" },
+  { link: "/worlds/new", title: "Build a World", kind: LinkKind.button },
 ];
 
 const Navbar = () => (
@@ -16,7 +22,7 @@ const Navbar = () => (
           alt="Waypoint Logo"
         ></img>
         <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-          Waypoint
+          w@y_point
         </span>
       </a>
       <div className="flex md:order-2">
@@ -49,14 +55,22 @@ const Navbar = () => (
         id="navbar-cta"
       >
         <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-          {menuItems.map((menuItem) => (
+          {homeMenuItems.map((menuItem) => (
             <li key={menuItem.link}>
-              <Link
-                className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
+              <NavLink
+                className={({ isActive }) =>
+                  clsx(
+                    { ["font-bold active"]: isActive,
+                     ['rounded-full bg-green-600 text-md font-medium hover:bg-green-900 active:bg-green-700 focus:outline-none focus:ring focus:ring-green-300'] : menuItem.kind === LinkKind.button,
+                     ['bg-blue-700 rounded md:bg-transparent md:text-blue-700 dark:text-white'] : menuItem.kind !== LinkKind.button
+                     },
+                    "block py-2 pr-4 pl-3 text-white md:p-2"
+                  )
+                }
                 to={menuItem.link}
               >
                 {menuItem.title}
-              </Link>
+              </NavLink>
             </li>
           ))}
         </ul>
