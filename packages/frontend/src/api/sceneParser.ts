@@ -1,13 +1,65 @@
-import { Element, ElementNodes } from "../types/elements";
+import {
+  Element,
+  ElementNodes,
+  ElementType,
+  ImageElement,
+} from "../types/elements";
 import { SceneConfiguration } from "../types/scene";
-import { Optional } from "../types/shared";
+import { FileLocation, FileLocationKind, Optional } from "../types/shared";
 
 type Acc = {
   childrenWithPathsReplaced: ElementNodes;
   files: File[];
 };
+function replaceFileWithPath(fileLocation: FileLocation | undefined) {
+  if (fileLocation?.kind === FileLocationKind.blob) {
+    const { file } = fileLocation;
 
-function extractFiledToUploadForChildrenAndSetPaths(
+    const fileName = file.name;
+
+    const fileAsPath: FileLocation = {
+      kind: FileLocationKind.ipfs,
+      url: `/${fileName}`,
+    };
+    return {
+      fileAsPath,
+      file,
+    };
+  }
+
+  return {
+    fileAsPath: fileLocation,
+    file: undefined,
+  };
+}
+
+const filterUndefinedFiles = (files: (File | undefined)[]) =>
+  files.filter((x) => typeof x !== "undefined") as File[];
+
+function extractFilesToUploadForElementAndSetPaths(element: Element) {
+  if (element.elementType === ElementType.Image) {
+    const imageFile = element.imageConfig.file;
+    const { fileAsPath: imageFileAsPath, file: imageFileBlob } =
+      replaceFileWithPath(imageFile);
+    const result: ImageElement = {
+      ...element,
+      imageConfig: {
+        file: imageFileAsPath,
+      },
+    };
+    return {
+      element: result,
+      files: filterUndefinedFiles([imageFileBlob]),
+    };
+  }
+
+  return {
+    element,
+    files: [],
+  };
+}
+
+function extractFilesToUploadForChildrenAndSetPaths(
   elements?: Optional<ElementNodes>
 ): Acc {
   const { childrenWithPathsReplaced, files } = Object.entries(
@@ -16,19 +68,23 @@ function extractFiledToUploadForChildrenAndSetPaths(
     (acc: Acc, [elementId, existingElement]) => {
       const { files: childElementFiles, childrenWithPathsReplaced } =
         // recursive call - dig into children and extract files and set their paths
-        extractFiledToUploadForChildrenAndSetPaths(existingElement.children);
+        extractFilesToUploadForChildrenAndSetPaths(existingElement.children);
+
+      const { element: updatedElement, files: elementFiles } =
+        extractFilesToUploadForElementAndSetPaths(existingElement);
 
       const element = {
-        ...existingElement,
+        ...updatedElement,
         children: childrenWithPathsReplaced,
       };
 
       return {
+        ...element,
         childrenWithPathsReplaced: {
           ...acc.childrenWithPathsReplaced,
           [elementId]: element,
         },
-        files: [...acc.files, ...childElementFiles],
+        files: [...acc.files, ...elementFiles, ...childElementFiles],
       };
     },
     {
@@ -50,7 +106,7 @@ export function extractFilesToUploadForSceneAndSetPaths(
   sceneWithPathsForFiles: SceneConfiguration;
 } {
   const { files, childrenWithPathsReplaced } =
-    extractFiledToUploadForChildrenAndSetPaths(scene.elements);
+    extractFilesToUploadForChildrenAndSetPaths(scene.elements);
 
   const sceneWithPathsForFiles: SceneConfiguration = {
     ...scene,
