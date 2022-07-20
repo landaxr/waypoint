@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   applyUpdates,
-  createNewElement,
   updateEnvironment,
 } from "../../editorDb/mutations";
 import { EnvironmentConfig, SceneConfiguration } from "../../types/scene";

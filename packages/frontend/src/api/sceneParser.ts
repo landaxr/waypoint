@@ -22,7 +22,7 @@ function replaceFileWithPath(fileLocation: FileLocation | undefined): {
     const fileName = file.name;
 
     const fileAsPath: FileLocation = {
-      kind: FileLocationKind.ipfs,
+      kind: FileLocationKind.ipfsRelative,
       url: `/${fileName}`,
     };
     return {

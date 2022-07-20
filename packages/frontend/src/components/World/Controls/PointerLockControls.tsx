@@ -2,10 +2,6 @@ import { useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Euler, Vector3 } from "three";
 
-const changeEvent = { type: "change" };
-const lockEvent = { type: "lock" };
-const unlockEvent = { type: "unlock" };
-
 const PI_2 = Math.PI / 2;
 
 const PointerLockControls = ({

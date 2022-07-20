@@ -60,8 +60,6 @@ const Scene = ({
     setListener(new AudioListener());
   }, [hasClicked]);
 
-  const [camera, setCamera] = useState<Camera>();
-
   const cursorClass = useMemo(() => {
     return "cursor-pointer";
   }, []);
@@ -77,15 +75,15 @@ const Scene = ({
 
   useEffect(() => {
     setMenuItems(buildMenu({ isNew, worldId, handleSaveToIpfs }));
-  }, [isNew, worldId]);
+  }, [handleSaveToIpfs, isNew, worldId]);
 
   return (
     <>
       <Navbar centerItems={menuItems} />
       <div
         className={clsx("w-screen h-screen", cursorClass, {
-          ["border-2"]: isDragging,
-          ["border-black"]: isDragging,
+          "border-2": isDragging,
+          "border-black": isDragging,
         })}
         {...getRootProps()}
       >
