@@ -3,11 +3,11 @@ import {
   applyUpdates,
   createNewElement,
   updateEnvironment,
-} from "../editorDb/mutations";
-import { EnvironmentConfig, SceneConfiguration } from "../types/scene";
-import { Element, ElementType } from "../types/elements";
-import { FileLocationKind } from "../types/shared";
-import Scene from "./Scene";
+} from "../../editorDb/mutations";
+import { EnvironmentConfig, SceneConfiguration } from "../../types/scene";
+import { Element, ElementType } from "../../types/elements";
+import { FileLocationKind } from "../../types/shared";
+import SceneBuilder from "./Builder/SceneBuidler";
 import useSceneWithUpdater from "./Builder/useSceneWithUpdater";
 import { useBuilder } from "./Builder/useBuilder";
 
@@ -53,7 +53,7 @@ const New = () => {
   const builderState = useBuilder(sceneUpdater.updater);
 
   return (
-    <Scene builderState={builderState} scene={sceneUpdater.sceneWithUpdates} />
+    <SceneBuilder builderState={builderState} scene={sceneUpdater.sceneWithUpdates} isNew />
   );
 };
 

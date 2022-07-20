@@ -2,26 +2,49 @@ import { Select } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
 import { Leva } from "leva";
-import { useCallback, useMemo, useRef, useState } from "react";
-import { Camera, Raycaster, Vector3 } from "three";
-import { SceneConfiguration } from "../types/scene";
-import SetRaycasterFromCamera from "./Builder/SetRaycasterFromCamera";
-import { BuilderState } from "./Builder/useBuilder";
-import { SceneUpdater } from "./Builder/useSceneWithUpdater";
-import Controls from "./Controls";
-import DynamicEnvironment from "./DynamicEnvironment";
-import ElementsTree from "./Elements/ElementsTree";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Camera } from "three";
+import { SceneConfiguration } from "../../../types/scene";
+import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
+import { BuilderState } from "./useBuilder";
+import Controls from "../Controls";
+import DynamicEnvironment from "../DynamicEnvironment";
+import ElementsTree from "../Elements/ElementsTree";
 import { AudioListener } from "three";
-import BuilderMenu from './Builder/Menu';
+import BuilderMenu from "./Menu";
+import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
 
 const rootPath: string[] = [];
+
+const buildMenu = ({
+  isNew,
+  worldId,
+}: {
+  isNew?: boolean;
+  worldId?: string;
+}): MenuItem[] => {
+  const elementName = isNew ? "Draft World" : worldId || "World";
+
+  return [
+    { link: "#", title: `Building ${elementName}`, kind: LinkKind.link },
+    {
+      action: () => alert("clicked"),
+      title: "Mint it",
+      kind: LinkKind.button,
+    },
+  ];
+};
 
 const Scene = ({
   builderState,
   scene,
+  isNew,
+  worldId,
 }: {
   builderState: BuilderState;
   scene: SceneConfiguration;
+  isNew?: boolean;
+  worldId?: string;
 }) => {
   const [hasClicked, setHasClicked] = useState(false);
 
@@ -43,8 +66,15 @@ const Scene = ({
   const { isDragging, getRootProps, getInputProps, raycasterRef } =
     builderState;
 
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+
+  useEffect(() => {
+    setMenuItems(buildMenu({isNew, worldId}))
+  }, [isNew, worldId])
+
   return (
     <>
+      <Navbar centerItems={menuItems} />
       <div
         className={clsx("w-screen h-screen", cursorClass, {
           ["border-2"]: isDragging,

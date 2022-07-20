@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import clsx from "clsx";
-import { WalletConnectIcon, MetamaskIcon } from "./Icons";
+import { WalletConnectIcon, MetamaskIcon } from "../Shared/Icons";
 import { useAccount, useConnect, useEnsName, useEnsAvatar } from "wagmi";
 
 const Web3LoginModal = ({

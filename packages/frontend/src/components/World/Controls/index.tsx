@@ -1,4 +1,8 @@
-import { PointerLockControls, FlyControls } from "@react-three/drei";
+import {
+  PointerLockControls,
+  FlyControls,
+  FirstPersonControls,
+} from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
 import { BuilderState } from "../Builder/useBuilder";
@@ -25,16 +29,18 @@ const Controls = ({
   const { gl, camera } = useThree();
 
   useEffect(() => {
+    console.log("enabled:", showPointerLockControls);
 
-    console.log('enabled:', showPointerLockControls);
-
+    if (!showPointerLockControls) {
+      document.exitPointerLock();
+    }
   }, [showPointerLockControls]);
 
   return (
     <>
-      <PointerLockControls args={[camera, gl.domElement]} enabled={showPointerLockControls} />
       {showPointerLockControls && (
         <>
+          <PointerLockControls args={[camera, gl.domElement]} />
           <FlyControls dragToLook />
         </>
       )}

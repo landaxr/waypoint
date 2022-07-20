@@ -1,8 +1,8 @@
 import { buttonGroup, useControls } from "leva";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Object3D, Raycaster } from "three";
-import { Transform, Element } from "../../types/elements";
-import { Optional } from "../../types/shared";
+import { Transform, Element } from "../../../types/elements";
+import { Optional } from "../../../types/shared";
 import { isElementUserData } from "../Elements/ElementsTree";
 import useAddFile from "./useAddFile";
 import { SceneUpdater } from "./useSceneWithUpdater";

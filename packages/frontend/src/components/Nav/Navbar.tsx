@@ -2,17 +2,35 @@ import Web3Login from "./Web3Login";
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 
-enum LinkKind {
+export enum LinkKind {
   button = "button",
+  link = "link",
 }
 
-const homeMenuItems: { link: string; title: string; kind?: LinkKind }[] = [
-  { link: "/", title: "Explore" },
-  { link: "/your-worlds", title: "Your Worlds" },
-  { link: "/worlds/new", title: "Build a World", kind: LinkKind.button },
-];
+export type MenuItem = (
+  | { link: string; action?: undefined }
+  | { action: () => any; link?: undefined }
+) & { title: string; kind?: LinkKind };
 
-const Navbar = () => (
+const linkClass = ({
+  isActive,
+  kind,
+}: {
+  isActive: boolean;
+  kind: LinkKind | undefined;
+}) =>
+  clsx(
+    {
+      ["font-bold active"]: isActive,
+      ["rounded-full bg-red text-md font-medium hover:bg-red-light active:bg-red focus:outline-none focus:ring focus:ring-red-light"]:
+        kind === LinkKind.button,
+      ["bg-red-700 rounded md:bg-transparent text-red dark:text-white"]:
+        kind !== LinkKind.button,
+    },
+    "block py-2 pr-4 pl-3 text-white dark:text-white md:p-2 font-monospace"
+  );
+
+const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => (
   <nav className="bg-white dark:bg-black border-gray-200 px-2 sm:px-4 py-1 rounded">
     <div className="container flex flex-wrap justify-between items-center mx-auto">
       <a href="https://flowbite.com/" className="flex items-center">
@@ -55,25 +73,30 @@ const Navbar = () => (
         id="navbar-cta"
       >
         <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-          {homeMenuItems.map((menuItem) => (
-            <li key={menuItem.link}>
-              <NavLink
-                className={({ isActive }) =>
-                  clsx(
-                    {
-                      ["font-bold active"]: isActive,
-                      ["rounded-full bg-red text-md font-medium hover:bg-red-light active:bg-red focus:outline-none focus:ring focus:ring-red-light"]:
-                        menuItem.kind === LinkKind.button,
-                      ["bg-red-700 rounded md:bg-transparent text-red dark:text-white"]:
-                        menuItem.kind !== LinkKind.button,
-                    },
-                    "block py-2 pr-4 pl-3 text-white dark:text-white md:p-2 font-monospace"
-                  )
-                }
-                to={menuItem.link}
-              >
-                {menuItem.title}
-              </NavLink>
+          {centerItems.map((menuItem) => (
+            <li key={menuItem.link || menuItem.title}>
+              {menuItem.link && (
+                <NavLink
+                  className={({ isActive }) =>
+                    linkClass({ isActive, kind: menuItem.kind })
+                  }
+                  to={menuItem.link}
+                >
+                  {menuItem.title}
+                </NavLink>
+              )}
+              {menuItem.action && (
+                <button
+                  className={linkClass({
+                    isActive: false,
+                    kind: menuItem.kind,
+                  })}
+                  onClick={menuItem.action}
+                >
+
+                 {menuItem.title}
+                </button>
+              )}
             </li>
           ))}
         </ul>

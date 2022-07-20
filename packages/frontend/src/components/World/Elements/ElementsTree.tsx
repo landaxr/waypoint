@@ -1,10 +1,10 @@
-import { SceneConfiguration } from "../../types/scene";
+import { SceneConfiguration } from "../../../types/scene";
 import {
   Element,
   ElementType,
   IVector3,
   Transform,
-} from "../../types/elements";
+} from "../../../types/elements";
 import Model from "./Model";
 import Image from "./Image";
 import { useEffect, useMemo, useState } from "react";

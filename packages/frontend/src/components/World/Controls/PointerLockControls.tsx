@@ -56,7 +56,7 @@ const PointerLockControls = ({
   );
 
   const onPointerlockChange = useCallback((): void => {
-    console.log('pointer lock changed');
+    console.log("pointer lock changed");
     if (!domElement) return;
     if (domElement.ownerDocument.pointerLockElement === domElement) {
       lock();
@@ -72,7 +72,7 @@ const PointerLockControls = ({
   }, []);
 
   const connect = useCallback((): void => {
-    console.log('connecting to', domElement);
+    console.log("connecting to", domElement);
     if (!domElement) return;
     domElement.ownerDocument.addEventListener("mousemove", onMouseMove);
     domElement.ownerDocument.addEventListener(
@@ -99,21 +99,21 @@ const PointerLockControls = ({
   }, [domElement, onMouseMove, onPointerlockChange, onPointerlockError]);
 
   const lock = useCallback((): void => {
-    if (!domElement) return
-    domElement.requestPointerLock()
+    if (!domElement) return;
+    domElement.requestPointerLock();
   }, [domElement]);
 
   const unlock = useCallback((): void => {
-    if (!domElement) return
-    domElement.ownerDocument.exitPointerLock()
+    if (!domElement) return;
+    domElement.ownerDocument.exitPointerLock();
   }, []);
 
   useEffect(() => {
     if (enabled) {
-      console.log('connecting')
+      console.log("connecting");
       connect();
       return () => {
-        console.log('disconnecting');
+        console.log("disconnecting");
         disconnect();
       };
     }

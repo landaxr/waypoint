@@ -1,6 +1,6 @@
-import { ImageConfig } from "../../types/elements";
+import { ImageConfig } from "../../../types/elements";
 import { Image as DreiImage } from "@react-three/drei";
-import { useHttpsUrl } from "../../lib/ipfs";
+import { useHttpsUrl } from "../../../lib/ipfs";
 
 const Image = ({
   config,
