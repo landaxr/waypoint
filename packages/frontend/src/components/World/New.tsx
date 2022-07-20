@@ -53,7 +53,11 @@ const New = () => {
   const builderState = useBuilder(sceneUpdater.updater);
 
   return (
-    <SceneBuilder builderState={builderState} scene={sceneUpdater.sceneWithUpdates} isNew />
+    <SceneBuilder
+      builderState={builderState}
+      scene={sceneUpdater.sceneWithUpdates}
+      isNew
+    />
   );
 };
 

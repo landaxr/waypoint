@@ -6,6 +6,6 @@ const homeMenuItems: MenuItem[] = [
   { link: "/worlds/new", title: "Build a World", kind: LinkKind.button },
 ];
 
-const MainNavbar = () => (<Navbar centerItems={homeMenuItems} />);
+const MainNavbar = () => <Navbar centerItems={homeMenuItems} />;
 
 export default MainNavbar;

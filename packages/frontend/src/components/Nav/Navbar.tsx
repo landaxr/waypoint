@@ -93,8 +93,7 @@ const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => (
                   })}
                   onClick={menuItem.action}
                 >
-
-                 {menuItem.title}
+                  {menuItem.title}
                 </button>
               )}
             </li>

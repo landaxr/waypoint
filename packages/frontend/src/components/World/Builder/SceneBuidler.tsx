@@ -69,8 +69,8 @@ const Scene = ({
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
-    setMenuItems(buildMenu({isNew, worldId}))
-  }, [isNew, worldId])
+    setMenuItems(buildMenu({ isNew, worldId }));
+  }, [isNew, worldId]);
 
   return (
     <>
