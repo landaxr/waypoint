@@ -6,12 +6,14 @@ module.exports = {
       serif: ["Merriweather", "serif"],
       monospace: ["Overpass Mono", "monospace"],
     },
-    colors: {
+    
+    extend: {
+      colors: {
       white: "#f1f0f0",
       red: "#f13223",
       ["red-light"]: "#fa6559",
     },
-    extend: {},
+    },
   },
   plugins: [],
 };

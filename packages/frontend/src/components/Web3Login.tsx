@@ -157,10 +157,10 @@ const Web3Profile = ({ address }: { address: string }) => {
   if (isError) return <div>Error fetching name</div>;
   return (
     <>
-      <div className="text-sm">
+      <div className="text-sm text-black dark:text-white">
         @{data} {avatarData}
       </div>
-      <div className="text-xs font-light w-20 truncate hover:text-clip">
+      <div className="text-xs text-black dark:text-white font-light w-20 truncate hover:text-clip">
         {address}
       </div>
     </>

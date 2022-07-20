@@ -12,6 +12,7 @@ import Controls from "./Controls";
 import DynamicEnvironment from "./DynamicEnvironment";
 import ElementsTree from "./Elements/ElementsTree";
 import { AudioListener } from "three";
+import BuilderMenu from './Builder/Menu';
 
 const rootPath: string[] = [];
 
@@ -52,6 +53,7 @@ const Scene = ({
         {...getRootProps()}
       >
         <input type="hidden" {...getInputProps()} />
+        <BuilderMenu />
         <Canvas onClick={onClicked}>
           <SetRaycasterFromCamera raycasterRef={raycasterRef} />
           {scene && (

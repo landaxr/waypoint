@@ -13,7 +13,7 @@ const homeMenuItems: { link: string; title: string; kind?: LinkKind }[] = [
 ];
 
 const Navbar = () => (
-  <nav className="bg-white border-gray-200 px-2 sm:px-4 py-1 rounded dark:bg-gray-900">
+  <nav className="bg-white dark:bg-black border-gray-200 px-2 sm:px-4 py-1 rounded">
     <div className="container flex flex-wrap justify-between items-center mx-auto">
       <a href="https://flowbite.com/" className="flex items-center">
         <img
@@ -21,7 +21,7 @@ const Navbar = () => (
           className="mr-3 h-6 sm:h-9"
           alt="Waypoint Logo"
         ></img>
-        <span className="self-center text-xl font-monospace font-bold whitespace-nowrap dark:text-white">
+        <span className="self-center text-xl font-monospace font-bold whitespace-nowrap text-black dark:text-white">
           w@y_point
         </span>
       </a>
@@ -62,12 +62,12 @@ const Navbar = () => (
                   clsx(
                     {
                       ["font-bold active"]: isActive,
-                      ["rounded-full bg-red text-md font-medium hover:bg-red-light active:bg-red focus:outline-none focus:ring focus:ring-"]:
+                      ["rounded-full bg-red text-md font-medium hover:bg-red-light active:bg-red focus:outline-none focus:ring focus:ring-red-light"]:
                         menuItem.kind === LinkKind.button,
-                      ["bg-red-700 rounded md:bg-transparent md:text-red dark:text-white"]:
+                      ["bg-red-700 rounded md:bg-transparent text-red dark:text-white"]:
                         menuItem.kind !== LinkKind.button,
                     },
-                    "block py-2 pr-4 pl-3 text-white md:p-2 font-monospace"
+                    "block py-2 pr-4 pl-3 text-white dark:text-white md:p-2 font-monospace"
                   )
                 }
                 to={menuItem.link}
