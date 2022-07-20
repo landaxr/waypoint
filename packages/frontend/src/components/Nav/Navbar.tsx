@@ -1,5 +1,5 @@
 import Web3Login from "./Web3Login";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
 
 export enum LinkKind {
@@ -33,7 +33,7 @@ const linkClass = ({
 const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => (
   <nav className="bg-white dark:bg-black border-gray-200 px-2 sm:px-4 py-1 rounded">
     <div className="container flex flex-wrap justify-between items-center mx-auto">
-      <a href="https://flowbite.com/" className="flex items-center">
+      <Link to="/" className="flex items-center">
         <img
           src="/logo192.png"
           className="mr-3 h-6 sm:h-9"
@@ -42,7 +42,7 @@ const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => (
         <span className="self-center text-xl font-monospace font-bold whitespace-nowrap text-black dark:text-white">
           w@y_point
         </span>
-      </a>
+      </Link>
       <div className="flex md:order-2">
         <Web3Login />
         <button

@@ -29,7 +29,7 @@ const buildMenu = ({
     { link: "#", title: `Building ${elementName}`, kind: LinkKind.link },
     {
       action: () => alert("clicked"),
-      title: "Mint it",
+      title: "Save to ipfs",
       kind: LinkKind.button,
     },
   ];
