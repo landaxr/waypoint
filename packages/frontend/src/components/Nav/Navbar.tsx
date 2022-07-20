@@ -22,12 +22,12 @@ const linkClass = ({
   clsx(
     {
       ["font-bold active"]: isActive,
-      ["rounded-full bg-red text-md font-medium hover:bg-red-light active:bg-red focus:outline-none focus:ring focus:ring-red-light"]:
+      ["rounded-full bg-red text-white text-md font-medium hover:bg-red-light active:bg-red focus:outline-none focus:ring focus:ring-red-light"]:
         kind === LinkKind.button,
       ["bg-red-700 rounded md:bg-transparent text-red dark:text-white"]:
-        kind !== LinkKind.button,
+        kind === LinkKind.link,
     },
-    "block py-2 pr-4 pl-3 text-white dark:text-white md:p-2 font-monospace"
+    "block py-2 pr-4 pl-3 md:p-2 font-monospace"
   );
 
 const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => (

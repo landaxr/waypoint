@@ -3,6 +3,7 @@ import {
   ElementNodes,
   ElementType,
   ImageElement,
+  ModelElement,
 } from "../types/elements";
 import { SceneConfiguration } from "../types/scene";
 import { FileLocation, FileLocationKind, Optional } from "../types/shared";
@@ -41,15 +42,30 @@ function extractFilesToUploadForElementAndSetPaths(element: Element) {
     const imageFile = element.imageConfig.file;
     const { fileAsPath: imageFileAsPath, file: imageFileBlob } =
       replaceFileWithPath(imageFile);
-    const result: ImageElement = {
+    const imageElementResult: ImageElement = {
       ...element,
       imageConfig: {
         file: imageFileAsPath,
       },
     };
     return {
-      element: result,
+      element: imageElementResult,
       files: filterUndefinedFiles([imageFileBlob]),
+    };
+  }
+  if (element.elementType === ElementType.Model) {
+    const modelFile = element.modelConfig.file;
+    const { fileAsPath: modelFileAsPath, file: modelFileAsBlob } =
+      replaceFileWithPath(modelFile);
+    const modelElementResult: ModelElement = {
+      ...element,
+      modelConfig: {
+        file: modelFileAsPath,
+      },
+    };
+    return {
+      element: modelElementResult,
+      files: filterUndefinedFiles([modelFileAsBlob]),
     };
   }
 
