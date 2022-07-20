@@ -43,13 +43,14 @@ function extractFiledToUploadForChildrenAndSetPaths(
   };
 }
 
-export function extractFilesToUploadForSceneAndSetPaths(scene: SceneConfiguration): {
+export function extractFilesToUploadForSceneAndSetPaths(
+  scene: SceneConfiguration
+): {
   files: File[];
   sceneWithPathsForFiles: SceneConfiguration;
 } {
-  const { files, childrenWithPathsReplaced } = extractFiledToUploadForChildrenAndSetPaths(
-    scene.elements
-  );
+  const { files, childrenWithPathsReplaced } =
+    extractFiledToUploadForChildrenAndSetPaths(scene.elements);
 
   const sceneWithPathsForFiles: SceneConfiguration = {
     ...scene,
@@ -61,4 +62,3 @@ export function extractFilesToUploadForSceneAndSetPaths(scene: SceneConfiguratio
     files,
   };
 }
-

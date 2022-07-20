@@ -20,7 +20,7 @@ const rootPath: string[] = [];
 const buildMenu = ({
   isNew,
   worldId,
-handleSaveToIpfs
+  handleSaveToIpfs,
 }: {
   isNew?: boolean;
   worldId?: string;
@@ -72,7 +72,7 @@ const Scene = ({
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   const handleSaveToIpfs = useCallback(async () => {
-    await saveSceneToIpfs({scene});
+    await saveSceneToIpfs({ scene });
   }, [scene]);
 
   useEffect(() => {
