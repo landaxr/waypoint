@@ -1,7 +1,11 @@
-import { PointerLockControls, FlyControls } from "@react-three/drei";
+import {
+  PointerLockControls,
+  FlyControls,
+  FirstPersonControls,
+} from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
-import { BuilderState, TransformMode } from "../Builder/useBuilder";
+import { BuilderState } from "../Builder/useBuilder";
 import TransformAndOrbitControls from "./TransformAndOrbitControls";
 
 const Controls = ({
@@ -22,14 +26,22 @@ const Controls = ({
 
   const showPointerLockControls = !isDragging && !enableTransform;
 
-  const { gl } = useThree();
+  const { gl, camera } = useThree();
+
+  useEffect(() => {
+    console.log("enabled:", showPointerLockControls);
+
+    if (!showPointerLockControls) {
+      document.exitPointerLock();
+    }
+  }, [showPointerLockControls]);
 
   return (
     <>
       {showPointerLockControls && (
         <>
-          <PointerLockControls domElement={gl.domElement} />
-          <FlyControls />
+          <PointerLockControls args={[camera, gl.domElement]} />
+          <FlyControls dragToLook />
         </>
       )}
 

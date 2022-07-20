@@ -6,8 +6,8 @@ import {
   ImageElement,
   ModelElement,
   Transform,
-} from "../../types/elements";
-import { FileLocationKind, Optional } from "../../types/shared";
+} from "../../../types/elements";
+import { FileLocationKind, Optional } from "../../../types/shared";
 import { SceneUpdater } from "./useSceneWithUpdater";
 
 enum FileType {
@@ -115,8 +115,6 @@ const useAddFile = ({
           });
 
           const pathToSelect: string[] = [newElementId];
-
-          console.log(pathToSelect);
 
           startTransforming(pathToSelect);
         }

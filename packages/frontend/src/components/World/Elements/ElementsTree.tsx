@@ -1,10 +1,15 @@
-import { SceneConfiguration } from "../types/scene";
-import { Element, ElementType, IVector3, Transform } from "../types/elements";
-import Model from "./Elements/Model";
-import Image from "./Elements/Image";
+import { SceneConfiguration } from "../../../types/scene";
+import {
+  Element,
+  ElementType,
+  IVector3,
+  Transform,
+} from "../../../types/elements";
+import Model from "./Model";
+import Image from "./Image";
 import { useEffect, useMemo, useState } from "react";
 import { Object3D, Vector3 } from "three";
-import { BuilderState } from "./Builder/useBuilder";
+import { BuilderState } from "../Builder/useBuilder";
 
 const pathsEqual = (a: string[], b: string[]) => {
   return a.join(",") === b.join(",");
@@ -13,12 +18,12 @@ const pathsEqual = (a: string[], b: string[]) => {
 const emptyTransform: Transform = {};
 
 export type isElementUserData = {
-  isElement?: true
-}
+  isElement?: true;
+};
 
 export const isElementUserData: isElementUserData = {
-  isElement: true
-}
+  isElement: true,
+};
 
 const TransformedElement = ({
   transform,
@@ -31,7 +36,7 @@ const TransformedElement = ({
 }) => {
   const [ref, setRef] = useState<Object3D | null>();
 
-  const { position, rotation, scale} = transform || emptyTransform;
+  const { position, rotation, scale } = transform || emptyTransform;
 
   return (
     <group
@@ -65,10 +70,7 @@ const ElementNode = ({
   builderState: BuilderState;
 }) => {
   return (
-    <TransformedElement
-      id={id}
-      transform={element.transform}
-    >
+    <TransformedElement id={id} transform={element.transform}>
       <>
         {element.elementType === ElementType.Model && (
           <Model config={element.modelConfig} />

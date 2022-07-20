@@ -1,6 +1,6 @@
 import { Environment } from "@react-three/drei";
-import { useHttpsUrl } from "../lib/ipfs";
-import { SceneConfiguration } from "../types/scene";
+import { useHttpsUrl } from "../../lib/ipfs";
+import { SceneConfiguration } from "../../types/scene";
 
 const DynamicEnvironment = ({
   environment,

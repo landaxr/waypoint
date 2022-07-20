@@ -1,14 +1,14 @@
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
-import { SceneConfiguration } from "../../types/scene";
-import { Element } from "../../types/elements";
+import { SceneConfiguration } from "../../../types/scene";
+import { Element } from "../../../types/elements";
 import {
   createNewElement,
   updateElement,
   deleteElement,
   updateEnvironment,
   addElement,
-} from "../../editorDb/mutations";
-import { newId } from "../../editorDb/utils";
+} from "../../../editorDb/mutations";
+import { newId } from "../../../editorDb/utils";
 
 export const useSceneUpdater = ({
   updateScene,

@@ -1,9 +1,9 @@
 import { buttonGroup, useControls } from "leva";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Object3D, Raycaster } from "three";
-import { Transform, Element } from "../../types/elements";
-import { Optional } from "../../types/shared";
-import { isElementUserData } from "../ElementsTree";
+import { Transform, Element } from "../../../types/elements";
+import { Optional } from "../../../types/shared";
+import { isElementUserData } from "../Elements/ElementsTree";
 import useAddFile from "./useAddFile";
 import { SceneUpdater } from "./useSceneWithUpdater";
 
@@ -20,7 +20,8 @@ const transformOptions: { [key: string]: TransformMode } = {
 };
 
 function findParentElement(selectedMesh: Object3D): Object3D | null {
-  if ((selectedMesh.userData as isElementUserData).isElement) return selectedMesh;
+  if ((selectedMesh.userData as isElementUserData).isElement)
+    return selectedMesh;
 
   if (!selectedMesh.parent) return null;
 
