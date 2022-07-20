@@ -3,7 +3,6 @@ import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
 import { Leva } from "leva";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Camera } from "three";
 import { SceneConfiguration } from "../../../types/scene";
 import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
 import { BuilderState } from "./useBuilder";
@@ -13,7 +12,6 @@ import ElementsTree from "../Elements/ElementsTree";
 import { AudioListener } from "three";
 import BuilderMenu from "./Menu";
 import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
-import { saveSceneToIpfs } from "../../../api/ipfsSaver";
 
 const rootPath: string[] = [];
 
@@ -21,10 +19,12 @@ const buildMenu = ({
   isNew,
   worldId,
   handleSaveToIpfs,
+  savingScene,
 }: {
   isNew?: boolean;
   worldId?: string;
   handleSaveToIpfs: () => void;
+  savingScene: boolean;
 }): MenuItem[] => {
   const elementName = isNew ? "Draft World" : worldId || "World";
 
@@ -34,6 +34,7 @@ const buildMenu = ({
       action: handleSaveToIpfs,
       title: "Save to ipfs",
       kind: LinkKind.button,
+      disabled: savingScene,
     },
   ];
 };
@@ -69,13 +70,21 @@ const Scene = ({
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
-  const handleSaveToIpfs = useCallback(async () => {
-    await saveSceneToIpfs({ scene });
-  }, [scene]);
-
   useEffect(() => {
-    setMenuItems(buildMenu({ isNew, worldId, handleSaveToIpfs }));
-  }, [handleSaveToIpfs, isNew, worldId]);
+    setMenuItems(
+      buildMenu({
+        isNew,
+        worldId,
+        handleSaveToIpfs: builderState.handleSaveToIpfs,
+        savingScene: builderState.saveSceneStatus.saving,
+      })
+    );
+  }, [
+    builderState.handleSaveToIpfs,
+    builderState.saveSceneStatus.saving,
+    isNew,
+    worldId,
+  ]);
 
   return (
     <>

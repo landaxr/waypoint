@@ -1,7 +1,4 @@
-import {
-  PointerLockControls,
-  FlyControls,
-} from "@react-three/drei";
+import { PointerLockControls, FlyControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
 import { BuilderState } from "../Builder/useBuilder";

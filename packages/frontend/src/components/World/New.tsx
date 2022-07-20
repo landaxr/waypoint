@@ -1,13 +1,9 @@
 import { useState } from "react";
-import {
-  applyUpdates,
-  updateEnvironment,
-} from "../../editorDb/mutations";
+import { applyUpdates, updateEnvironment } from "../../editorDb/mutations";
 import { EnvironmentConfig, SceneConfiguration } from "../../types/scene";
 import { Element, ElementType } from "../../types/elements";
 import { FileLocationKind } from "../../types/shared";
 import SceneBuilder from "./Builder/SceneBuilder";
-import useSceneWithUpdater from "./Builder/useSceneWithUpdater";
 import { useBuilder } from "./Builder/useBuilder";
 
 const randomEnvironment = (): EnvironmentConfig => {
@@ -45,16 +41,12 @@ const makeNewScene = (): SceneConfiguration => {
 const New = () => {
   const [scene, setScene] = useState<SceneConfiguration>(() => makeNewScene());
 
-  const sceneUpdater = useSceneWithUpdater({
-    scene,
-  });
-
-  const builderState = useBuilder(sceneUpdater.updater);
+  const builderState = useBuilder({ scene });
 
   return (
     <SceneBuilder
       builderState={builderState}
-      scene={sceneUpdater.sceneWithUpdates}
+      scene={builderState.scene}
       isNew
     />
   );

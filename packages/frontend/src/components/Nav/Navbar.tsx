@@ -9,23 +9,31 @@ export enum LinkKind {
 
 export type MenuItem = (
   | { link: string; action?: undefined }
-  | { action: () => any; link?: undefined }
+  | { action: () => any; link?: undefined; disabled?: boolean }
 ) & { title: string; kind?: LinkKind };
 
 const linkClass = ({
   isActive,
   kind,
+  disabled,
 }: {
   isActive: boolean;
   kind: LinkKind | undefined;
+  disabled?: boolean;
 }) =>
   clsx(
     {
-      ["font-bold active"]: isActive,
-      ["rounded-full bg-red text-white text-md font-medium hover:bg-red-light active:bg-red focus:outline-none focus:ring focus:ring-red-light"]:
+      "font-bold active": isActive,
+      "rounded-full bg-red text-white text-md font-medium active:bg-red focus:outline-none focus:ring focus:ring-red-light":
         kind === LinkKind.button,
-      ["bg-red-700 rounded md:bg-transparent text-red dark:text-white"]:
+      "bg-red-700 rounded md:bg-transparent text-red dark:text-white":
         kind === LinkKind.link,
+    },
+    {
+      "bg-gray-500": disabled && kind === LinkKind.button,
+    },
+    {
+      "hover:bg-red-light": !disabled && kind === LinkKind.button,
     },
     "block py-2 pr-4 pl-3 md:p-2 font-monospace"
   );
@@ -90,7 +98,9 @@ const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => (
                   className={linkClass({
                     isActive: false,
                     kind: menuItem.kind,
+                    disabled: menuItem.disabled,
                   })}
+                  disabled={menuItem.disabled}
                   onClick={menuItem.action}
                 >
                   {menuItem.title}

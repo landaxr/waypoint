@@ -1,14 +1,14 @@
-import { RefObject, startTransition, useCallback, useState } from "react";
+import { RefObject, useCallback, useState } from "react";
 import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
 import { Object3D, Raycaster } from "three";
 import {
+  Element,
   ElementType,
   ImageElement,
   ModelElement,
   Transform,
 } from "../../../types/elements";
 import { FileLocationKind, Optional } from "../../../types/shared";
-import { SceneUpdater } from "./useSceneWithUpdater";
 
 enum FileType {
   image = "image",
@@ -90,9 +90,10 @@ const useAddFile = ({
   createNewElement,
   raycasterRef,
   startTransforming,
-}: Pick<SceneUpdater, "createNewElement"> & {
+}: {
   raycasterRef: RefObject<Raycaster>;
   startTransforming: (path: string[]) => void;
+  createNewElement: (params: { elementConfig: Element }) => string;
 }) => {
   const [isDragging, setIsDragging] = useState(false);
 
@@ -124,7 +125,7 @@ const useAddFile = ({
         console.error(`${rejected.file.type}`);
       });
     },
-    [createNewElement, startTransforming]
+    [createNewElement, raycasterRef, startTransforming]
   );
 
   const onDragEnter = useCallback(() => {

@@ -10,7 +10,10 @@ export enum FileLocationKind {
 export type FileLocation =
   | {
       url: string;
-      kind: FileLocationKind.ipfs | FileLocationKind.https | FileLocationKind.ipfsRelative;
+      kind:
+        | FileLocationKind.ipfs
+        | FileLocationKind.https
+        | FileLocationKind.ipfsRelative;
     }
   | {
       kind: FileLocationKind.blob;

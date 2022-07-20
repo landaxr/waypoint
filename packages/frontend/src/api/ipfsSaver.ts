@@ -5,14 +5,14 @@ import { extractFilesToUploadForSceneAndSetPaths } from "./sceneParser";
 const web3StorageKey = process.env.REACT_APP_WEB3_STORAGE_KEY;
 
 const createSceneJsonFile = (scene: SceneConfiguration) => {
-    const fileContents = JSON.stringify(scene);
+  const fileContents = JSON.stringify(scene);
 
-    const blob = new Blob([fileContents], {type : 'application/json'});
+  const blob = new Blob([fileContents], { type: "application/json" });
 
-    const file = new File([blob], 'metadata.json');
+  const file = new File([blob], "metadata.json");
 
-    return file;
-}
+  return file;
+};
 
 export const saveSceneToIpfs = async ({
   scene,
@@ -22,26 +22,26 @@ export const saveSceneToIpfs = async ({
   const { files, sceneWithPathsForFiles } =
     extractFilesToUploadForSceneAndSetPaths(scene);
 
+  const sceneConfigMetadata = createSceneJsonFile(sceneWithPathsForFiles);
 
-   const sceneConfigMetadata = createSceneJsonFile(sceneWithPathsForFiles);
-
-   console.log({
+  console.log({
     files,
     scene,
     sceneWithPathsForFiles,
   });
 
-  if (!web3StorageKey) throw new Error("REACT_APP_WEB3_STORAGE_KEY environment variable must be defined.")
+  if (!web3StorageKey)
+    throw new Error(
+      "REACT_APP_WEB3_STORAGE_KEY environment variable must be defined."
+    );
   // @ts-ignore
-  const client = new Web3Storage({token: web3StorageKey});
+  const client = new Web3Storage({ token: web3StorageKey });
 
-  console.log('uploading files...');
+  console.log("uploading files...");
 
-  const allFiles = [sceneConfigMetadata, ...files]
+  const allFiles = [sceneConfigMetadata, ...files];
 
   const cid = await client.put(allFiles);
 
-  console.log('cid:', cid);
-
-  
+  return cid;
 };
