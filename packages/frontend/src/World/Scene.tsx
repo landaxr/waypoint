@@ -10,7 +10,8 @@ import { BuilderState } from "./Builder/useBuilder";
 import { SceneUpdater } from "./Builder/useSceneWithUpdater";
 import Controls from "./Controls";
 import DynamicEnvironment from "./DynamicEnvironment";
-import ElementsTree from "./ElementsTree";
+import ElementsTree from "./Elements/ElementsTree";
+import { AudioListener } from "three";
 
 const rootPath: string[] = [];
 

@@ -43,9 +43,9 @@ const Navbar = () => (
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-              clip-rule="evenodd"
+              clipRule="evenodd"
             ></path>
           </svg>
         </button>
@@ -60,10 +60,13 @@ const Navbar = () => (
               <NavLink
                 className={({ isActive }) =>
                   clsx(
-                    { ["font-bold active"]: isActive,
-                     ['rounded-full bg-red text-md font-medium hover:bg-red-light active:bg-red focus:outline-none focus:ring focus:ring-black'] : menuItem.kind === LinkKind.button,
-                     ['bg-red-700 rounded md:bg-transparent md:text-red dark:text-white'] : menuItem.kind !== LinkKind.button
-                     },
+                    {
+                      ["font-bold active"]: isActive,
+                      ["rounded-full bg-red text-md font-medium hover:bg-red-light active:bg-red focus:outline-none focus:ring focus:ring-"]:
+                        menuItem.kind === LinkKind.button,
+                      ["bg-red-700 rounded md:bg-transparent md:text-red dark:text-white"]:
+                        menuItem.kind !== LinkKind.button,
+                    },
                     "block py-2 pr-4 pl-3 text-white md:p-2 font-monospace"
                   )
                 }
