@@ -13,22 +13,25 @@ import ElementsTree from "../Elements/ElementsTree";
 import { AudioListener } from "three";
 import BuilderMenu from "./Menu";
 import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
+import { saveSceneToIpfs } from "../../../api/ipfsSaver";
 
 const rootPath: string[] = [];
 
 const buildMenu = ({
   isNew,
   worldId,
+handleSaveToIpfs
 }: {
   isNew?: boolean;
   worldId?: string;
+  handleSaveToIpfs: () => void;
 }): MenuItem[] => {
   const elementName = isNew ? "Draft World" : worldId || "World";
 
   return [
     { link: "#", title: `Building ${elementName}`, kind: LinkKind.link },
     {
-      action: () => alert("clicked"),
+      action: handleSaveToIpfs,
       title: "Save to ipfs",
       kind: LinkKind.button,
     },
@@ -68,8 +71,12 @@ const Scene = ({
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
+  const handleSaveToIpfs = useCallback(async () => {
+    await saveSceneToIpfs({scene});
+  }, [scene]);
+
   useEffect(() => {
-    setMenuItems(buildMenu({ isNew, worldId }));
+    setMenuItems(buildMenu({ isNew, worldId, handleSaveToIpfs }));
   }, [isNew, worldId]);
 
   return (

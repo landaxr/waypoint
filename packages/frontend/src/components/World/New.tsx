@@ -7,7 +7,7 @@ import {
 import { EnvironmentConfig, SceneConfiguration } from "../../types/scene";
 import { Element, ElementType } from "../../types/elements";
 import { FileLocationKind } from "../../types/shared";
-import SceneBuilder from "./Builder/SceneBuidler";
+import SceneBuilder from "./Builder/SceneBuilder";
 import useSceneWithUpdater from "./Builder/useSceneWithUpdater";
 import { useBuilder } from "./Builder/useBuilder";
 

@@ -1,6 +1,6 @@
 import { ModelConfig } from "../../../types/elements";
 import { useGLTF } from "@react-three/drei";
-import { useHttpsUrl } from "../../../lib/ipfs";
+import { useHttpsUrl } from "../../../api/ipfsUrls";
 
 const Model = ({
   config,
