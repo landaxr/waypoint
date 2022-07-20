@@ -12,7 +12,10 @@ type Acc = {
   childrenWithPathsReplaced: ElementNodes;
   files: File[];
 };
-function replaceFileWithPath(fileLocation: FileLocation | undefined) {
+function replaceFileWithPath(fileLocation: FileLocation | undefined): {
+  fileAsPath: FileLocation | undefined;
+  file: File | undefined;
+} {
   if (fileLocation?.kind === FileLocationKind.blob) {
     const { file } = fileLocation;
 
@@ -34,39 +37,71 @@ function replaceFileWithPath(fileLocation: FileLocation | undefined) {
   };
 }
 
-const filterUndefinedFiles = (files: (File | undefined)[]) =>
-  files.filter((x) => typeof x !== "undefined") as File[];
+type UpdateResult<T extends Element> = {
+  element: T;
+  files: File[];
+};
+function elementUpdater<T extends Element>(
+  element: T,
+  updaters: {
+    filePath: (element: T) => Optional<FileLocation> | undefined;
+    updater: (element: T, updatedFileLocation: FileLocation | undefined) => T;
+  }[]
+): UpdateResult<T> {
+  const result = updaters.reduce(
+    (acc: UpdateResult<T>, updater): UpdateResult<T> => {
+      const fileLocation = updater.filePath(acc.element);
+      if (!fileLocation) return acc;
 
-function extractFilesToUploadForElementAndSetPaths(element: Element) {
+      const { file, fileAsPath } = replaceFileWithPath(fileLocation);
+      const updatedElement = updater.updater(acc.element, fileAsPath);
+
+      const files = file ? [...acc.files, file] : acc.files;
+
+      return {
+        element: updatedElement,
+        files,
+      };
+    },
+    {
+      element: element,
+      files: [],
+    }
+  );
+
+  return result;
+}
+
+function extractFilesToUploadForElementAndSetPaths(
+  element: Element
+): UpdateResult<Element> {
   if (element.elementType === ElementType.Image) {
-    const imageFile = element.imageConfig.file;
-    const { fileAsPath: imageFileAsPath, file: imageFileBlob } =
-      replaceFileWithPath(imageFile);
-    const imageElementResult: ImageElement = {
-      ...element,
-      imageConfig: {
-        file: imageFileAsPath,
+    return elementUpdater<ImageElement>(element, [
+      {
+        filePath: (element) => element.imageConfig.file,
+        updater: (element, fileLocation) => ({
+          ...element,
+          imageConfig: {
+            ...element.imageConfig,
+            file: fileLocation,
+          },
+        }),
       },
-    };
-    return {
-      element: imageElementResult,
-      files: filterUndefinedFiles([imageFileBlob]),
-    };
+    ]);
   }
   if (element.elementType === ElementType.Model) {
-    const modelFile = element.modelConfig.file;
-    const { fileAsPath: modelFileAsPath, file: modelFileAsBlob } =
-      replaceFileWithPath(modelFile);
-    const modelElementResult: ModelElement = {
-      ...element,
-      modelConfig: {
-        file: modelFileAsPath,
+    return elementUpdater<ModelElement>(element, [
+      {
+        filePath: (element) => element.modelConfig.file,
+        updater: (element, fileLocation) => ({
+          ...element,
+          modelConfig: {
+            ...element.modelConfig,
+            file: fileLocation,
+          },
+        }),
       },
-    };
-    return {
-      element: modelElementResult,
-      files: filterUndefinedFiles([modelFileAsBlob]),
-    };
+    ]);
   }
 
   return {
