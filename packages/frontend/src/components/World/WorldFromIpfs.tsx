@@ -59,9 +59,9 @@ const WorldFromIpfs = ({ cid }: { cid: string }) => {
     })();
   }, [cid]);
 
-    if (sceneAndFiles) {
-      return <SceneBuilder sceneAndFiles={sceneAndFiles} worldId={cid} />;
-    }
+  if (sceneAndFiles) {
+    return <SceneBuilder sceneAndFiles={sceneAndFiles} worldId={cid} />;
+  }
 
   return (
     <LoadingScreen

@@ -59,7 +59,9 @@ function getElementFileIds(element: Element): string[] {
   if (element.elementType === ElementType.Model) {
     return filterUndefined([element.modelConfig.file?.fileId]);
   }
-
+  if (element.elementType === ElementType.Video) {
+    return filterUndefined([element.videoConfig.file?.original?.fileId]);
+  }
   return [];
 }
 
