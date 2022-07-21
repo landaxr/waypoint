@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { FilesByPath } from "../types/scene";
 import { FileLocation, FileLocationKind, Optional } from "../types/shared";
 
 function convertURIToHTTPSInner({
@@ -58,34 +59,55 @@ function readFileContents(file: File) {
   });
 }
 
-export const useHttpsUrl = (file?: Optional<FileLocation>) => {
+export const useHttpsUrl = (
+  fileLocation: Optional<FileLocation> | undefined,
+  files: FilesByPath
+) => {
   const [result, setResult] = useState<string | null>(null);
 
+  const [fileForElement, setFileForElement] = useState<File | null>();
+
   useEffect(() => {
-    if (!file) {
+    if (fileLocation?.kind === FileLocationKind.local) {
+      const name = fileLocation.path;
+      setFileForElement(files[name] || null);
+    } else {
+      setFileForElement(null);
+    }
+  }, [fileLocation, files]);
+
+  useEffect(() => {
+    if (!fileLocation) {
       setResult(null);
       return;
     }
 
-    if (file.kind === FileLocationKind.ipfs) {
-      setResult(convertURIToHTTPS({ url: file.url }));
-    } else if (file.kind === FileLocationKind.https) {
-      setResult(file.url);
-    } else if (file.kind === FileLocationKind.blob) {
-      (async () => {
-        const fileContents = await readFileContents(file.file);
-        if (fileContents) {
-          if (typeof fileContents === "string") {
-            setResult(fileContents);
-          } else {
-            const blobUrl = URL.createObjectURL(new Blob([fileContents]));
+    const setFileFromBlob = async (file: File) => {
+      const fileContents = await readFileContents(file);
+      if (fileContents) {
+        if (typeof fileContents === "string") {
+          setResult(fileContents);
+        } else {
+          const blobUrl = URL.createObjectURL(new Blob([fileContents]));
 
-            setResult(blobUrl);
-          }
+          setResult(blobUrl);
         }
-      })();
+      }
+    };
+
+    const { kind } = fileLocation;
+
+    if (kind === FileLocationKind.ipfs) {
+      setResult(convertURIToHTTPS({ url: fileLocation.url }));
+    } else if (kind === FileLocationKind.https) {
+      setResult(fileLocation.url);
+    } else if (kind === FileLocationKind.local) {
+      const file = fileForElement;
+      if (file) {
+        setFileFromBlob(file);
+      } else setResult(null);
     }
-  }, [file]);
+  }, [fileLocation, fileForElement]);
 
   return result;
 };

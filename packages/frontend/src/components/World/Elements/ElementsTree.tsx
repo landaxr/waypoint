@@ -73,10 +73,10 @@ const ElementNode = ({
     <TransformedElement id={id} transform={element.transform}>
       <>
         {element.elementType === ElementType.Model && (
-          <Model config={element.modelConfig} />
+          <Model config={element.modelConfig} files={builderState.files} />
         )}
         {element.elementType === ElementType.Image && (
-          <Image config={element.imageConfig} />
+          <Image config={element.imageConfig} files={builderState.files} />
         )}
 
         {element.children && (

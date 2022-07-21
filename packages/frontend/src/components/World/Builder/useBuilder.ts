@@ -3,7 +3,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Euler, Object3D, Raycaster, Vector3 } from "three";
 import { saveSceneToIpfs } from "../../../api/ipfsSaver";
 import { Transform, Element, IVector3 } from "../../../types/elements";
-import { SceneConfiguration } from "../../../types/scene";
+import {
+  FilesByPath,
+  SceneAndFiles,
+  SceneConfiguration,
+} from "../../../types/scene";
 import { Optional } from "../../../types/shared";
 import { isElementUserData } from "../Elements/ElementsTree";
 import useAddFile from "./useAddFile";
@@ -43,14 +47,15 @@ const toIVector3 = (vector3: Vector3 | Euler): IVector3 => ({
   z: vector3.z,
 });
 
-export const useBuilder = ({ scene }: { scene: SceneConfiguration }) => {
+export const useBuilder = (sceneAndFiles: SceneAndFiles) => {
   const raycasterRef = useRef<Raycaster>(new Raycaster());
 
-  const [sceneWithUpdates, updateScene] = useState<SceneConfiguration>(
-    () => scene
-  );
+  const [{ scene: sceneWithUpdates, files: filesWithUpdates }, updateScene] =
+    useState<SceneAndFiles>(() => sceneAndFiles);
 
-  const { createNewElement, updateElement } = useSceneUpdater({ updateScene });
+  const { createNewElementForFile, updateElement } = useSceneUpdater({
+    updateScene,
+  });
 
   const [saveSceneStatus, setSaveSceneStatus] = useState<SceneSaveStatus>({
     saving: false,
@@ -62,7 +67,7 @@ export const useBuilder = ({ scene }: { scene: SceneConfiguration }) => {
       saving: true,
     });
     try {
-      const cid = await saveSceneToIpfs({ scene: sceneWithUpdates });
+      const cid = await saveSceneToIpfs({ scene: sceneWithUpdates, files: filesWithUpdates });
 
       setSaveSceneStatus({
         savedCid: cid,
@@ -77,7 +82,7 @@ export const useBuilder = ({ scene }: { scene: SceneConfiguration }) => {
         error: e as Error,
       });
     }
-  }, [sceneWithUpdates, saveSceneStatus.saving]);
+  }, [sceneWithUpdates, saveSceneStatus.saving, filesWithUpdates]);
 
   const [transforming, setTransforming] = useState<{
     isTransforming: boolean;
@@ -99,7 +104,7 @@ export const useBuilder = ({ scene }: { scene: SceneConfiguration }) => {
   }, []);
 
   const addFile = useAddFile({
-    createNewElement,
+    createNewElementForFile: createNewElementForFile,
     raycasterRef,
     startTransforming,
   });
@@ -187,6 +192,7 @@ export const useBuilder = ({ scene }: { scene: SceneConfiguration }) => {
     handleSaveToIpfs,
     saveSceneStatus,
     scene: sceneWithUpdates,
+    files: filesWithUpdates,
   };
 };
 

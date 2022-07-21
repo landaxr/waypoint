@@ -2,7 +2,8 @@ export type Optional<T> = T | null;
 
 export enum FileLocationKind {
   ipfs = "ipfs",
-  ipfsRelative = "ipfsRelative",
+  local = "local",
+  ipfsLink = "ipfsLink",
   https = "https",
   blob = "blob",
 }
@@ -10,12 +11,9 @@ export enum FileLocationKind {
 export type FileLocation =
   | {
       url: string;
-      kind:
-        | FileLocationKind.ipfs
-        | FileLocationKind.https
-        | FileLocationKind.ipfsRelative;
+      kind: FileLocationKind.ipfs | FileLocationKind.https;
     }
   | {
-      kind: FileLocationKind.blob;
-      file: File;
+      kind: FileLocationKind.local;
+      path: string;
     };

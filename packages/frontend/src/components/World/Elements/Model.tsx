@@ -1,6 +1,7 @@
 import { ModelConfig } from "../../../types/elements";
 import { useGLTF } from "@react-three/drei";
 import { useHttpsUrl } from "../../../api/ipfsUrls";
+import { FilesByPath } from "../../../types/scene";
 
 const Model = ({
   config,
@@ -14,8 +15,14 @@ const Model = ({
   return <primitive object={model.scene} />;
 };
 
-const ModelNullGuard = ({ config }: { config: ModelConfig }) => {
-  const fileUrl = useHttpsUrl(config.file);
+const ModelNullGuard = ({
+  config,
+  files,
+}: {
+  config: ModelConfig;
+  files: FilesByPath;
+}) => {
+  const fileUrl = useHttpsUrl(config.file, files);
 
   if (!fileUrl) return null;
 

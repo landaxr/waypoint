@@ -9,3 +9,12 @@ export type SceneConfiguration = {
   elements?: Optional<ElementNodes>;
   environment?: Optional<EnvironmentConfig>;
 };
+
+export type FilesByPath = {
+  [path: string]: File;
+};
+
+export type SceneAndFiles = {
+  scene: SceneConfiguration;
+  files: FilesByPath;
+};

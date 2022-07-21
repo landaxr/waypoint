@@ -1,6 +1,7 @@
 import { ImageConfig } from "../../../types/elements";
 import { Image as DreiImage } from "@react-three/drei";
 import { useHttpsUrl } from "../../../api/ipfsUrls";
+import { FilesByPath } from "../../../types/scene";
 
 const Image = ({
   config,
@@ -12,8 +13,14 @@ const Image = ({
   return <DreiImage url={fileUrl} />;
 };
 
-const ImageNullGuard = ({ config }: { config: ImageConfig }) => {
-  const fileUrl = useHttpsUrl(config.file);
+const ImageNullGuard = ({
+  config,
+  files,
+}: {
+  config: ImageConfig;
+  files: FilesByPath;
+}) => {
+  const fileUrl = useHttpsUrl(config.file, files);
 
   if (!fileUrl) return null;
 

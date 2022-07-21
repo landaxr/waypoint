@@ -5,29 +5,26 @@ import {
   ImageElement,
   ModelElement,
 } from "../types/elements";
-import { SceneConfiguration } from "../types/scene";
+import { FilesByPath, SceneConfiguration } from "../types/scene";
 import { FileLocation, FileLocationKind, Optional } from "../types/shared";
 
 type Acc = {
   childrenWithPathsReplaced: ElementNodes;
-  files: File[];
+  filesToUpload: FilesByPath;
 };
-function replaceFileWithPath(fileLocation: FileLocation | undefined): {
+function replaceFileWithPath(
+  fileLocation: FileLocation | undefined,
+  files: FilesByPath
+): {
   fileAsPath: FileLocation | undefined;
   file: File | undefined;
 } {
-  if (fileLocation?.kind === FileLocationKind.blob) {
-    const { file } = fileLocation;
+  // todo: fetch https files from clound and bundle into ipfs - or do we even need https based files?
 
-    const fileName = file.name;
-
-    const fileAsPath: FileLocation = {
-      kind: FileLocationKind.ipfsRelative,
-      url: `/${fileName}`,
-    };
+  if (fileLocation?.kind === FileLocationKind.local) {
     return {
-      fileAsPath,
-      file,
+      fileAsPath: fileLocation,
+      file: files[fileLocation.path],
     };
   }
 
@@ -39,10 +36,11 @@ function replaceFileWithPath(fileLocation: FileLocation | undefined): {
 
 type UpdateResult<T extends Element> = {
   element: T;
-  files: File[];
+  files: FilesByPath;
 };
 function elementUpdater<T extends Element>(
   element: T,
+  files: FilesByPath,
   updaters: {
     filePath: (element: T) => Optional<FileLocation> | undefined;
     updater: (element: T, updatedFileLocation: FileLocation | undefined) => T;
@@ -53,19 +51,19 @@ function elementUpdater<T extends Element>(
       const fileLocation = updater.filePath(acc.element);
       if (!fileLocation) return acc;
 
-      const { file, fileAsPath } = replaceFileWithPath(fileLocation);
+      const { file, fileAsPath } = replaceFileWithPath(fileLocation, files);
       const updatedElement = updater.updater(acc.element, fileAsPath);
 
-      const files = file ? [...acc.files, file] : acc.files;
+      const updatedFiles = file ? {...acc.files, [file.name]:file} : acc.files;
 
       return {
         element: updatedElement,
-        files,
+        files: updatedFiles,
       };
     },
     {
       element: element,
-      files: [],
+      files: {},
     }
   );
 
@@ -73,10 +71,11 @@ function elementUpdater<T extends Element>(
 }
 
 function extractFilesToUploadForElementAndSetPaths(
-  element: Element
+  element: Element,
+  files: FilesByPath
 ): UpdateResult<Element> {
   if (element.elementType === ElementType.Image) {
-    return elementUpdater<ImageElement>(element, [
+    return elementUpdater<ImageElement>(element, files, [
       {
         filePath: (element) => element.imageConfig.file,
         updater: (element, fileLocation) => ({
@@ -90,7 +89,7 @@ function extractFilesToUploadForElementAndSetPaths(
     ]);
   }
   if (element.elementType === ElementType.Model) {
-    return elementUpdater<ModelElement>(element, [
+    return elementUpdater<ModelElement>(element, files, [
       {
         filePath: (element) => element.modelConfig.file,
         updater: (element, fileLocation) => ({
@@ -106,23 +105,24 @@ function extractFilesToUploadForElementAndSetPaths(
 
   return {
     element,
-    files: [],
+    files: {},
   };
 }
 
 function extractFilesToUploadForChildrenAndSetPaths(
-  elements?: Optional<ElementNodes>
+  elements: Optional<ElementNodes> | undefined,
+  files: FilesByPath
 ): Acc {
-  const { childrenWithPathsReplaced, files } = Object.entries(
+  const { childrenWithPathsReplaced, filesToUpload } = Object.entries(
     elements || {}
   ).reduce(
-    (acc: Acc, [elementId, existingElement]) => {
-      const { files: childElementFiles, childrenWithPathsReplaced } =
+    (acc: Acc, [elementId, existingElement]): Acc => {
+      const { filesToUpload: childElementFiles, childrenWithPathsReplaced } =
         // recursive call - dig into children and extract files and set their paths
-        extractFilesToUploadForChildrenAndSetPaths(existingElement.children);
+        extractFilesToUploadForChildrenAndSetPaths(existingElement.children, files);
 
       const { element: updatedElement, files: elementFiles } =
-        extractFilesToUploadForElementAndSetPaths(existingElement);
+        extractFilesToUploadForElementAndSetPaths(existingElement, files);
 
       const element = {
         ...updatedElement,
@@ -130,34 +130,38 @@ function extractFilesToUploadForChildrenAndSetPaths(
       };
 
       return {
-        ...element,
         childrenWithPathsReplaced: {
           ...acc.childrenWithPathsReplaced,
           [elementId]: element,
         },
-        files: [...acc.files, ...elementFiles, ...childElementFiles],
+        filesToUpload: {
+          ...acc.filesToUpload,
+          ...elementFiles,
+          ...childElementFiles,
+        },
       };
     },
     {
       childrenWithPathsReplaced: {},
-      files: [],
+      filesToUpload: {},
     }
   );
 
   return {
-    files,
+    filesToUpload,
     childrenWithPathsReplaced,
   };
 }
 
 export function extractFilesToUploadForSceneAndSetPaths(
-  scene: SceneConfiguration
+  scene: SceneConfiguration,
+  files: FilesByPath
 ): {
-  files: File[];
+  filesToUpload: File[];
   sceneWithPathsForFiles: SceneConfiguration;
 } {
-  const { files, childrenWithPathsReplaced } =
-    extractFilesToUploadForChildrenAndSetPaths(scene.elements);
+  const { filesToUpload, childrenWithPathsReplaced } =
+    extractFilesToUploadForChildrenAndSetPaths(scene.elements, files);
 
   const sceneWithPathsForFiles: SceneConfiguration = {
     ...scene,
@@ -166,6 +170,6 @@ export function extractFilesToUploadForSceneAndSetPaths(
 
   return {
     sceneWithPathsForFiles,
-    files,
+    filesToUpload: Object.values(filesToUpload),
   };
 }

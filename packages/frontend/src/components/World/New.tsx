@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { applyUpdates, updateEnvironment } from "../../editorDb/mutations";
-import { EnvironmentConfig, SceneConfiguration } from "../../types/scene";
+import {
+  EnvironmentConfig,
+  SceneAndFiles,
+  SceneConfiguration,
+} from "../../types/scene";
 import { Element, ElementType } from "../../types/elements";
 import { FileLocationKind } from "../../types/shared";
 import SceneBuilder from "./Builder/SceneBuilder";
@@ -31,17 +35,18 @@ const marbleTheatorModel = (): Element => ({
   },
 });
 
-const makeNewScene = (): SceneConfiguration => {
-  return applyUpdates({}, [
+const makeNewScene = (): SceneAndFiles => ({
+  scene: applyUpdates({}, [
     updateEnvironment({ environment: randomEnvironment() }),
     // createNewElement({ elementConfig: marbleTheatorModel() }),
-  ]);
-};
+  ]),
+  files: {},
+});
 
 const New = () => {
-  const [scene, setScene] = useState<SceneConfiguration>(() => makeNewScene());
+  const [{ scene, files }] = useState<SceneAndFiles>(() => makeNewScene());
 
-  const builderState = useBuilder({ scene });
+  const builderState = useBuilder({ scene, files });
 
   return (
     <SceneBuilder

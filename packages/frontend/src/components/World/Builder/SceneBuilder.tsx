@@ -12,6 +12,7 @@ import ElementsTree from "../Elements/ElementsTree";
 import { AudioListener } from "three";
 import BuilderMenu from "./Menu";
 import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
+import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
 
 const rootPath: string[] = [];
 
@@ -32,14 +33,14 @@ const buildMenu = ({
     { link: "#", title: `Building ${elementName}`, kind: LinkKind.link },
     {
       action: handleSaveToIpfs,
-      title: "Save to ipfs",
+      title: savingScene ? "Saving..." : "Save to ipfs",
       kind: LinkKind.button,
       disabled: savingScene,
     },
   ];
 };
 
-const Scene = ({
+const SceneBuilder = ({
   builderState,
   scene,
   isNew,
@@ -102,7 +103,10 @@ const Scene = ({
           <SetRaycasterFromCamera raycasterRef={raycasterRef} />
           {scene && (
             <>
-              <DynamicEnvironment environment={scene.environment} />
+              <DynamicEnvironment
+                environment={scene.environment}
+                files={builderState.files}
+              />
               <Select onChange={builderState.selectTargetElement}>
                 <ElementsTree
                   elements={scene.elements}
@@ -118,9 +122,14 @@ const Scene = ({
         <div className="absolute right-5 top-20">
           <Leva fill hidden={!builderState.transforming.isTransforming} />
         </div>
+        {builderState.saveSceneStatus.saved && (
+          <SavedSceneSuccessModal
+            savedCid={builderState.saveSceneStatus.savedCid}
+          />
+        )}
       </div>
     </>
   );
 };
 
-export default Scene;
+export default SceneBuilder;
