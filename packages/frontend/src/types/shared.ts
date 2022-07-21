@@ -16,4 +16,5 @@ export type FileLocation =
   | {
       kind: FileLocationKind.local;
       path: string;
+      fromIpfsLocation?: string;
     };

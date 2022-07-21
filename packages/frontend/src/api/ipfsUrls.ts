@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FilesByPath } from "../types/scene";
 import { FileLocation, FileLocationKind, Optional } from "../types/shared";
 

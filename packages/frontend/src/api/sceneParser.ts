@@ -1,3 +1,4 @@
+import { merge } from "lodash";
 import {
   Element,
   ElementNodes,
@@ -38,13 +39,15 @@ type UpdateResult<T extends Element> = {
   element: T;
   files: FilesByPath;
 };
+
+type Updater<T extends Element> = {
+    filePath: (element: T) => Optional<FileLocation> | undefined;
+    updater: (updatedFileLocation: FileLocation | undefined) => Partial<T>;
+  }
 function elementUpdater<T extends Element>(
   element: T,
   files: FilesByPath,
-  updaters: {
-    filePath: (element: T) => Optional<FileLocation> | undefined;
-    updater: (element: T, updatedFileLocation: FileLocation | undefined) => T;
-  }[]
+  updaters: Updater<T>[]
 ): UpdateResult<T> {
   const result = updaters.reduce(
     (acc: UpdateResult<T>, updater): UpdateResult<T> => {
@@ -52,7 +55,7 @@ function elementUpdater<T extends Element>(
       if (!fileLocation) return acc;
 
       const { file, fileAsPath } = replaceFileWithPath(fileLocation, files);
-      const updatedElement = updater.updater(acc.element, fileAsPath);
+      const updatedElement = merge({}, acc.element, updater.updater(fileAsPath)) as T;
 
       const updatedFiles = file ? {...acc.files, [file.name]:file} : acc.files;
 
@@ -74,28 +77,23 @@ function extractFilesToUploadForElementAndSetPaths(
   element: Element,
   files: FilesByPath
 ): UpdateResult<Element> {
-  if (element.elementType === ElementType.Image) {
-    return elementUpdater<ImageElement>(element, files, [
+if (element.elementType === ElementType.Image) {
+    return elementUpdater(element, files, [
       {
         filePath: (element) => element.imageConfig.file,
-        updater: (element, fileLocation) => ({
-          ...element,
+        updater: (fileLocation) => ({
           imageConfig: {
-            ...element.imageConfig,
             file: fileLocation,
-          },
+          }
         }),
       },
     ]);
-  }
-  if (element.elementType === ElementType.Model) {
-    return elementUpdater<ModelElement>(element, files, [
+  } else if(element.elementType === ElementType.Model) {
+    return elementUpdater(element, files, [
       {
         filePath: (element) => element.modelConfig.file,
-        updater: (element, fileLocation) => ({
-          ...element,
+        updater: (fileLocation) => ({
           modelConfig: {
-            ...element.modelConfig,
             file: fileLocation,
           },
         }),
