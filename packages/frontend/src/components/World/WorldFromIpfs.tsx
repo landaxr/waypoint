@@ -2,59 +2,71 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import loadSceneFromIpfs from "../../api/ipfsLoader";
 import { SceneAndFiles } from "../../types/scene";
+import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
-import { useBuilder } from "./Builder/useBuilder";
 
 const WorldFromIpfs = ({ cid }: { cid: string }) => {
-  const [{ loadingState, sceneAndFiles }, setLoadedState] = useState<{
-    loadingState: {
-      loaded: boolean;
-      progress: number;
-    };
-    sceneAndFiles: SceneAndFiles;
+  const [{ loaded, progress, sceneAndFiles }, setLoadedState] = useState<{
+    loaded: boolean;
+    progress: number;
+    error?: boolean;
+    sceneAndFiles?: SceneAndFiles;
   }>({
-    loadingState: {
-      loaded: false,
-      progress: 0,
-    },
-    sceneAndFiles: {
-      scene: {},
-      files: {},
-    },
+    loaded: false,
+    progress: 0,
   });
 
   useEffect(() => {
     setLoadedState({
-      loadingState: {
-        loaded: false,
-        progress: 0,
-      },
-      sceneAndFiles: { scene: {}, files: {} },
+      loaded: false,
+      progress: 0,
     });
 
-    (async () => {
-      const { scene, files } = await loadSceneFromIpfs(cid);
-
-      setLoadedState({
+    const handleLoadProgressed = (progress: number) => {
+      setLoadedState((existing) => ({
+        ...existing,
         loadingState: {
+          progress: progress,
+          loaded: false,
+        },
+      }));
+    };
+
+    (async () => {
+      try {
+        const { scene, files } = await loadSceneFromIpfs(
+          cid,
+          handleLoadProgressed
+        );
+        setLoadedState({
           loaded: true,
           progress: 1,
-        },
-        sceneAndFiles: {
-          scene,
-          files,
-        },
-      });
+          sceneAndFiles: {
+            scene,
+            files,
+          },
+        });
+      } catch (e) {
+        console.error(e);
+
+        setLoadedState((existing) => ({
+          ...existing,
+          loaded: false,
+          progress: 0,
+          error: true,
+        }));
+      }
     })();
   }, [cid]);
 
-  const builderState = useBuilder({ sceneAndFiles, loadingState });
+    if (sceneAndFiles) {
+      return <SceneBuilder sceneAndFiles={sceneAndFiles} worldId={cid} />;
+    }
 
   return (
-    <SceneBuilder
-      builderState={builderState}
-      scene={builderState.scene}
-      worldId={cid}
+    <LoadingScreen
+      loadingProgress={progress}
+      title={`Loading world from IPFS: ipfs://${cid}`}
     />
   );
 };

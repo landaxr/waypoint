@@ -7,7 +7,6 @@ import {
 import { SceneAndFiles } from "../../types/scene";
 import { FileLocationKindLocal, FileLocationLocal } from "../../types/shared";
 import SceneBuilder from "./Builder/SceneBuilder";
-import { useBuilder } from "./Builder/useBuilder";
 
 const randomEnvironmentFile = (): { file: FileLocationLocal; id: string } => {
   // todo: randomize
@@ -38,23 +37,10 @@ const makeNewScene = (): SceneAndFiles => {
   };
 };
 
-const loadingState = {
-  loaded: true,
-  progress: 1,
-};
-
 const New = () => {
   const [sceneAndFiles] = useState<SceneAndFiles>(() => makeNewScene());
 
-  const builderState = useBuilder({ sceneAndFiles, loadingState });
-
-  return (
-    <SceneBuilder
-      builderState={builderState}
-      scene={builderState.scene}
-      isNew
-    />
-  );
+  return <SceneBuilder sceneAndFiles={sceneAndFiles} isNew />;
 };
 
 export default New;

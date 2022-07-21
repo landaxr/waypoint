@@ -3,9 +3,9 @@ import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
 import { Leva } from "leva";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { SceneConfiguration } from "../../../types/scene";
+import { SceneAndFiles } from "../../../types/scene";
 import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
-import { BuilderState } from "./useBuilder";
+import { useBuilder } from "./useBuilder";
 import Controls from "../Controls";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";
@@ -41,16 +41,16 @@ const buildMenu = ({
 };
 
 const SceneBuilder = ({
-  builderState,
-  scene,
+  sceneAndFiles,
   isNew,
   worldId,
 }: {
-  builderState: BuilderState;
-  scene: SceneConfiguration;
+  sceneAndFiles: SceneAndFiles;
   isNew?: boolean;
   worldId?: string;
 }) => {
+  const builderState = useBuilder({ sceneAndFiles });
+
   const [hasClicked, setHasClicked] = useState(false);
 
   const [, setListener] = useState<AudioListener>();
@@ -101,22 +101,20 @@ const SceneBuilder = ({
         <BuilderMenu />
         <Canvas onClick={onClicked}>
           <SetRaycasterFromCamera raycasterRef={raycasterRef} />
-          {scene && (
-            <>
-              <DynamicEnvironment
-                environment={scene.environment}
-                files={builderState.files}
+          <>
+            <DynamicEnvironment
+              environment={builderState.scene.environment}
+              files={builderState.files}
+            />
+            <Select onChange={builderState.selectTargetElement}>
+              <ElementsTree
+                elements={builderState.scene.elements}
+                parentId={null}
+                parentPath={rootPath}
+                builderState={builderState}
               />
-              <Select onChange={builderState.selectTargetElement}>
-                <ElementsTree
-                  elements={scene.elements}
-                  parentId={null}
-                  parentPath={rootPath}
-                  builderState={builderState}
-                />
-              </Select>
-            </>
-          )}
+            </Select>
+          </>
           <Controls {...builderState} />
         </Canvas>
         <div className="absolute right-5 top-20">

@@ -83,7 +83,10 @@ async function storedFilesToLocal(
 
 // function localFilesToStored
 
-const loadSceneFromIpfs = async (cid: string): Promise<SceneAndFiles> => {
+const loadSceneFromIpfs = async (
+  cid: string,
+  handleProgress: (progress: number) => void
+): Promise<SceneAndFiles> => {
   const client = makeWeb3StorageClient();
 
   const res = await client.get(cid);

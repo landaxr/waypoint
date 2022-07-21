@@ -45,13 +45,8 @@ const toIVector3 = (vector3: Vector3 | Euler): IVector3 => ({
 
 export const useBuilder = ({
   sceneAndFiles,
-  loadingState,
 }: {
   sceneAndFiles: SceneAndFiles;
-  loadingState: {
-    loaded: boolean;
-    progress: number;
-  };
 }) => {
   const raycasterRef = useRef<Raycaster>(new Raycaster());
 
