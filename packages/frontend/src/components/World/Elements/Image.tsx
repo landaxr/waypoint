@@ -14,29 +14,28 @@ const Image = ({
 }) => {
   const texture = useLoader(TextureLoader, fileUrl);
 
-  const [dimensions, setDimensions] = useState<[number, number]>(() => [0,1]);
+  const [dimensions, setDimensions] = useState<[number, number]>(() => [0, 1]);
 
   useEffect(() => {
     if (texture) {
       const { height, width } = texture.image as
         | HTMLImageElement
         | HTMLCanvasElement;
-      const aspect = width/height;
-    
-      setDimensions([
-        aspect,
-        1
-      ])
+      const aspect = width / height;
+
+      setDimensions([aspect, 1]);
     } else {
     }
   }, [texture]);
 
-  if (!texture)return null;
+  if (!texture) return null;
 
-  return <mesh>
-    <planeBufferGeometry args={dimensions} />
-  <meshBasicMaterial map={texture} />
-  </mesh>
+  return (
+    <mesh>
+      <planeBufferGeometry args={dimensions} />
+      <meshBasicMaterial map={texture} />
+    </mesh>
+  );
 };
 
 const ImageNullGuard = ({

@@ -13,6 +13,7 @@ import {
   ImageElement,
   ModelElement,
   Transform,
+  VideoElement,
 } from "../../../types/elements";
 import { FileLocationKindLocal, Optional } from "../../../types/shared";
 
@@ -65,6 +66,22 @@ const newFileToElementConfig = ({
         },
       },
     };
+    return result;
+  } else if (fileType === FileType.video) {
+    const result: VideoElement = {
+      elementType: ElementType.Video,
+      transform,
+      videoConfig: {
+        file: {
+          original: {
+          fileId: file.name
+          }
+        }
+      }
+    }
+  
+    console.log('added', result);
+  
     return result;
   }
 

@@ -4,6 +4,7 @@ import Model from "./Model";
 import Image from "./Image";
 import { useMemo } from "react";
 import { BuilderState } from "../Builder/useBuilder";
+import Video from "./Video";
 
 const emptyTransform: Transform = {};
 
@@ -64,6 +65,9 @@ const ElementNode = ({
         )}
         {element.elementType === ElementType.Image && (
           <Image config={element.imageConfig} files={builderState.files} />
+        )}
+        {element.elementType === ElementType.Video && (
+          <Video config={element.videoConfig} files={builderState.files} />
         )}
 
         {element.children && (
