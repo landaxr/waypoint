@@ -74,14 +74,14 @@ const newFileToElementConfig = ({
       videoConfig: {
         file: {
           original: {
-          fileId: file.name
-          }
-        }
-      }
-    }
-  
-    console.log('added', result);
-  
+            fileId: file.name,
+          },
+        },
+      },
+    };
+
+    console.log("added", result);
+
     return result;
   }
 

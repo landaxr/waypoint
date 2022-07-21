@@ -1,18 +1,18 @@
-import { Select } from "@react-three/drei";
+import { Select, useContextBridge } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
 import { Leva } from "leva";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SceneAndFiles } from "../../../types/scene";
 import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
 import { useBuilder } from "./useBuilder";
 import Controls from "../Controls";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";
-import { AudioListener } from "three";
 import BuilderMenu from "./Menu";
 import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
 import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
+import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 
 const rootPath: string[] = [];
 
@@ -51,17 +51,6 @@ const SceneBuilder = ({
 }) => {
   const builderState = useBuilder({ sceneAndFiles });
 
-  const [hasClicked, setHasClicked] = useState(false);
-
-  const [, setListener] = useState<AudioListener>();
-
-  const onClicked = useCallback(() => {
-    if (hasClicked) return;
-    setHasClicked(true);
-
-    setListener(new AudioListener());
-  }, [hasClicked]);
-
   const cursorClass = useMemo(() => {
     return "cursor-pointer";
   }, []);
@@ -87,6 +76,8 @@ const SceneBuilder = ({
     worldId,
   ]);
 
+  const ContextBridge = useContextBridge(ClickedAndAudioContext);
+
   return (
     <>
       <Navbar centerItems={menuItems} />
@@ -99,23 +90,25 @@ const SceneBuilder = ({
       >
         <input type="hidden" {...getInputProps()} />
         <BuilderMenu />
-        <Canvas onClick={onClicked}>
-          <SetRaycasterFromCamera raycasterRef={raycasterRef} />
-          <>
-            <DynamicEnvironment
-              environment={builderState.scene.environment}
-              files={builderState.files}
-            />
-            <Select onChange={builderState.selectTargetElement}>
-              <ElementsTree
-                elements={builderState.scene.elements}
-                parentId={null}
-                parentPath={rootPath}
-                builderState={builderState}
+        <Canvas>
+          <ContextBridge>
+            <SetRaycasterFromCamera raycasterRef={raycasterRef} />
+            <>
+              <DynamicEnvironment
+                environment={builderState.scene.environment}
+                files={builderState.files}
               />
-            </Select>
-          </>
-          <Controls {...builderState} />
+              <Select onChange={builderState.selectTargetElement}>
+                <ElementsTree
+                  elements={builderState.scene.elements}
+                  parentId={null}
+                  parentPath={rootPath}
+                  builderState={builderState}
+                />
+              </Select>
+            </>
+            <Controls {...builderState} />
+          </ContextBridge>
         </Canvas>
         <div className="absolute right-5 top-20">
           <Leva fill hidden={!builderState.transforming.isTransforming} />

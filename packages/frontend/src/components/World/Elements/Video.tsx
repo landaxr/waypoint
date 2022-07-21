@@ -1,10 +1,10 @@
 import { VideoConfig } from "../../../types/elements";
 import { useHttpsUrl } from "../../../api/ipfsUrls";
 import { SceneFilesLocal } from "../../../types/shared";
-import { useLoader } from "@react-three/fiber";
-import { Texture, TextureLoader, VideoTexture } from "three";
-import { SyntheticEvent, useCallback, useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { Texture, VideoTexture } from "three";
+import { SyntheticEvent, useCallback, useContext, useEffect, useState } from "react";
+import HtmlWrapper from "./HtmlWrapper";
+import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 
 const VideoHtmlElement = ({
   url,
@@ -19,34 +19,35 @@ const VideoHtmlElement = ({
 }) => {
   const onLoaded = useCallback(
     (e: SyntheticEvent<HTMLVideoElement>) => {
+      console.log("video loaded");
       const { videoHeight, videoWidth } = e.target as HTMLVideoElement;
 
-      handleDimensionsDetermined([videoWidth, videoHeight]);
+      handleDimensionsDetermined([videoWidth / videoHeight, 1]);
     },
     [handleDimensionsDetermined]
   );
 
+  console.log("added wrapper");
+
   return (
-    <>
-      {createPortal(
-        <video
-          style={{ display: "none" }}
-          crossOrigin="anonymous"
-          autoPlay={play}
-          controls
-          playsInline
-          loop
-          // fires when first frame of video has been loaded
-          onLoadedData={onLoaded}
-          preload={"auto"}
-          // preload="metadata"
-          muted
-          src={url}
-          ref={setVideoElement}
-        ></video>,
-        document.body
-      )}
-    </>
+    <HtmlWrapper>
+      <video
+        style={{ position: "absolute", zIndex: 100 }}
+        crossOrigin="anonymous"
+        autoPlay={play}
+        controls
+        playsInline
+        loop
+        // fires when first frame of video has been loaded
+        onLoadedData={onLoaded}
+        onLoadedMetadata={onLoaded}
+        preload="auto"
+        // preload="metadata"
+        ref={setVideoElement}
+      >
+        <source src={url} type="video/mp4" />
+      </video>
+    </HtmlWrapper>
   );
 };
 
@@ -63,7 +64,17 @@ const Video = ({
 
   const [dimensions, setDimensions] = useState<[number, number]>(() => [1, 1]);
 
-  const [play, setPlay] = useState(false);
+  const {hasClicked: play, listener}= useContext(ClickedAndAudioContext);
+
+  useEffect(() => {
+    if (videoElement && play) {
+      videoElement.play();
+
+      return () => {
+        videoElement.pause();
+      };
+    }
+  }, [videoElement, play]);
 
   useEffect(() => {
     if (videoElement) {
@@ -71,14 +82,6 @@ const Video = ({
       setTexture(texture);
     }
   }, [videoElement]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setPlay(true);
-    }, 100);
-  }, []);
-
-  if (!texture) return null;
 
   return (
     <>
@@ -109,7 +112,12 @@ const VideoNullGuard = ({
 
   if (!fileUrl) return null;
 
-  return <Video config={config} fileUrl={fileUrl} />;
+  return (
+    <Video
+      config={config}
+      fileUrl={fileUrl}
+    />
+  );
 };
 
 export default VideoNullGuard;

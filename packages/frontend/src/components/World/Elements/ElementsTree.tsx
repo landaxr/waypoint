@@ -67,7 +67,10 @@ const ElementNode = ({
           <Image config={element.imageConfig} files={builderState.files} />
         )}
         {element.elementType === ElementType.Video && (
-          <Video config={element.videoConfig} files={builderState.files} />
+          <Video
+            config={element.videoConfig}
+            files={builderState.files}
+          />
         )}
 
         {element.children && (
