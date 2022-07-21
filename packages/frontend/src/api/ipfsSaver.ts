@@ -1,10 +1,11 @@
-import { FilesByPath, SceneConfiguration } from "../types/scene";
-import { extractFilesToUploadForSceneAndSetPaths} from "./sceneParser";
+import { SceneConfiguration, StoredSceneAndFiles } from "../types/scene";
+import { SceneFilesLocal } from "../types/shared";
+import { extractFilesToUploadAndLocations } from "./sceneParser";
 import { makeWeb3StorageClient } from "./web3Storage";
 
 export const metadataFileName = "metadata.json";
 
-const createSceneJsonFile = (scene: SceneConfiguration) => {
+const createSceneJsonFile = (scene: StoredSceneAndFiles) => {
   const fileContents = JSON.stringify(scene);
 
   const blob = new Blob([fileContents], { type: "application/json" });
@@ -16,26 +17,29 @@ const createSceneJsonFile = (scene: SceneConfiguration) => {
 
 export const saveSceneToIpfs = async ({
   scene,
-files
+  files,
 }: {
   scene: SceneConfiguration;
-files: FilesByPath
+  files: SceneFilesLocal;
 }) => {
-  const { filesToUpload, sceneWithPathsForFiles } =
-    extractFilesToUploadForSceneAndSetPaths(scene, files);
+  const { fileLocations: storedFileLocations, toUpload } =
+    extractFilesToUploadAndLocations({scene, files});
 
-  const sceneConfigMetadata = createSceneJsonFile(sceneWithPathsForFiles);
+  const storedSceneAndFiles: StoredSceneAndFiles = {
+    scene,
+    files: storedFileLocations
+  };
+
+  const sceneConfigMetadata = createSceneJsonFile(storedSceneAndFiles);
 
   console.log({
     files,
-    filesToUpload,
     scene,
-    sceneWithPathsForFiles,
+    storedFileLocations,
+  toUpload
   });
 
-  console.log("uploading files...");
-
-  const allFiles = [sceneConfigMetadata, ...filesToUpload];
+  const allFiles = [sceneConfigMetadata, ...toUpload];
 
   const client = makeWeb3StorageClient();
 

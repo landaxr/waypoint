@@ -1,7 +1,7 @@
 import { ModelConfig } from "../../../types/elements";
 import { useGLTF } from "@react-three/drei";
 import { useHttpsUrl } from "../../../api/ipfsUrls";
-import { FilesByPath } from "../../../types/scene";
+import { SceneFilesLocal } from "../../../types/shared";
 
 const Model = ({
   config,
@@ -20,7 +20,7 @@ const ModelNullGuard = ({
   files,
 }: {
   config: ModelConfig;
-  files: FilesByPath;
+  files: SceneFilesLocal;
 }) => {
   const fileUrl = useHttpsUrl(config.file, files);
 

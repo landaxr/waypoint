@@ -1,12 +1,13 @@
 import { Environment } from "@react-three/drei";
 import { useHttpsUrl } from "../../api/ipfsUrls";
-import { FilesByPath, SceneConfiguration } from "../../types/scene";
+import { SceneConfiguration } from "../../types/scene";
+import { SceneFilesLocal } from "../../types/shared";
 
 const DynamicEnvironment = ({
   environment,
   files,
 }: Pick<SceneConfiguration, "environment"> & {
-  files: FilesByPath;
+  files: SceneFilesLocal;
 }) => {
   const fileUrl = useHttpsUrl(environment?.environmentMap, files);
 

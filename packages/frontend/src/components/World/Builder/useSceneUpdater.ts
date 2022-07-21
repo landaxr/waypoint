@@ -5,6 +5,7 @@ import {
   updateElement,
   addElement,
   SceneUpdateFn,
+  addFile,
 } from "../../../editorDb/mutations";
 import { newId } from "../../../editorDb/utils";
 import {
@@ -13,7 +14,11 @@ import {
   ModelElement,
   Transform,
 } from "../../../types/elements";
-import { FileLocationKind, Optional } from "../../../types/shared";
+import {
+  FileLocationKindLocal,
+  FileLocationKindStored,
+  Optional,
+} from "../../../types/shared";
 
 enum FileType {
   image = "image",
@@ -32,7 +37,15 @@ const getFieType = (file: File) => {
   alert("Unkown file type");
 };
 
-const newFileToElementConfig = (file: File, transform: Optional<Transform>) => {
+const newFileToElementConfig = ({
+  file,
+  transform,
+  fileId,
+}: {
+  file: File;
+  transform: Optional<Transform>;
+  fileId: string;
+}) => {
   const fileType = getFieType(file);
 
   if (fileType === FileType.glb) {
@@ -41,8 +54,7 @@ const newFileToElementConfig = (file: File, transform: Optional<Transform>) => {
       transform,
       modelConfig: {
         file: {
-          kind: FileLocationKind.local,
-          path: file.name,
+          fileId: fileId,
         },
       },
     };
@@ -53,8 +65,7 @@ const newFileToElementConfig = (file: File, transform: Optional<Transform>) => {
       transform,
       imageConfig: {
         file: {
-          kind: FileLocationKind.local,
-          path: file.name,
+          fileId: file.name,
         },
       },
     };
@@ -108,20 +119,29 @@ export const useSceneUpdater = ({
     }): string => {
       const elementId = newId();
       updateScene(({ scene, files }) => {
-        const path = file.name;
+        const fileId = file.name;
 
-        const elementConfig = newFileToElementConfig(file, transform);
+        const elementConfig = newFileToElementConfig({
+          file,
+          transform,
+          fileId,
+        });
 
         const updatedScene = elementConfig
           ? addElement({ elementConfig, id: elementId })(scene)
           : scene;
 
+        const updatedFiles = addFile({
+          file: {
+            kind: FileLocationKindLocal.uploaded,
+            file,
+          },
+          id: fileId,
+        })(files);
+
         return {
           scene: updatedScene,
-          files: {
-            ...files,
-            [path]: file,
-          },
+          files: updatedFiles,
         };
       });
       return elementId;

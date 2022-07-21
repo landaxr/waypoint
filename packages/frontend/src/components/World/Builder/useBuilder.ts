@@ -3,11 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Euler, Object3D, Raycaster, Vector3 } from "three";
 import { saveSceneToIpfs } from "../../../api/ipfsSaver";
 import { Transform, Element, IVector3 } from "../../../types/elements";
-import {
-  FilesByPath,
-  SceneAndFiles,
-  SceneConfiguration,
-} from "../../../types/scene";
+import { SceneAndFiles } from "../../../types/scene";
 import { Optional } from "../../../types/shared";
 import { isElementUserData } from "../Elements/ElementsTree";
 import useAddFile from "./useAddFile";
@@ -67,7 +63,10 @@ export const useBuilder = (sceneAndFiles: SceneAndFiles) => {
       saving: true,
     });
     try {
-      const cid = await saveSceneToIpfs({ scene: sceneWithUpdates, files: filesWithUpdates });
+      const cid = await saveSceneToIpfs({
+        scene: sceneWithUpdates,
+        files: filesWithUpdates,
+      });
 
       setSaveSceneStatus({
         savedCid: cid,

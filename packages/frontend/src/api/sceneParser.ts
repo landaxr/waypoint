@@ -1,173 +1,128 @@
-import { merge } from "lodash";
+import { flatten, pick } from "lodash";
+import { Element, ElementType } from "../types/elements";
+import { EnvironmentConfig, SceneAndFiles, SceneConfiguration } from "../types/scene";
 import {
-  Element,
-  ElementNodes,
-  ElementType,
-  ImageElement,
-  ModelElement,
-} from "../types/elements";
-import { FilesByPath, SceneConfiguration } from "../types/scene";
-import { FileLocation, FileLocationKind, Optional } from "../types/shared";
+  FileLocationKindStored,
+  SceneFilesLocal,
+  FileLocationStored,
+  FileLocationLocal,
+  SceneFilesStored,
+  FileLocationKindLocal,
+} from "../types/shared";
+
+function filterUndefined<T>(ids: (T | undefined)[]): T[] {
+  return ids.filter((x) => x !== null && typeof x !== "undefined") as T[];
+}
+
+function toStoredFileLocationWithFileToUpload(
+  fileLocation: FileLocationLocal
+): {
+  location: FileLocationStored;
+  fileToUpload: File | undefined;
+} {
+  if (fileLocation.kind === FileLocationKindLocal.https)
+    return {
+      location: {
+        kind: FileLocationKindStored.https,
+        url: fileLocation.url,
+      },
+      fileToUpload: undefined,
+    };
+  if (fileLocation.kind === FileLocationKindLocal.ipfs)
+    return {
+      location: {
+        kind: FileLocationKindStored.ipfs,
+        cid: fileLocation.cid,
+        url: fileLocation.url,
+      },
+      fileToUpload: undefined,
+    };
+
+  // last case - assume its an uploaded file
+  return {
+    location: {
+      kind: FileLocationKindStored.local,
+      path: fileLocation.file.name,
+    },
+    fileToUpload: fileLocation.file,
+  };
+}
+
+function getElementFileIds(element: Element): string[] {
+  if (element.elementType === ElementType.Image) {
+    return filterUndefined([element.imageConfig.file?.fileId]);
+  }
+  if (element.elementType === ElementType.Model) {
+    return filterUndefined([element.modelConfig.file?.fileId]);
+  }
+
+  return [];
+}
+
+function getElementAndChildrenFileIds(element: Element): string[] {
+  const childFileIds = flatten(
+    Object.values(element.children || {}).map((child) =>
+      getElementAndChildrenFileIds(child)
+    )
+  );
+
+  const elementFileIds = getElementFileIds(element);
+
+  return [...flatten(childFileIds), ...flatten(elementFileIds)];
+}
+
+function getFileIdsInEnvironment(environment: EnvironmentConfig | undefined | null) {
+    return filterUndefined([environment?.environmentMap?.fileId]);
+}
 
 type Acc = {
-  childrenWithPathsReplaced: ElementNodes;
-  filesToUpload: FilesByPath;
-};
-function replaceFileWithPath(
-  fileLocation: FileLocation | undefined,
-  files: FilesByPath
-): {
-  fileAsPath: FileLocation | undefined;
-  file: File | undefined;
-} {
-  // todo: fetch https files from clound and bundle into ipfs - or do we even need https based files?
-
-  if (fileLocation?.kind === FileLocationKind.local) {
-    return {
-      fileAsPath: fileLocation,
-      file: files[fileLocation.path],
-    };
-  }
-
-  return {
-    fileAsPath: fileLocation,
-    file: undefined,
-  };
-}
-
-type UpdateResult<T extends Element> = {
-  element: T;
-  files: FilesByPath;
+  fileLocations: SceneFilesStored;
+  toUpload: File[];
 };
 
-type Updater<T extends Element> = {
-    filePath: (element: T) => Optional<FileLocation> | undefined;
-    updater: (updatedFileLocation: FileLocation | undefined) => Partial<T>;
-  }
-function elementUpdater<T extends Element>(
-  element: T,
-  files: FilesByPath,
-  updaters: Updater<T>[]
-): UpdateResult<T> {
-  const result = updaters.reduce(
-    (acc: UpdateResult<T>, updater): UpdateResult<T> => {
-      const fileLocation = updater.filePath(acc.element);
-      if (!fileLocation) return acc;
 
-      const { file, fileAsPath } = replaceFileWithPath(fileLocation, files);
-      const updatedElement = merge({}, acc.element, updater.updater(fileAsPath)) as T;
 
-      const updatedFiles = file ? {...acc.files, [file.name]:file} : acc.files;
-
-      return {
-        element: updatedElement,
-        files: updatedFiles,
-      };
-    },
-    {
-      element: element,
-      files: {},
-    }
-  );
-
-  return result;
-}
-
-function extractFilesToUploadForElementAndSetPaths(
-  element: Element,
-  files: FilesByPath
-): UpdateResult<Element> {
-if (element.elementType === ElementType.Image) {
-    return elementUpdater(element, files, [
-      {
-        filePath: (element) => element.imageConfig.file,
-        updater: (fileLocation) => ({
-          imageConfig: {
-            file: fileLocation,
-          }
-        }),
-      },
-    ]);
-  } else if(element.elementType === ElementType.Model) {
-    return elementUpdater(element, files, [
-      {
-        filePath: (element) => element.modelConfig.file,
-        updater: (fileLocation) => ({
-          modelConfig: {
-            file: fileLocation,
-          },
-        }),
-      },
-    ]);
-  }
-
-  return {
-    element,
-    files: {},
-  };
-}
-
-function extractFilesToUploadForChildrenAndSetPaths(
-  elements: Optional<ElementNodes> | undefined,
-  files: FilesByPath
-): Acc {
-  const { childrenWithPathsReplaced, filesToUpload } = Object.entries(
-    elements || {}
-  ).reduce(
-    (acc: Acc, [elementId, existingElement]): Acc => {
-      const { filesToUpload: childElementFiles, childrenWithPathsReplaced } =
-        // recursive call - dig into children and extract files and set their paths
-        extractFilesToUploadForChildrenAndSetPaths(existingElement.children, files);
-
-      const { element: updatedElement, files: elementFiles } =
-        extractFilesToUploadForElementAndSetPaths(existingElement, files);
-
-      const element = {
-        ...updatedElement,
-        children: childrenWithPathsReplaced,
-      };
-
-      return {
-        childrenWithPathsReplaced: {
-          ...acc.childrenWithPathsReplaced,
-          [elementId]: element,
-        },
-        filesToUpload: {
-          ...acc.filesToUpload,
-          ...elementFiles,
-          ...childElementFiles,
-        },
-      };
-    },
-    {
-      childrenWithPathsReplaced: {},
-      filesToUpload: {},
-    }
-  );
-
-  return {
-    filesToUpload,
-    childrenWithPathsReplaced,
-  };
-}
-
-export function extractFilesToUploadForSceneAndSetPaths(
+function extractFilesToUploadAndConfigForChildren(
   scene: SceneConfiguration,
-  files: FilesByPath
-): {
-  filesToUpload: File[];
-  sceneWithPathsForFiles: SceneConfiguration;
-} {
-  const { filesToUpload, childrenWithPathsReplaced } =
-    extractFilesToUploadForChildrenAndSetPaths(scene.elements, files);
+  fileLocations: SceneFilesLocal
+): Acc {
+  const fileIdsInScene = flatten(
+    Object.values(scene.elements || {}).map((element) =>
+      getElementAndChildrenFileIds(element)
+    )
+  );
 
-  const sceneWithPathsForFiles: SceneConfiguration = {
-    ...scene,
-    elements: childrenWithPathsReplaced,
-  };
+  const fileIdsInEnvironment = getFileIdsInEnvironment(scene.environment);
 
-  return {
-    sceneWithPathsForFiles,
-    filesToUpload: Object.values(filesToUpload),
-  };
+  const fileLocationsToSave = pick(fileLocations, [...fileIdsInScene, ...fileIdsInEnvironment]);
+
+  return Object.entries(fileLocationsToSave).reduce(
+    ({ fileLocations, toUpload }: Acc, [id, fileLocation]) => {
+      const { fileToUpload, location } =
+        toStoredFileLocationWithFileToUpload(fileLocation);
+
+      const updatedFiles = fileToUpload
+        ? [...toUpload, fileToUpload]
+        : toUpload;
+
+      return {
+        fileLocations: {
+          ...fileLocations,
+          [id]: location,
+        },
+        toUpload: updatedFiles,
+      };
+    },
+    {
+      fileLocations: {},
+      toUpload: [],
+    }
+  );
+}
+
+export function extractFilesToUploadAndLocations({
+  scene,
+  files,
+}: SceneAndFiles) {
+  return extractFilesToUploadAndConfigForChildren(scene, files);
 }

@@ -1,7 +1,7 @@
 import { ImageConfig } from "../../../types/elements";
 import { Image as DreiImage } from "@react-three/drei";
 import { useHttpsUrl } from "../../../api/ipfsUrls";
-import { FilesByPath } from "../../../types/scene";
+import { SceneFilesLocal } from "../../../types/shared";
 
 const Image = ({
   config,
@@ -18,7 +18,7 @@ const ImageNullGuard = ({
   files,
 }: {
   config: ImageConfig;
-  files: FilesByPath;
+  files: SceneFilesLocal;
 }) => {
   const fileUrl = useHttpsUrl(config.file, files);
 

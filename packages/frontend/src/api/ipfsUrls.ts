@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import { FilesByPath } from "../types/scene";
-import { FileLocation, FileLocationKind, Optional } from "../types/shared";
+import {
+  FileLocationKindLocal,
+  FileLocationLocal,
+  SceneFilesLocal,
+} from "../types/shared";
+import { FileReference, Optional } from "../types/shared";
 
 function convertURIToHTTPSInner({
   url,
@@ -60,24 +64,25 @@ function readFileContents(file: File) {
 }
 
 export const useHttpsUrl = (
-  fileLocation: Optional<FileLocation> | undefined,
-  files: FilesByPath
+  fileLocation: Optional<FileReference> | undefined,
+  files: SceneFilesLocal
 ) => {
   const [result, setResult] = useState<string | null>(null);
 
-  const [fileForElement, setFileForElement] = useState<File | null>();
-
-  useEffect(() => {
-    if (fileLocation?.kind === FileLocationKind.local) {
-      const name = fileLocation.path;
-      setFileForElement(files[name] || null);
-    } else {
-      setFileForElement(null);
-    }
-  }, [fileLocation, files]);
+  const [fileForElement, setFileForElement] =
+    useState<FileLocationLocal | null>();
 
   useEffect(() => {
     if (!fileLocation) {
+      setFileForElement(null);
+      return;
+    }
+
+    setFileForElement(files[fileLocation.fileId]);
+  }, [fileLocation, files]);
+
+  useEffect(() => {
+    if (!fileForElement) {
       setResult(null);
       return;
     }
@@ -95,19 +100,17 @@ export const useHttpsUrl = (
       }
     };
 
-    const { kind } = fileLocation;
+    const { kind } = fileForElement;
 
-    if (kind === FileLocationKind.ipfs) {
-      setResult(convertURIToHTTPS({ url: fileLocation.url }));
-    } else if (kind === FileLocationKind.https) {
-      setResult(fileLocation.url);
-    } else if (kind === FileLocationKind.local) {
-      const file = fileForElement;
-      if (file) {
-        setFileFromBlob(file);
-      } else setResult(null);
+    if (kind === FileLocationKindLocal.https) {
+      setResult(fileForElement.url);
+    } else if (
+      kind === FileLocationKindLocal.uploaded ||
+      kind === FileLocationKindLocal.ipfs
+    ) {
+      setFileFromBlob(fileForElement.file);
     }
-  }, [fileLocation, fileForElement]);
+  }, [fileForElement]);
 
   return result;
 };
