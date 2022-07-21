@@ -1,7 +1,9 @@
 import { ImageConfig } from "../../../types/elements";
-import { Image as DreiImage } from "@react-three/drei";
 import { useHttpsUrl } from "../../../api/ipfsUrls";
 import { SceneFilesLocal } from "../../../types/shared";
+import { useLoader } from "@react-three/fiber";
+import { TextureLoader } from "three";
+import { useEffect, useState } from "react";
 
 const Image = ({
   config,
@@ -10,7 +12,31 @@ const Image = ({
   config: ImageConfig;
   fileUrl: string;
 }) => {
-  return <DreiImage url={fileUrl} />;
+  const texture = useLoader(TextureLoader, fileUrl);
+
+  const [dimensions, setDimensions] = useState<[number, number]>(() => [0,1]);
+
+  useEffect(() => {
+    if (texture) {
+      const { height, width } = texture.image as
+        | HTMLImageElement
+        | HTMLCanvasElement;
+      const aspect = width/height;
+    
+      setDimensions([
+        aspect,
+        1
+      ])
+    } else {
+    }
+  }, [texture]);
+
+  if (!texture)return null;
+
+  return <mesh>
+    <planeBufferGeometry args={dimensions} />
+  <meshBasicMaterial map={texture} />
+  </mesh>
 };
 
 const ImageNullGuard = ({
