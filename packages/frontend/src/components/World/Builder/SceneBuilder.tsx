@@ -3,52 +3,57 @@ import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
 import { Leva } from "leva";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Camera } from "three";
-import { SceneConfiguration } from "../../../types/scene";
+import { SceneAndFiles } from "../../../types/scene";
 import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
-import { BuilderState } from "./useBuilder";
+import { useBuilder } from "./useBuilder";
 import Controls from "../Controls";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";
 import { AudioListener } from "three";
 import BuilderMenu from "./Menu";
 import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
+import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
 
 const rootPath: string[] = [];
 
 const buildMenu = ({
   isNew,
   worldId,
+  handleSaveToIpfs,
+  savingScene,
 }: {
   isNew?: boolean;
   worldId?: string;
+  handleSaveToIpfs: () => void;
+  savingScene: boolean;
 }): MenuItem[] => {
   const elementName = isNew ? "Draft World" : worldId || "World";
 
   return [
     { link: "#", title: `Building ${elementName}`, kind: LinkKind.link },
     {
-      action: () => alert("clicked"),
-      title: "Save to ipfs",
+      action: handleSaveToIpfs,
+      title: savingScene ? "Saving to IPFS" : "Save to IPFS",
       kind: LinkKind.button,
+      disabled: savingScene,
     },
   ];
 };
 
-const Scene = ({
-  builderState,
-  scene,
+const SceneBuilder = ({
+  sceneAndFiles,
   isNew,
   worldId,
 }: {
-  builderState: BuilderState;
-  scene: SceneConfiguration;
+  sceneAndFiles: SceneAndFiles;
   isNew?: boolean;
   worldId?: string;
 }) => {
+  const builderState = useBuilder({ sceneAndFiles });
+
   const [hasClicked, setHasClicked] = useState(false);
 
-  const [listener, setListener] = useState<AudioListener>();
+  const [, setListener] = useState<AudioListener>();
 
   const onClicked = useCallback(() => {
     if (hasClicked) return;
@@ -56,8 +61,6 @@ const Scene = ({
 
     setListener(new AudioListener());
   }, [hasClicked]);
-
-  const [camera, setCamera] = useState<Camera>();
 
   const cursorClass = useMemo(() => {
     return "cursor-pointer";
@@ -69,16 +72,28 @@ const Scene = ({
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
-    setMenuItems(buildMenu({ isNew, worldId }));
-  }, [isNew, worldId]);
+    setMenuItems(
+      buildMenu({
+        isNew,
+        worldId,
+        handleSaveToIpfs: builderState.handleSaveToIpfs,
+        savingScene: builderState.saveSceneStatus.saving,
+      })
+    );
+  }, [
+    builderState.handleSaveToIpfs,
+    builderState.saveSceneStatus.saving,
+    isNew,
+    worldId,
+  ]);
 
   return (
     <>
       <Navbar centerItems={menuItems} />
       <div
         className={clsx("w-screen h-screen", cursorClass, {
-          ["border-2"]: isDragging,
-          ["border-black"]: isDragging,
+          "border-2": isDragging,
+          "border-black": isDragging,
         })}
         {...getRootProps()}
       >
@@ -86,27 +101,33 @@ const Scene = ({
         <BuilderMenu />
         <Canvas onClick={onClicked}>
           <SetRaycasterFromCamera raycasterRef={raycasterRef} />
-          {scene && (
-            <>
-              <DynamicEnvironment environment={scene.environment} />
-              <Select onChange={builderState.selectTargetElement}>
-                <ElementsTree
-                  elements={scene.elements}
-                  parentId={null}
-                  parentPath={rootPath}
-                  builderState={builderState}
-                />
-              </Select>
-            </>
-          )}
+          <>
+            <DynamicEnvironment
+              environment={builderState.scene.environment}
+              files={builderState.files}
+            />
+            <Select onChange={builderState.selectTargetElement}>
+              <ElementsTree
+                elements={builderState.scene.elements}
+                parentId={null}
+                parentPath={rootPath}
+                builderState={builderState}
+              />
+            </Select>
+          </>
           <Controls {...builderState} />
         </Canvas>
         <div className="absolute right-5 top-20">
           <Leva fill hidden={!builderState.transforming.isTransforming} />
         </div>
+        {builderState.saveSceneStatus.saved && (
+          <SavedSceneSuccessModal
+            savedCid={builderState.saveSceneStatus.savedCid}
+          />
+        )}
       </div>
     </>
   );
 };
 
-export default Scene;
+export default SceneBuilder;

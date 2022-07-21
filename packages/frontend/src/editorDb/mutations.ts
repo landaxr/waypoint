@@ -1,6 +1,6 @@
 import { EnvironmentConfig, SceneConfiguration } from "../types/scene";
 import { Element } from "../types/elements";
-import { Optional } from "../types/shared";
+import { Optional, FileLocationLocal, SceneFilesLocal } from "../types/shared";
 import { merge } from "lodash";
 import { newId } from "./utils";
 
@@ -99,5 +99,14 @@ export const deleteElement =
     return {
       ...scene,
       elements,
+    };
+  };
+
+export const addFile =
+  ({ file, id }: { file: FileLocationLocal; id: string }) =>
+  (files: SceneFilesLocal) => {
+    return {
+      ...files,
+      [id]: file,
     };
   };

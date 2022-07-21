@@ -5,6 +5,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import Explore from "./components/Explore";
 import YourWorlds from "./components/World/YourWorlds";
 import NewWorld from "./components/World/New";
+import WorldFromIpfsRoute from "./components/World/WorldFromIpfs";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/your-worlds" element={<YourWorlds />} />
           <Route path="/worlds">
             <Route path="new" element={<NewWorld />} />
+            <Route path="ipfs/:cid" element={<WorldFromIpfsRoute />} />
           </Route>
         </Routes>
       </HashRouter>

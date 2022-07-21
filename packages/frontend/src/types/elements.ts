@@ -1,4 +1,4 @@
-import { FileLocation, Optional } from "./shared";
+import { FileReference, Optional } from "./shared";
 
 export enum ElementType {
   Model = "model",
@@ -47,16 +47,16 @@ export type ElementNodes = {
 };
 
 export type ModelConfig = {
-  file?: FileLocation;
+  file?: FileReference;
 };
 
 export type ImageConfig = {
-  file?: FileLocation;
+  file?: FileReference;
 };
 
 export type VideoConfig = {
   file?: {
-    original?: FileLocation;
+    original?: FileReference;
     streamUrl?: string;
   };
   volume?: number;

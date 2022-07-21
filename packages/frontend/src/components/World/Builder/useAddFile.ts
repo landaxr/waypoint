@@ -1,31 +1,7 @@
-import { RefObject, startTransition, useCallback, useState } from "react";
+import { RefObject, useCallback, useState } from "react";
 import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
 import { Object3D, Raycaster } from "three";
-import {
-  ElementType,
-  ImageElement,
-  ModelElement,
-  Transform,
-} from "../../../types/elements";
-import { FileLocationKind, Optional } from "../../../types/shared";
-import { SceneUpdater } from "./useSceneWithUpdater";
-
-enum FileType {
-  image = "image",
-  video = "video",
-  glb = "glb",
-}
-
-const getFieType = (file: File) => {
-  if (file.type.includes("image")) return FileType.image;
-  if (file.type.includes("video")) return FileType.video;
-  if (file.type.includes("glb")) return FileType.glb;
-
-  if (file.name.endsWith("glb") || file.name.endsWith("gltf"))
-    return FileType.glb;
-
-  alert("Unkown file type");
-};
+import { Transform } from "../../../types/elements";
 
 const getAddElementTransform = (
   raycaster: Raycaster | null,
@@ -53,46 +29,17 @@ const getAddElementTransform = (
   };
 };
 
-const newFileToElementConfig = (file: File, transform: Optional<Transform>) => {
-  const fileType = getFieType(file);
-  let elementConfig: Element | null = null;
-
-  if (fileType === FileType.glb) {
-    const result: ModelElement = {
-      elementType: ElementType.Model,
-      transform,
-      modelConfig: {
-        file: {
-          kind: FileLocationKind.blob,
-          file,
-        },
-      },
-    };
-    return result;
-  } else if (fileType === FileType.image) {
-    const result: ImageElement = {
-      elementType: ElementType.Image,
-      transform,
-      imageConfig: {
-        file: {
-          kind: FileLocationKind.blob,
-          file,
-        },
-      },
-    };
-    return result;
-  }
-
-  return null;
-};
-
 const useAddFile = ({
-  createNewElement,
+  createNewElementForFile,
   raycasterRef,
   startTransforming,
-}: Pick<SceneUpdater, "createNewElement"> & {
+}: {
   raycasterRef: RefObject<Raycaster>;
   startTransforming: (path: string[]) => void;
+  createNewElementForFile: (params: {
+    file: File;
+    transform: Transform | null;
+  }) => string;
 }) => {
   const [isDragging, setIsDragging] = useState(false);
 
@@ -107,24 +54,18 @@ const useAddFile = ({
       acceptedFiles.forEach((file) => {
         const transform = getAddElementTransform(raycasterRef.current);
 
-        const elementConfig = newFileToElementConfig(file, transform);
+        const newElementId = createNewElementForFile({ file, transform });
 
-        if (elementConfig) {
-          const newElementId = createNewElement({
-            elementConfig,
-          });
+        const pathToSelect: string[] = [newElementId];
 
-          const pathToSelect: string[] = [newElementId];
-
-          startTransforming(pathToSelect);
-        }
+        startTransforming(pathToSelect);
       });
 
       fileRejection.forEach((rejected) => {
         console.error(`${rejected.file.type}`);
       });
     },
-    [createNewElement, startTransforming]
+    [createNewElementForFile, raycasterRef, startTransforming]
   );
 
   const onDragEnter = useCallback(() => {
@@ -135,7 +76,7 @@ const useAddFile = ({
     setIsDragging(false);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     onDragEnter,
     onDragLeave,

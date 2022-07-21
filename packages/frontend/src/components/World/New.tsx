@@ -1,64 +1,46 @@
 import { useState } from "react";
 import {
+  addFile,
   applyUpdates,
-  createNewElement,
   updateEnvironment,
 } from "../../editorDb/mutations";
-import { EnvironmentConfig, SceneConfiguration } from "../../types/scene";
-import { Element, ElementType } from "../../types/elements";
-import { FileLocationKind } from "../../types/shared";
-import SceneBuilder from "./Builder/SceneBuidler";
-import useSceneWithUpdater from "./Builder/useSceneWithUpdater";
-import { useBuilder } from "./Builder/useBuilder";
+import { SceneAndFiles } from "../../types/scene";
+import { FileLocationKindLocal, FileLocationLocal } from "../../types/shared";
+import SceneBuilder from "./Builder/SceneBuilder";
 
-const randomEnvironment = (): EnvironmentConfig => {
+const randomEnvironmentFile = (): { file: FileLocationLocal; id: string } => {
   // todo: randomize
   return {
-    environmentMap: {
-      kind: FileLocationKind.https,
+    file: {
+      kind: FileLocationKindLocal.https,
       url: "https://firebasestorage.googleapis.com/v0/b/mintxr-experiment.appspot.com/o/kloppenheim_02_1k.pic?alt=media&token=42249658-2916-496b-84ab-f66481b46668",
     },
+    id: "kkloppenheim_02_1k.pic",
   };
 };
 
-const marbleTheatorModel = (): Element => ({
-  elementType: ElementType.Model,
-  transform: {
-    position: {
-      y: -4,
-    },
-  },
-  modelConfig: {
-    file: {
-      kind: FileLocationKind.https,
-      url: "https://firebasestorage.googleapis.com/v0/b/mintxr-experiment.appspot.com/o/MarbleTheater-Metallic.glb?alt=media&token=137e6259-00c5-46e3-8a0b-fbe1398b98c1",
-    },
-  },
-});
+const makeNewScene = (): SceneAndFiles => {
+  const { file, id: fileId } = randomEnvironmentFile();
 
-const makeNewScene = (): SceneConfiguration => {
-  return applyUpdates({}, [
-    updateEnvironment({ environment: randomEnvironment() }),
-    // createNewElement({ elementConfig: marbleTheatorModel() }),
-  ]);
+  return {
+    scene: applyUpdates({}, [
+      updateEnvironment({
+        environment: {
+          environmentMap: {
+            fileId: fileId,
+          },
+        },
+      }),
+      // createNewElement({ elementConfig: marbleTheatorModel() }),
+    ]),
+    files: addFile({ file, id: fileId })({}),
+  };
 };
 
 const New = () => {
-  const [scene, setScene] = useState<SceneConfiguration>(() => makeNewScene());
+  const [sceneAndFiles] = useState<SceneAndFiles>(() => makeNewScene());
 
-  const sceneUpdater = useSceneWithUpdater({
-    scene,
-  });
-
-  const builderState = useBuilder(sceneUpdater.updater);
-
-  return (
-    <SceneBuilder
-      builderState={builderState}
-      scene={sceneUpdater.sceneWithUpdates}
-      isNew
-    />
-  );
+  return <SceneBuilder sceneAndFiles={sceneAndFiles} isNew />;
 };
 
 export default New;

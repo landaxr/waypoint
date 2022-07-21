@@ -1,17 +1,26 @@
-import { buttonGroup, useControls } from "leva";
+import { useControls } from "leva";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Object3D, Raycaster } from "three";
-import { Transform, Element } from "../../../types/elements";
+import { Euler, Object3D, Raycaster, Vector3 } from "three";
+import { saveSceneToIpfs } from "../../../api/ipfsSaver";
+import { Transform, Element, IVector3 } from "../../../types/elements";
+import { SceneAndFiles } from "../../../types/scene";
 import { Optional } from "../../../types/shared";
 import { isElementUserData } from "../Elements/ElementsTree";
 import useAddFile from "./useAddFile";
-import { SceneUpdater } from "./useSceneWithUpdater";
+import { useSceneUpdater } from "./useSceneUpdater";
 
 export enum TransformMode {
   translate = "translate",
   rotate = "rotate",
   scale = "scale",
 }
+
+export type SceneSaveStatus = {
+  saving: boolean;
+  saved?: boolean;
+  error?: Error;
+  savedCid?: string;
+};
 
 const transformOptions: { [key: string]: TransformMode } = {
   translate: TransformMode.translate,
@@ -28,11 +37,59 @@ function findParentElement(selectedMesh: Object3D): Object3D | null {
   return findParentElement(selectedMesh.parent);
 }
 
+const toIVector3 = (vector3: Vector3 | Euler): IVector3 => ({
+  x: vector3.x,
+  y: vector3.y,
+  z: vector3.z,
+});
+
 export const useBuilder = ({
-  createNewElement,
-  updateElement,
-}: SceneUpdater) => {
+  sceneAndFiles,
+}: {
+  sceneAndFiles: SceneAndFiles;
+}) => {
   const raycasterRef = useRef<Raycaster>(new Raycaster());
+
+  const [{ scene: sceneWithUpdates, files: filesWithUpdates }, updateScene] =
+    useState<SceneAndFiles>(() => sceneAndFiles);
+
+  useEffect(() => {
+    updateScene(sceneAndFiles);
+  }, [sceneAndFiles]);
+
+  const { createNewElementForFile, updateElement } = useSceneUpdater({
+    updateScene,
+  });
+
+  const [saveSceneStatus, setSaveSceneStatus] = useState<SceneSaveStatus>({
+    saving: false,
+  });
+
+  const handleSaveToIpfs = useCallback(async () => {
+    if (saveSceneStatus.saving) return;
+    setSaveSceneStatus({
+      saving: true,
+    });
+    try {
+      const cid = await saveSceneToIpfs({
+        scene: sceneWithUpdates,
+        files: filesWithUpdates,
+      });
+
+      setSaveSceneStatus({
+        savedCid: cid,
+        saving: false,
+        saved: true,
+      });
+    } catch (e) {
+      console.error(e);
+
+      setSaveSceneStatus({
+        saving: false,
+        error: e as Error,
+      });
+    }
+  }, [sceneWithUpdates, saveSceneStatus.saving, filesWithUpdates]);
 
   const [transforming, setTransforming] = useState<{
     isTransforming: boolean;
@@ -54,7 +111,7 @@ export const useBuilder = ({
   }, []);
 
   const addFile = useAddFile({
-    createNewElement,
+    createNewElementForFile: createNewElementForFile,
     raycasterRef,
     startTransforming,
   });
@@ -75,7 +132,7 @@ export const useBuilder = ({
         }
       }
     },
-    []
+    [startTransforming]
   );
 
   useEffect(() => {
@@ -86,7 +143,7 @@ export const useBuilder = ({
     };
     document.addEventListener("keydown", cb);
     return () => document.removeEventListener("keydown", cb);
-  }, []);
+  }, [stopTransforming]);
 
   const [values, set] = useControls(() => ({
     transform: {
@@ -96,7 +153,7 @@ export const useBuilder = ({
 
   useEffect(() => {
     set({ transform: TransformMode.translate });
-  }, []);
+  }, [set]);
 
   const transformMode = values.transform;
 
@@ -108,23 +165,15 @@ export const useBuilder = ({
 
     if (transformMode === TransformMode.translate) {
       update = {
-        position: { x: position.x, y: position.y, z: position.z },
+        position: toIVector3(position),
       };
     } else if (transformMode === TransformMode.rotate) {
       update = {
-        rotation: {
-          x: rotation.x,
-          y: rotation.y,
-          z: rotation.z,
-        },
+        rotation: toIVector3(rotation),
       };
     } else {
       update = {
-        scale: {
-          x: scale.x,
-          y: scale.y,
-          z: scale.z,
-        },
+        scale: toIVector3(scale),
       };
     }
 
@@ -136,7 +185,7 @@ export const useBuilder = ({
     };
 
     updateElement({ id: elementId, elementConfig: toUpdate });
-  }, [transformMode, targetElement, transforming.elementPath]);
+  }, [targetElement, transforming.elementPath, transformMode, updateElement]);
 
   return {
     ...addFile,
@@ -147,6 +196,10 @@ export const useBuilder = ({
     selectTargetElement,
     updateElement,
     handleTransformComplete,
+    handleSaveToIpfs,
+    saveSceneStatus,
+    scene: sceneWithUpdates,
+    files: filesWithUpdates,
   };
 };
 
