@@ -5,38 +5,41 @@ import { SceneAndFiles } from "../../types/scene";
 import SceneBuilder from "./Builder/SceneBuilder";
 import { useBuilder } from "./Builder/useBuilder";
 
-const LoadedWorldFromIpfs = ({
-  scene,
-  files,
-  cid,
-}: SceneAndFiles & { cid: string }) => {
-  const builderState = useBuilder({ scene, files });
-
-  return (
-    <SceneBuilder
-      builderState={builderState}
-      scene={builderState.scene}
-      worldId={cid}
-    />
-  );
-};
-
 const WorldFromIpfs = ({ cid }: { cid: string }) => {
-  const [{ loaded, sceneAndFiles }, setLoadedState] = useState<{
-    loaded: boolean;
-    sceneAndFiles?: SceneAndFiles;
+  const [{ loadingState, sceneAndFiles }, setLoadedState] = useState<{
+    loadingState: {
+      loaded: boolean;
+      progress: number;
+    };
+    sceneAndFiles: SceneAndFiles;
   }>({
-    loaded: false,
+    loadingState: {
+      loaded: false,
+      progress: 0,
+    },
+    sceneAndFiles: {
+      scene: {},
+      files: {},
+    },
   });
 
   useEffect(() => {
-    setLoadedState({ loaded: false });
+    setLoadedState({
+      loadingState: {
+        loaded: false,
+        progress: 0,
+      },
+      sceneAndFiles: { scene: {}, files: {} },
+    });
 
     (async () => {
       const { scene, files } = await loadSceneFromIpfs(cid);
 
       setLoadedState({
-        loaded: true,
+        loadingState: {
+          loaded: true,
+          progress: 1,
+        },
         sceneAndFiles: {
           scene,
           files,
@@ -45,9 +48,15 @@ const WorldFromIpfs = ({ cid }: { cid: string }) => {
     })();
   }, [cid]);
 
-  if (!loaded || !sceneAndFiles) return null;
+  const builderState = useBuilder({ sceneAndFiles, loadingState });
 
-  return <LoadedWorldFromIpfs {...sceneAndFiles} cid={cid} />;
+  return (
+    <SceneBuilder
+      builderState={builderState}
+      scene={builderState.scene}
+      worldId={cid}
+    />
+  );
 };
 
 const WorldFromIpfsRoute = () => {

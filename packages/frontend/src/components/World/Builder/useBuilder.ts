@@ -43,11 +43,24 @@ const toIVector3 = (vector3: Vector3 | Euler): IVector3 => ({
   z: vector3.z,
 });
 
-export const useBuilder = (sceneAndFiles: SceneAndFiles) => {
+export const useBuilder = ({
+  sceneAndFiles,
+  loadingState,
+}: {
+  sceneAndFiles: SceneAndFiles;
+  loadingState: {
+    loaded: boolean;
+    progress: number;
+  };
+}) => {
   const raycasterRef = useRef<Raycaster>(new Raycaster());
 
   const [{ scene: sceneWithUpdates, files: filesWithUpdates }, updateScene] =
     useState<SceneAndFiles>(() => sceneAndFiles);
+
+  useEffect(() => {
+    updateScene(sceneAndFiles);
+  }, [sceneAndFiles]);
 
   const { createNewElementForFile, updateElement } = useSceneUpdater({
     updateScene,

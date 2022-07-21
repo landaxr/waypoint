@@ -38,10 +38,15 @@ const makeNewScene = (): SceneAndFiles => {
   };
 };
 
-const New = () => {
-  const [{ scene, files }] = useState<SceneAndFiles>(() => makeNewScene());
+const loadingState = {
+  loaded: true,
+  progress: 1,
+};
 
-  const builderState = useBuilder({ scene, files });
+const New = () => {
+  const [sceneAndFiles] = useState<SceneAndFiles>(() => makeNewScene());
+
+  const builderState = useBuilder({ sceneAndFiles, loadingState });
 
   return (
     <SceneBuilder

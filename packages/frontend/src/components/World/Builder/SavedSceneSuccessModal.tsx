@@ -9,11 +9,14 @@ const SavedSceneSuccessModal = ({ savedCid }: { savedCid?: string }) => {
     setClosed(true);
   }, []);
 
-  const handleSelectText = useCallback((e: SyntheticEvent<HTMLInputElement>) => {
-    // @ts-ignore
-    e.target.select();
-    e.stopPropagation();
-  }, []); 
+  const handleSelectText = useCallback(
+    (e: SyntheticEvent<HTMLInputElement>) => {
+      // @ts-ignore
+      e.target.select();
+      e.stopPropagation();
+    },
+    []
+  );
 
   const preventChange = useCallback((e: SyntheticEvent) => {
     e.preventDefault();
@@ -29,7 +32,12 @@ const SavedSceneSuccessModal = ({ savedCid }: { savedCid?: string }) => {
         </h3>
       }
       footer={
-          <Link to={`/worlds/ipfs/${savedCid}`} className='text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>Load world from IPFS</Link>
+        <Link
+          to={`/worlds/ipfs/${savedCid}`}
+          className="text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Load world from IPFS
+        </Link>
       }
       size={"lg"}
     >
@@ -47,14 +55,12 @@ const SavedSceneSuccessModal = ({ savedCid }: { savedCid?: string }) => {
             id="ipfsAddress"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white cursor-text"
             // disabled
-          value={`ipfs://${savedCid}`}
-          onClick={handleSelectText }
-          onChange={preventChange}
+            value={`ipfs://${savedCid}`}
+            onClick={handleSelectText}
+            onChange={preventChange}
           />
         </div>
-        <p>
-
-        </p>
+        <p></p>
       </div>
     </Modal>
   );
