@@ -76,7 +76,7 @@ const useAddFile = ({
     setIsDragging(false);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     onDragEnter,
     onDragLeave,

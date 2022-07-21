@@ -53,7 +53,7 @@ const SceneBuilder = ({
 }) => {
   const [hasClicked, setHasClicked] = useState(false);
 
-  const [listener, setListener] = useState<AudioListener>();
+  const [, setListener] = useState<AudioListener>();
 
   const onClicked = useCallback(() => {
     if (hasClicked) return;

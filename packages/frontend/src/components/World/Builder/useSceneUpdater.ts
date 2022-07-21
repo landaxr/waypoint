@@ -16,7 +16,6 @@ import {
 } from "../../../types/elements";
 import {
   FileLocationKindLocal,
-  FileLocationKindStored,
   Optional,
 } from "../../../types/shared";
 

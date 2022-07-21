@@ -2,18 +2,12 @@ import { SceneConfiguration } from "../../../types/scene";
 import {
   Element,
   ElementType,
-  IVector3,
   Transform,
 } from "../../../types/elements";
 import Model from "./Model";
 import Image from "./Image";
-import { useEffect, useMemo, useState } from "react";
-import { Object3D, Vector3 } from "three";
+import { useMemo } from "react";
 import { BuilderState } from "../Builder/useBuilder";
-
-const pathsEqual = (a: string[], b: string[]) => {
-  return a.join(",") === b.join(",");
-};
 
 const emptyTransform: Transform = {};
 
@@ -21,7 +15,7 @@ export type isElementUserData = {
   isElement?: true;
 };
 
-export const isElementUserData: isElementUserData = {
+export const isElementUserDataIsTrue: isElementUserData = {
   isElement: true,
 };
 
@@ -34,13 +28,11 @@ const TransformedElement = ({
   id: string;
   children: JSX.Element | JSX.Element[];
 }) => {
-  const [ref, setRef] = useState<Object3D | null>();
-
   const { position, rotation, scale } = transform || emptyTransform;
 
   return (
     <group
-      userData={isElementUserData}
+      userData={isElementUserDataIsTrue}
       name={id}
       position-x={position?.x}
       position-y={position?.y}
@@ -51,7 +43,6 @@ const TransformedElement = ({
       rotation-x={rotation?.x}
       rotation-y={rotation?.y}
       rotation-z={rotation?.z}
-      ref={setRef}
     >
       {children}
     </group>

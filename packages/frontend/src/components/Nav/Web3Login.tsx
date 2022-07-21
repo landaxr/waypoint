@@ -11,7 +11,7 @@ const Web3LoginModal = ({
   handleClose: () => void;
 }) => {
   //   const { data: account } = useAccount();
-  const { connect, connectors, error, pendingConnector } = useConnect();
+  const { connect, connectors } = useConnect();
 
   return (
     <Modal
@@ -134,7 +134,7 @@ const Web3Profile = ({ address }: { address: string }) => {
 };
 
 const Web3Login = () => {
-  const { connector: activeConnector, isConnected, address } = useAccount();
+  const { isConnected, address } = useAccount();
 
   return (
     <>
