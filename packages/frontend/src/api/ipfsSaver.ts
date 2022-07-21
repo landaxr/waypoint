@@ -23,11 +23,11 @@ export const saveSceneToIpfs = async ({
   files: SceneFilesLocal;
 }) => {
   const { fileLocations: storedFileLocations, toUpload } =
-    extractFilesToUploadAndLocations({scene, files});
+    extractFilesToUploadAndLocations({ scene, files });
 
   const storedSceneAndFiles: StoredSceneAndFiles = {
     scene,
-    files: storedFileLocations
+    files: storedFileLocations,
   };
 
   const sceneConfigMetadata = createSceneJsonFile(storedSceneAndFiles);
@@ -36,7 +36,7 @@ export const saveSceneToIpfs = async ({
     files,
     scene,
     storedFileLocations,
-  toUpload
+    toUpload,
   });
 
   const allFiles = [sceneConfigMetadata, ...toUpload];

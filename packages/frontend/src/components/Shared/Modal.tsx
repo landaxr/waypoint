@@ -29,12 +29,14 @@ const Modal = ({
   show,
   handleClose,
   header,
+  footer,
   size = "md",
 }: {
   children: JSX.Element | JSX.Element[];
   show?: boolean;
   handleClose: () => void;
   header?: JSX.Element;
+  footer?: JSX.Element;
   size?: "lg" | "md";
 }) => {
   const hidden = !show;
@@ -50,17 +52,24 @@ const Modal = ({
       <div
         className={`mx-auto relative p-4 w-full max-w-${size} h-full md:h-auto`}
       >
-        {/* <!-- Modal header --> */}
-        {header && (
-          <div className="py-4 px-6 rounded-t border-b dark:border-gray-600">
-            {header}
-          </div>
-        )}
         {/* <!-- Modal content --> */}
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+          {/* <!-- Modal header --> */}
+          {header && (
+            <div className="py-4 px-6 rounded-t border-b dark:border-gray-600">
+              {header}
+            </div>
+          )}
           <CloseButton handleClose={handleClose} />
           {/* <!-- Modal body --> */}
           <div className="p-6">{children}</div>
+          {/* <!-- Modal footer --> */}
+          {footer && (
+            <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
+            {footer}
+            </div>
+          )}
+          
         </div>
       </div>
     </div>

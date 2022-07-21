@@ -1,6 +1,10 @@
 import { flatten, pick } from "lodash";
 import { Element, ElementType } from "../types/elements";
-import { EnvironmentConfig, SceneAndFiles, SceneConfiguration } from "../types/scene";
+import {
+  EnvironmentConfig,
+  SceneAndFiles,
+  SceneConfiguration,
+} from "../types/scene";
 import {
   FileLocationKindStored,
   SceneFilesLocal,
@@ -71,16 +75,16 @@ function getElementAndChildrenFileIds(element: Element): string[] {
   return [...flatten(childFileIds), ...flatten(elementFileIds)];
 }
 
-function getFileIdsInEnvironment(environment: EnvironmentConfig | undefined | null) {
-    return filterUndefined([environment?.environmentMap?.fileId]);
+function getFileIdsInEnvironment(
+  environment: EnvironmentConfig | undefined | null
+) {
+  return filterUndefined([environment?.environmentMap?.fileId]);
 }
 
 type Acc = {
   fileLocations: SceneFilesStored;
   toUpload: File[];
 };
-
-
 
 function extractFilesToUploadAndConfigForChildren(
   scene: SceneConfiguration,
@@ -94,7 +98,10 @@ function extractFilesToUploadAndConfigForChildren(
 
   const fileIdsInEnvironment = getFileIdsInEnvironment(scene.environment);
 
-  const fileLocationsToSave = pick(fileLocations, [...fileIdsInScene, ...fileIdsInEnvironment]);
+  const fileLocationsToSave = pick(fileLocations, [
+    ...fileIdsInScene,
+    ...fileIdsInEnvironment,
+  ]);
 
   return Object.entries(fileLocationsToSave).reduce(
     ({ fileLocations, toUpload }: Acc, [id, fileLocation]) => {

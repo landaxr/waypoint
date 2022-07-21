@@ -33,7 +33,7 @@ const buildMenu = ({
     { link: "#", title: `Building ${elementName}`, kind: LinkKind.link },
     {
       action: handleSaveToIpfs,
-      title: savingScene ? "Saving..." : "Save to ipfs",
+      title: savingScene ? "Saving to IPFS" : "Save to IPFS",
       kind: LinkKind.button,
       disabled: savingScene,
     },

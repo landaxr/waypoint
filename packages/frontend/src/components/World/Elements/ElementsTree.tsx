@@ -1,9 +1,5 @@
 import { SceneConfiguration } from "../../../types/scene";
-import {
-  Element,
-  ElementType,
-  Transform,
-} from "../../../types/elements";
+import { Element, ElementType, Transform } from "../../../types/elements";
 import Model from "./Model";
 import Image from "./Image";
 import { useMemo } from "react";

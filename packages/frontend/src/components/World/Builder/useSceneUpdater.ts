@@ -14,10 +14,7 @@ import {
   ModelElement,
   Transform,
 } from "../../../types/elements";
-import {
-  FileLocationKindLocal,
-  Optional,
-} from "../../../types/shared";
+import { FileLocationKindLocal, Optional } from "../../../types/shared";
 
 enum FileType {
   image = "image",

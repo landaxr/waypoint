@@ -60,7 +60,7 @@ async function toLocalFile(
 async function storedFilesToLocal(
   storedFiles: SceneFilesStored,
   files: Web3File[],
-  folderCid: string | undefined,
+  folderCid: string | undefined
 ): Promise<SceneFilesLocal> {
   const localFiles = await Promise.all(
     Object.entries(storedFiles).map(async ([id, configuredFile]) => {
