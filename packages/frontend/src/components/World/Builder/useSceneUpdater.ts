@@ -166,9 +166,10 @@ export const useSceneUpdater = ({
           files: updatedFiles,
         };
       });
+      logUpdate();
       return elementId;
     },
-    [updateScene]
+    [updateScene, logUpdate]
   );
 
   const setNewSkyboxFile = useCallback(

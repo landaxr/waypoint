@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { useHttpsUrl } from "../../../api/ipfsUrls";
 import {
   FileReference,
   Optional,
@@ -25,7 +24,7 @@ const EditSkyboxDialog = ({
       if (files.length === 0) return;
 
       setNewSkybox({ file: files[0] });
-    handleClose();
+      handleClose();
     },
     [setNewSkybox, handleClose]
   );
@@ -49,10 +48,12 @@ const EditSkyboxDialog = ({
     >
       <div {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
-        <p>
-          Drag 'n' drop a skybox file here (must be an .hdr or .pic file), or
-          click to select file
-        </p>
+        <div className="text-base leading-relaxed text-gray-500 dark:text-gray-400 space-y-6">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            Drag 'n' drop a skybox file here (must be an .hdr or .pic file), or
+            click to select file
+          </label>
+        </div>
       </div>
     </Modal>
   );
