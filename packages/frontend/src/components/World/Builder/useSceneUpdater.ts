@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback } from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { SceneAndFiles } from "../../../types/scene";
 import {
   createNewElement,
@@ -93,6 +93,12 @@ export const useSceneUpdater = ({
 }: {
   updateScene: Dispatch<SetStateAction<SceneAndFiles>>;
 }) => {
+  const [updateCount, setUpdateCount] = useState(0);
+
+  const logUpdate = useCallback(() => {
+    setUpdateCount((existing) => existing + 1);
+  }, []);
+
   const updateSceneConfig = useCallback(
     (updater: SceneUpdateFn) => {
       updateScene(({ scene, files }) => ({
@@ -109,17 +115,20 @@ export const useSceneUpdater = ({
       updateSceneConfig(
         addElement({ id: elementId, elementConfig: params.elementConfig })
       );
+      logUpdate();
 
       return elementId;
     },
-    [updateSceneConfig]
+    [updateSceneConfig, logUpdate]
   );
 
   const update = useCallback(
     (params: Parameters<typeof updateElement>[0]) => {
       updateSceneConfig(updateElement(params));
+
+      logUpdate();
     },
-    [updateSceneConfig]
+    [updateSceneConfig, logUpdate]
   );
 
   const createNewElementForFile = useCallback(
@@ -166,5 +175,6 @@ export const useSceneUpdater = ({
     createNewElement: create,
     updateElement: update,
     createNewElementForFile,
+    updateCount,
   };
 };

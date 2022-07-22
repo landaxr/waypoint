@@ -104,7 +104,13 @@ const Video = ({
           <meshBasicMaterial map={texture} />
         </mesh>
       )}
-      {videoElement && <VideoPositionalAudio video={videoElement} refDistance={4} rollOffFactor={1}  />}
+      {videoElement && (
+        <VideoPositionalAudio
+          video={videoElement}
+          refDistance={4}
+          rollOffFactor={1}
+        />
+      )}
     </>
   );
 };

@@ -1,20 +1,29 @@
 import * as React from "react";
-import {
-  PositionalAudio as PositionalAudioImpl,
-} from "three";
+import { PositionalAudio as PositionalAudioImpl } from "three";
 import useClickedAndAudioListener from "../../useClickedAndAudioListener";
-import mergeRefs from 'react-merge-refs'
+import mergeRefs from "react-merge-refs";
 
 type Props = JSX.IntrinsicElements["positionalAudio"] & {
   video: HTMLVideoElement;
   distance?: number;
   loop?: boolean;
-refDistance?: number;
-rollOffFactor?: number;
+  refDistance?: number;
+  rollOffFactor?: number;
 };
 
 const VideoPositionalAudio = React.forwardRef(
-  ({ video, distance = 1, refDistance, rollOffFactor, loop = true, autoplay, ...props }: Props, ref) => {
+  (
+    {
+      video,
+      distance = 1,
+      refDistance,
+      rollOffFactor,
+      loop = true,
+      autoplay,
+      ...props
+    }: Props,
+    ref
+  ) => {
     const { listener } = useClickedAndAudioListener();
     const sound = React.useRef<PositionalAudioImpl>();
 
@@ -22,31 +31,37 @@ const VideoPositionalAudio = React.forwardRef(
       console.log("audio,", { listener: !!listener });
       if (!listener) return;
 
-    sound.current = new PositionalAudioImpl(listener);
+      sound.current = new PositionalAudioImpl(listener);
 
-      const _sound = sound.current
+      const _sound = sound.current;
       if (!_sound) return;
       _sound.setMediaElementSource(video);
 
-      _sound.setRefDistance(distance)
-      _sound.setLoop(loop)
+      _sound.setRefDistance(distance);
+      _sound.setLoop(loop);
     }, [distance, listener, loop, video]);
 
     React.useEffect(() => {
       if (refDistance) {
         sound.current?.setRefDistance(refDistance);
       }
-    }, [refDistance])
+    }, [refDistance]);
 
     React.useEffect(() => {
       if (rollOffFactor) {
         sound.current?.setRolloffFactor(rollOffFactor);
       }
-    }, [rollOffFactor])
+    }, [rollOffFactor]);
 
     if (!listener) return null;
 
-    return <positionalAudio ref={mergeRefs([sound, ref])} args={[listener]} {...props} />
+    return (
+      <positionalAudio
+        ref={mergeRefs([sound, ref])}
+        args={[listener]}
+        {...props}
+      />
+    );
   }
 );
 

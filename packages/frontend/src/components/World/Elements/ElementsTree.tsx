@@ -3,8 +3,8 @@ import { Element, ElementType, Transform } from "../../../types/elements";
 import Model from "./Model";
 import Image from "./Image";
 import { useMemo } from "react";
-import { BuilderState } from "../Builder/useBuilder";
 import Video from "./Video";
+import { SceneFilesLocal } from "../../../types/shared";
 
 const emptyTransform: Transform = {};
 
@@ -50,24 +50,24 @@ const ElementNode = ({
   id,
   element,
   parentPath,
-  builderState,
+  files,
 }: {
   id: string;
   element: Element;
   parentPath: string[];
-  builderState: BuilderState;
+  files: SceneFilesLocal;
 }) => {
   return (
     <TransformedElement id={id} transform={element.transform}>
       <>
         {element.elementType === ElementType.Model && (
-          <Model config={element.modelConfig} files={builderState.files} />
+          <Model config={element.modelConfig} files={files} />
         )}
         {element.elementType === ElementType.Image && (
-          <Image config={element.imageConfig} files={builderState.files} />
+          <Image config={element.imageConfig} files={files} />
         )}
         {element.elementType === ElementType.Video && (
-          <Video config={element.videoConfig} files={builderState.files} />
+          <Video config={element.videoConfig} files={files} />
         )}
 
         {element.children && (
@@ -75,7 +75,7 @@ const ElementNode = ({
             elements={element.children}
             parentId={id}
             parentPath={parentPath}
-            builderState={builderState}
+            files={files}
           />
         )}
       </>
@@ -87,11 +87,11 @@ const ElementsTree = ({
   elements,
   parentId,
   parentPath,
-  builderState,
+  files,
 }: Pick<SceneConfiguration, "elements"> & {
   parentId: string | null;
   parentPath: string[];
-  builderState: BuilderState;
+  files: SceneFilesLocal;
 }) => {
   const path = useMemo(() => {
     if (parentId) return [...parentPath, parentId];
@@ -108,7 +108,7 @@ const ElementsTree = ({
           element={element}
           key={id}
           parentPath={path}
-          builderState={builderState}
+          files={files}
         />
       ))}
     </>

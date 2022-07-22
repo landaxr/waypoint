@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { SceneAndFiles } from "../../../types/scene";
 import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
 import { useBuilder } from "./useBuilder";
-import Controls from "../Controls";
+import BuilderControls from "./BuilderControls";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";
 import BuilderMenu from "./Menu";
@@ -22,21 +22,23 @@ const buildMenu = ({
   worldId,
   handleSaveToIpfs,
   savingScene,
+  disabled,
 }: {
   isNew?: boolean;
   worldId?: string;
   handleSaveToIpfs: () => void;
   savingScene: boolean;
+  disabled: boolean;
 }): MenuItem[] => {
   const elementName = isNew ? "Draft World" : worldId || "World";
 
   return [
-    { link: "#", title: `Building ${elementName}`, kind: LinkKind.link },
+    { link: "#", title: `Forking ${elementName}`, kind: LinkKind.link },
     {
       action: handleSaveToIpfs,
       title: savingScene ? "Saving to IPFS" : "Save to IPFS",
       kind: LinkKind.button,
-      disabled: savingScene,
+      disabled,
     },
   ];
 };
@@ -62,17 +64,23 @@ const SceneBuilder = ({
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
+    console.log({
+      canSave: builderState.canSave,
+      saving: builderState.saveSceneStatus.saving,
+    });
     setMenuItems(
       buildMenu({
         isNew,
         worldId,
         handleSaveToIpfs: builderState.handleSaveToIpfs,
         savingScene: builderState.saveSceneStatus.saving,
+        disabled: builderState.saveSceneStatus.saving || !builderState.canSave,
       })
     );
   }, [
     builderState.handleSaveToIpfs,
     builderState.saveSceneStatus.saving,
+    builderState.canSave,
     isNew,
     worldId,
   ]);
@@ -94,22 +102,20 @@ const SceneBuilder = ({
         <Canvas>
           <ContextBridge>
             <SetRaycasterFromCamera raycasterRef={raycasterRef} />
-            <>
-<AttachAudioListenerToCamera />
-              <DynamicEnvironment
-                environment={builderState.scene.environment}
+            <AttachAudioListenerToCamera />
+            <DynamicEnvironment
+              environment={builderState.scene.environment}
+              files={builderState.files}
+            />
+            <Select onChange={builderState.selectTargetElement}>
+              <ElementsTree
+                elements={builderState.scene.elements}
+                parentId={null}
+                parentPath={rootPath}
                 files={builderState.files}
               />
-              <Select onChange={builderState.selectTargetElement}>
-                <ElementsTree
-                  elements={builderState.scene.elements}
-                  parentId={null}
-                  parentPath={rootPath}
-                  builderState={builderState}
-                />
-              </Select>
-            </>
-            <Controls {...builderState} />
+            </Select>
+            <BuilderControls {...builderState} />
           </ContextBridge>
         </Canvas>
         <div className="absolute right-5 top-20">
