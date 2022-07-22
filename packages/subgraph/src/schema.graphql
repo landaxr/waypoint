@@ -1,15 +1,41 @@
-type Purpose @entity {
-  id: ID!
-  sender: Sender!
-  purpose: String!
-  createdAt: BigInt!
-  transactionHash: String!
+# type Purpose @entity {
+#   id: ID!
+#   sender: Sender!
+#   purpose: String!
+#   createdAt: BigInt!
+#   transactionHash: String!
+# }
+
+# type Sender @entity {
+#   id: ID!
+#   address: Bytes!
+#   purposes: [Purpose!] @derivedFrom(field: "sender")
+#   createdAt: BigInt!
+#   purposeCount: BigInt!
+# }
+
+type MetaNomad @entity {
+	id: ID!
+	spaces: [Space!] @derivedFrom(field: "owner")
 }
 
-type Sender @entity {
-  id: ID!
-  address: Bytes!
-  purposes: [Purpose!] @derivedFrom(field: "sender")
-  createdAt: BigInt!
-  purposeCount: BigInt!
+type Space @entity {
+	id: ID!
+	owner: MetaNomad!
+	portals: [Portal!] @derivedFrom(field: "space")
+	uri: String!
+}
+
+type Portal @entity {
+	id: ID!
+	space: Space!
+	tokenId: String!
+	portalId: String!
+	targetId: String!
+	x: BigInt!
+	y: BigInt!
+	z: BigInt!
+	toX: BigInt!
+	toY: BigInt!
+	toZ: BigInt!
 }
