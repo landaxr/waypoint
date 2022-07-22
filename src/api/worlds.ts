@@ -12,15 +12,17 @@ type WorldFetchResponse = {
   tokenErc721: WorldErc721;
 };
 
+export const emptyWorldToken = (): WorldErc721 => ({
+  image: catImage,
+});
+
 const fetchMockWorlds = async (): Promise<WorldFetchResponse[]> => {
   const fakeScenes: WorldFetchResponse[] = [
     // firstToken has no scene yet
     {
       tokenId: "0",
       ownerId: danAddress,
-      tokenErc721: {
-        image: catImage,
-      },
+      tokenErc721: emptyWorldToken(),
     },
     {
       tokenId: "1",

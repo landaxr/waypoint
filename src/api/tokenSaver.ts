@@ -15,6 +15,16 @@ const makeInteractiveApplicationUrl = (tokenId: string) =>
 
 export const erc721TokenFileName = "erc721.json";
 
+export async function saveErc721ToIpfs(toSave: object) {
+  const json = createJsonFileFromObject(toSave, erc721TokenFileName);
+
+  const client = makeWeb3StorageClient();
+
+  const cid = await client.put([json]);
+
+  return cid;
+}
+
 export async function saveTokenMetadataAndSceneToIpfs({
   tokenId,
   sceneAndFiles,

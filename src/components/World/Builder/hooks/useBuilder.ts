@@ -8,7 +8,7 @@ import { isElementUserData } from "../../Elements/ElementsTree";
 import useAddFile from "./useAddFile";
 import useSaveToIpfs from "./useSaveToIpfs";
 import { useSceneUpdater } from "./useSceneUpdater";
-import useWorldMinter from "./useWorldMinter";
+import useWorldUpdater, { useWorldCreator } from "./useWorldMinter";
 
 export enum TransformMode {
   translate = "translate",
@@ -63,7 +63,8 @@ export const useBuilder = ({
     updateScene,
   });
 
-  const { updateWorld, mintWorldStatus } = useWorldMinter();
+  const { updateWorld, status: mintWorldStatus } = useWorldUpdater();
+  const { createWorld, status: createWorldStatus } = useWorldCreator();
 
   const { handleSaveToIpfs, hasChangesToSave, saveSceneStatus } = useSaveToIpfs(
     {
@@ -194,6 +195,8 @@ export const useBuilder = ({
     setNewSkyboxFile,
     updateWorld,
     mintWorldStatus,
+    createWorld,
+    createWorldStatus,
   };
 };
 
