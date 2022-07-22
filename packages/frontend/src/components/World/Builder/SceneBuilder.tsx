@@ -13,6 +13,7 @@ import BuilderMenu from "./Menu";
 import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
 import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
 import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
+import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
 
 const rootPath: string[] = [];
 
@@ -94,6 +95,7 @@ const SceneBuilder = ({
           <ContextBridge>
             <SetRaycasterFromCamera raycasterRef={raycasterRef} />
             <>
+<AttachAudioListenerToCamera />
               <DynamicEnvironment
                 environment={builderState.scene.environment}
                 files={builderState.files}

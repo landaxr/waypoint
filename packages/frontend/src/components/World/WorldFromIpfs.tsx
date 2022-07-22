@@ -6,7 +6,7 @@ import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
 
 const WorldFromIpfs = ({ cid }: { cid: string }) => {
-  const [{ loaded, progress, sceneAndFiles }, setLoadedState] = useState<{
+  const [{ progress, sceneAndFiles }, setLoadedState] = useState<{
     loaded: boolean;
     progress: number;
     error?: boolean;
