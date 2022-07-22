@@ -52,7 +52,7 @@ const Modal = ({
       aria-hidden={!show}
       className={`${clsx(
         { hidden: hidden },
-        "bg-black bg-opacity-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 mx-auto z-50 w-full md:inset-0 h-modal md:h-full"
+        "bg-black bg-opacity-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 mx-auto w-full md:inset-0 h-modal md:h-full z-50"
       )}`}
     >
       <div

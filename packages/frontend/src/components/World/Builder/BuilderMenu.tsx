@@ -1,13 +1,9 @@
 import clsx from "clsx";
 import { useState } from "react";
-import {
-  FileLocationLocal,
-  FileReference,
-  Optional,
-  SceneFilesLocal,
-} from "../../../types/shared";
 import EditSkyboxDialog from "./EditSkyboxDialog";
 import { BuilderState, TransformMode } from "./useBuilder";
+
+const transformIconClass = "mr-2 w-4 h-4 fill-current";
 
 const TransformControlButton = ({
   setTransformMode,
@@ -22,15 +18,15 @@ const TransformControlButton = ({
       icon: (
         <svg
           aria-hidden="true"
-          className="mr-2 w-4 h-4 fill-current"
+          className={transformIconClass}
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           ></path>
         </svg>
       ),
@@ -41,15 +37,15 @@ const TransformControlButton = ({
       icon: (
         <svg
           aria-hidden="true"
-          className="mr-2 w-4 h-4 fill-current"
+          className={transformIconClass}
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           ></path>
         </svg>
       ),
@@ -60,15 +56,15 @@ const TransformControlButton = ({
       icon: (
         <svg
           aria-hidden="true"
-          className="mr-2 w-4 h-4 fill-current"
+          className={transformIconClass}
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           ></path>
         </svg>
       ),
@@ -78,7 +74,7 @@ const TransformControlButton = ({
   ];
 
   return (
-    <div className="inline-flex rounded-md shadow-sm" role="group">
+    <div className="inline-flex rounded-md shadow-sm text-white" role="group">
       {buttons.map((button, i) => (
         <button
           type="button"
@@ -88,7 +84,7 @@ const TransformControlButton = ({
             {
               "rounded-l-lg": i === 0,
               "rounded-r-lg": i === buttons.length - 1,
-              "bg-gray-900": button.transformMode === transformMode,
+              "bg-gray-900 text-white": button.transformMode === transformMode,
             }
           )}
           onClick={() => setTransformMode(button.transformMode)}
@@ -147,7 +143,7 @@ const BuilderMenu = ({
 
   return (
     <>
-      <div className="absolute m-2 top-15 left-0 z-50">
+      <div className="absolute m-2 top-15 left-0 z-10">
         {shouldBeTransforming && (
           <TransformControlButton
             setTransformMode={setTransformMode}
