@@ -1,5 +1,11 @@
 import clsx from "clsx";
 
+export const ModalHeader3 = ({ text }: { text: string }) => (
+  <h3 className="text-base font-semibold text-gray-900 lg:text-xl dark:text-white">
+    {text}
+  </h3>
+);
+
 const CloseButton = ({ handleClose }: { handleClose: () => void }) => (
   <button
     type="button"

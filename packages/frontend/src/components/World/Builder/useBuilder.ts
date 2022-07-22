@@ -53,10 +53,14 @@ export const useBuilder = ({
   const [{ scene: sceneWithUpdates, files: filesWithUpdates }, updateScene] =
     useState<SceneAndFiles>(() => sceneAndFiles);
 
-  const { createNewElementForFile, updateElement, updateCount } =
-    useSceneUpdater({
-      updateScene,
-    });
+  const {
+    createNewElementForFile,
+    updateElement,
+    updateCount,
+    setNewSkyboxFile,
+  } = useSceneUpdater({
+    updateScene,
+  });
 
   const [saveSceneStatus, setSaveSceneStatus] = useState<SceneSaveStatus>({
     saving: false,
@@ -160,6 +164,13 @@ export const useBuilder = ({
     set({ transform: TransformMode.translate });
   }, [set]);
 
+  const setTransformMode = useCallback(
+    (mode: TransformMode) => {
+      set({ transform: mode });
+    },
+    [set]
+  );
+
   const transformMode = values.transform;
 
   const handleTransformComplete = useCallback(() => {
@@ -203,9 +214,11 @@ export const useBuilder = ({
     handleTransformComplete,
     handleSaveToIpfs,
     saveSceneStatus,
+    setTransformMode,
     canSave: hasChangesToSave,
     scene: sceneWithUpdates,
     files: filesWithUpdates,
+    setNewSkyboxFile,
   };
 };
 

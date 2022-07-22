@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { WalletConnectIcon, MetamaskIcon } from "../Shared/Icons";
 import { useAccount, useConnect, useEnsName, useEnsAvatar } from "wagmi";
-import Modal from "../Shared/Modal";
+import Modal, { ModalHeader3 } from "../Shared/Modal";
 
 const Web3LoginModal = ({
   show,
@@ -17,11 +17,7 @@ const Web3LoginModal = ({
     <Modal
       handleClose={handleClose}
       show={show}
-      header={
-        <h3 className="text-base font-semibold text-gray-900 lg:text-xl dark:text-white">
-          Connect wallet
-        </h3>
-      }
+      header={<ModalHeader3 text="Connect wallet" />}
     >
       <>
         <p className="text-sm font-normal text-gray-500 dark:text-gray-400">

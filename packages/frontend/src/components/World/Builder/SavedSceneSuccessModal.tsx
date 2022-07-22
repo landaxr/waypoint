@@ -1,6 +1,6 @@
 import { SyntheticEvent, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import Modal from "../../Shared/Modal";
+import Modal, { ModalHeader3 } from "../../Shared/Modal";
 
 const SavedSceneSuccessModal = ({ savedCid }: { savedCid?: string }) => {
   const [closed, setClosed] = useState(false);
@@ -26,15 +26,11 @@ const SavedSceneSuccessModal = ({ savedCid }: { savedCid?: string }) => {
     <Modal
       handleClose={handleClose}
       show={!closed}
-      header={
-        <h3 className="text-base font-semibold text-gray-900 lg:text-xl dark:text-white">
-          World Saved to IPFS
-        </h3>
-      }
+      header={<ModalHeader3 text="World Saved to IPFS" />}
       footer={
         <Link
           to={`/worlds/ipfs/${savedCid}`}
-          className="text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red dark:hover:bg-red-light dark:focus:ring-red-light"
         >
           Load world from IPFS
         </Link>
