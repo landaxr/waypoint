@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import loadSceneFromIpfs from "../../api/ipfsLoader";
 import { SceneAndFiles } from "../../types/scene";
 import LoadingScreen from "../Shared/LoadingScreen";
@@ -60,14 +60,14 @@ const WorldFromIpfs = ({ cid, edit }: { cid: string; edit: boolean }) => {
     })();
   }, [cid]);
 
-  const [forking, setForking] = useState(false);
+  const navigate = useNavigate();
 
   const handleStartFork = useCallback(() => {
-    setForking(true);
-  }, []);
+    navigate(`fork`);
+  }, [navigate]);
 
   if (sceneAndFiles) {
-    if (edit || forking)
+    if (edit)
       return <SceneBuilder sceneAndFiles={sceneAndFiles} worldId={cid} />;
     return (
       <SceneViewer
