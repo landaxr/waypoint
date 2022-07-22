@@ -2,9 +2,16 @@ import { VideoConfig } from "../../../types/elements";
 import { useHttpsUrl } from "../../../api/ipfsUrls";
 import { SceneFilesLocal } from "../../../types/shared";
 import { Texture, VideoTexture } from "three";
-import { SyntheticEvent, useCallback, useContext, useEffect, useState } from "react";
-import HtmlWrapper from "./HtmlWrapper";
+import {
+  SyntheticEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import HtmlWrapper from "./utils/HtmlWrapper";
 import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
+import VideoPositionalAudio from "./utils/VideoPositionalAudio";
 
 const VideoHtmlElement = ({
   url,
@@ -64,7 +71,7 @@ const Video = ({
 
   const [dimensions, setDimensions] = useState<[number, number]>(() => [1, 1]);
 
-  const {hasClicked: play, listener}= useContext(ClickedAndAudioContext);
+  const { hasClicked: play } = useContext(ClickedAndAudioContext);
 
   useEffect(() => {
     if (videoElement && play) {
@@ -97,6 +104,7 @@ const Video = ({
           <meshBasicMaterial map={texture} />
         </mesh>
       )}
+      {videoElement && <VideoPositionalAudio video={videoElement} refDistance={4} rollOffFactor={1}  />}
     </>
   );
 };
@@ -112,12 +120,7 @@ const VideoNullGuard = ({
 
   if (!fileUrl) return null;
 
-  return (
-    <Video
-      config={config}
-      fileUrl={fileUrl}
-    />
-  );
+  return <Video config={config} fileUrl={fileUrl} />;
 };
 
 export default VideoNullGuard;

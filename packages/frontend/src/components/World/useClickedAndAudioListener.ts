@@ -1,4 +1,5 @@
 import { createContext, useCallback, useEffect, useState } from "react";
+import { AudioListener } from "three";
 
 const useClickedAndAudioListener = () => {
   const [hasClicked, setHasClicked] = useState(false);
