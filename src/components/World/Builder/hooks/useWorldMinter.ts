@@ -1,10 +1,9 @@
 import { useCallback, useState } from "react";
 import { useContractWrite, useSigner } from "wagmi";
-import { saveTokenMetadataAndSceneToIpfs } from "../../../api/tokenSaver";
-import { SceneAndFiles, SceneConfiguration } from "../../../types/scene";
-import { SceneFilesLocal } from "../../../types/shared";
-import { WorldErc721 } from "../../../types/world";
-import deployedContracts from "./contracts/Waypoint.json";
+import { saveTokenMetadataAndSceneToIpfs } from "../../../../api/tokenSaver";
+import deployedContracts from "../../../../contracts/Waypoint.json";
+import { SceneAndFiles } from "../../../../types/scene";
+import { WorldErc721 } from "../../../../types/world";
 
 export type MintWorldStatus = {
   minting: boolean;
@@ -72,6 +71,7 @@ function useWorldMinter() {
 
   return {
     updateWorld,
+  mintWorldStatus
   };
 }
 

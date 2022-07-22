@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useState } from "react";
 import EditSkyboxDialog from "./EditSkyboxDialog";
-import { BuilderState, TransformMode } from "./useBuilder";
+import { BuilderState, TransformMode } from "./hooks/useBuilder";
 
 const transformIconClass = "mr-2 w-4 h-4 fill-current";
 

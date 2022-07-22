@@ -1,7 +1,7 @@
 import { RefObject, useCallback, useState } from "react";
 import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
 import { Object3D, Raycaster } from "three";
-import { Transform } from "../../../types/elements";
+import { Transform } from "../../../../types/elements";
 
 const getAddElementTransform = (
   raycaster: Raycaster | null,

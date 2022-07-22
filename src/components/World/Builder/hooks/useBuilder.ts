@@ -1,15 +1,14 @@
 import { useControls } from "leva";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Euler, Object3D, Raycaster, Vector3 } from "three";
-import { Transform, Element, IVector3 } from "../../../types/elements";
-import { SceneAndFiles } from "../../../types/scene";
-import { Optional } from "../../../types/shared";
-import { WorldErc721 } from "../../../types/world";
-import { isElementUserData } from "../Elements/ElementsTree";
+import { Transform, Element, IVector3 } from "../../../../types/elements";
+import { SceneAndFiles } from "../../../../types/scene";
+import { Optional } from "../../../../types/shared";
+import { isElementUserData } from "../../Elements/ElementsTree";
 import useAddFile from "./useAddFile";
 import useSaveToIpfs from "./useSaveToIpfs";
 import { useSceneUpdater } from "./useSceneUpdater";
-import useWorldMinter, { MintWorldStatus } from "./useWorldMinter";
+import useWorldMinter from "./useWorldMinter";
 
 export enum TransformMode {
   translate = "translate",

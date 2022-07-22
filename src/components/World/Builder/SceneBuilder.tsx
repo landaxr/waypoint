@@ -5,7 +5,7 @@ import { Leva } from "leva";
 import { useEffect, useMemo, useState } from "react";
 import { SceneAndFiles } from "../../../types/scene";
 import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
-import { useBuilder } from "./useBuilder";
+import { useBuilder } from "./hooks/useBuilder";
 import BuilderControls from "./BuilderControls";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";

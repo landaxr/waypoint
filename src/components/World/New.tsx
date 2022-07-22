@@ -3,7 +3,7 @@ import {
   addFile,
   applyUpdates,
   updateEnvironment,
-} from "../../editorDb/mutations";
+} from "./Builder/hooks/mutations";
 import { SceneAndFiles } from "../../types/scene";
 import { FileLocationKindLocal, FileLocationLocal } from "../../types/shared";
 import SceneBuilder from "./Builder/SceneBuilder";
