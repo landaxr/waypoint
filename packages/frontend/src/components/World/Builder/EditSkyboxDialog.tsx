@@ -21,20 +21,23 @@ const EditSkyboxDialog = ({
   handleClose: () => void;
 }) => {
   const fileUrl = useHttpsUrl(skyboxFile, files);
-  const onDropAccepted = useCallback((files: File[]) => {
-    if (files.length === 0) return;
-  
-    setNewSkybox({file: files[0]});
-  }, [setNewSkybox]);
+  const onDropAccepted = useCallback(
+    (files: File[]) => {
+      if (files.length === 0) return;
 
-  const {getRootProps, getInputProps} = useDropzone({
+      setNewSkybox({ file: files[0] });
+    },
+    [setNewSkybox]
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
     onDropAccepted,
     accept: {
-    //   "image/png": [".png"],
-    //   "image/jpg": [".jpg", ".jpeg"],
-      "image/hdr": [".hdr", ".pic"]
+      //   "image/png": [".png"],
+      //   "image/jpg": [".jpg", ".jpeg"],
+      "image/hdr": [".hdr", ".pic"],
     },
-    multiple: false
+    multiple: false,
   });
 
   return (
@@ -42,11 +45,14 @@ const EditSkyboxDialog = ({
       size="md"
       header={<ModalHeader3 text="Change Scene Skybox/Environment Map" />}
       handleClose={handleClose}
-    show
+      show
     >
-      <div {...getRootProps({className: 'dropzone'})}>
+      <div {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
-        <p>Drag 'n' drop a skybox file here (must be an .hdr or .pic file), or click to select file</p>
+        <p>
+          Drag 'n' drop a skybox file here (must be an .hdr or .pic file), or
+          click to select file
+        </p>
       </div>
     </Modal>
   );

@@ -198,7 +198,7 @@ export const useSceneUpdater = ({
           files: updatedFiles,
         };
       });
-    
+
       logUpdate();
     },
     [updateScene, logUpdate]

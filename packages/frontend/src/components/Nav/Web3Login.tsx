@@ -17,9 +17,7 @@ const Web3LoginModal = ({
     <Modal
       handleClose={handleClose}
       show={show}
-      header={
-        <ModalHeader3 text="Connect wallet" />
-      }
+      header={<ModalHeader3 text="Connect wallet" />}
     >
       <>
         <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
