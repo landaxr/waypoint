@@ -62,6 +62,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.182",
     "@types/random-string": "^0.0.28",
     "@types/react-router-dom": "^5.3.3",
     "@types/three": "^0.141.0"
