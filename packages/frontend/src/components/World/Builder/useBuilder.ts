@@ -53,10 +53,14 @@ export const useBuilder = ({
   const [{ scene: sceneWithUpdates, files: filesWithUpdates }, updateScene] =
     useState<SceneAndFiles>(() => sceneAndFiles);
 
-  const { createNewElementForFile, updateElement, updateCount } =
-    useSceneUpdater({
-      updateScene,
-    });
+  const {
+    createNewElementForFile,
+    updateElement,
+    updateCount,
+    setNewSkyboxFile,
+  } = useSceneUpdater({
+    updateScene,
+  });
 
   const [saveSceneStatus, setSaveSceneStatus] = useState<SceneSaveStatus>({
     saving: false,
@@ -214,6 +218,7 @@ export const useBuilder = ({
     canSave: hasChangesToSave,
     scene: sceneWithUpdates,
     files: filesWithUpdates,
+    setNewSkyboxFile,
   };
 };
 

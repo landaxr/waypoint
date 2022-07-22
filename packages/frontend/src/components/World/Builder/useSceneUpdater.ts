@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
-import { SceneAndFiles } from "../../../types/scene";
+import { SceneAndFiles, SceneConfiguration } from "../../../types/scene";
 import {
   createNewElement,
   updateElement,
@@ -171,10 +171,44 @@ export const useSceneUpdater = ({
     [updateScene]
   );
 
+  const setNewSkyboxFile = useCallback(
+    ({ file }: { file: File }) => {
+      const fileId = file.name;
+      updateScene(({ scene, files }) => {
+        const updatedScene: SceneConfiguration = {
+          ...scene,
+          environment: {
+            ...scene.environment,
+            environmentMap: {
+              fileId,
+            },
+          },
+        };
+
+        const updatedFiles = addFile({
+          file: {
+            kind: FileLocationKindLocal.uploaded,
+            file,
+          },
+          id: fileId,
+        })(files);
+
+        return {
+          scene: updatedScene,
+          files: updatedFiles,
+        };
+      });
+    
+      logUpdate();
+    },
+    [updateScene, logUpdate]
+  );
+
   return {
     createNewElement: create,
     updateElement: update,
     createNewElementForFile,
     updateCount,
+    setNewSkyboxFile,
   };
 };

@@ -9,7 +9,7 @@ import { useBuilder } from "./useBuilder";
 import BuilderControls from "./BuilderControls";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";
-import BuilderMenu from "./Menu";
+import BuilderMenu from "./BuilderMenu";
 import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
 import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
 import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
