@@ -20,14 +20,14 @@ const EditSkyboxDialog = ({
   files: SceneFilesLocal;
   handleClose: () => void;
 }) => {
-  const fileUrl = useHttpsUrl(skyboxFile, files);
   const onDropAccepted = useCallback(
     (files: File[]) => {
       if (files.length === 0) return;
 
       setNewSkybox({ file: files[0] });
+    handleClose();
     },
-    [setNewSkybox]
+    [setNewSkybox, handleClose]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
