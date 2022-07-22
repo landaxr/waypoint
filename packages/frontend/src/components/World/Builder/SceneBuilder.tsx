@@ -93,20 +93,20 @@ const SceneBuilder = ({
         <BuilderMenu />
         <Canvas>
           <ContextBridge>
-              <SetRaycasterFromCamera raycasterRef={raycasterRef} />
-              <AttachAudioListenerToCamera />
-              <DynamicEnvironment
-                environment={builderState.scene.environment}
+            <SetRaycasterFromCamera raycasterRef={raycasterRef} />
+            <AttachAudioListenerToCamera />
+            <DynamicEnvironment
+              environment={builderState.scene.environment}
+              files={builderState.files}
+            />
+            <Select onChange={builderState.selectTargetElement}>
+              <ElementsTree
+                elements={builderState.scene.elements}
+                parentId={null}
+                parentPath={rootPath}
                 files={builderState.files}
               />
-              <Select onChange={builderState.selectTargetElement}>
-                <ElementsTree
-                  elements={builderState.scene.elements}
-                  parentId={null}
-                  parentPath={rootPath}
-                  files={builderState.files}
-                />
-              </Select>
+            </Select>
             <BuilderControls {...builderState} />
           </ContextBridge>
         </Canvas>

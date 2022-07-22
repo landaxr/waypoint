@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import loadSceneFromIpfs from "../../api/ipfsLoader";
 import { SceneAndFiles } from "../../types/scene";
@@ -6,7 +6,7 @@ import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
 import SceneViewer from "./Viewer/SceneViewer";
 
-const WorldFromIpfs = ({ cid, edit }: { cid: string, edit: boolean }) => {
+const WorldFromIpfs = ({ cid, edit }: { cid: string; edit: boolean }) => {
   const [{ progress, sceneAndFiles }, setLoadedState] = useState<{
     loaded: boolean;
     progress: number;
@@ -60,10 +60,22 @@ const WorldFromIpfs = ({ cid, edit }: { cid: string, edit: boolean }) => {
     })();
   }, [cid]);
 
+  const [forking, setForking] = useState(false);
+
+  const handleStartFork = useCallback(() => {
+    setForking(true);
+  }, []);
+
   if (sceneAndFiles) {
-    if (edit)
-    return <SceneBuilder sceneAndFiles={sceneAndFiles} worldId={cid} />;
-  return <SceneViewer sceneAndFiles={sceneAndFiles} worldId={cid} />;
+    if (edit || forking)
+      return <SceneBuilder sceneAndFiles={sceneAndFiles} worldId={cid} />;
+    return (
+      <SceneViewer
+        sceneAndFiles={sceneAndFiles}
+        worldId={cid}
+        handleStartFork={handleStartFork}
+      />
+    );
   }
 
   return (
@@ -74,11 +86,7 @@ const WorldFromIpfs = ({ cid, edit }: { cid: string, edit: boolean }) => {
   );
 };
 
-const WorldFromIpfsRoute = ({
-    fork
-}: {
-    fork: boolean;
-}) => {
+const WorldFromIpfsRoute = ({ fork }: { fork: boolean }) => {
   let params = useParams();
 
   const { cid } = params;

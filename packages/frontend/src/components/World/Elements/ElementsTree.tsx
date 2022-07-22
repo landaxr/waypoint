@@ -50,12 +50,12 @@ const ElementNode = ({
   id,
   element,
   parentPath,
-files
+  files,
 }: {
   id: string;
   element: Element;
   parentPath: string[];
-files: SceneFilesLocal
+  files: SceneFilesLocal;
 }) => {
   return (
     <TransformedElement id={id} transform={element.transform}>
@@ -87,11 +87,11 @@ const ElementsTree = ({
   elements,
   parentId,
   parentPath,
-files
+  files,
 }: Pick<SceneConfiguration, "elements"> & {
   parentId: string | null;
   parentPath: string[];
-files: SceneFilesLocal
+  files: SceneFilesLocal;
 }) => {
   const path = useMemo(() => {
     if (parentId) return [...parentPath, parentId];
@@ -108,7 +108,7 @@ files: SceneFilesLocal
           element={element}
           key={id}
           parentPath={path}
-        files={files}
+          files={files}
         />
       ))}
     </>

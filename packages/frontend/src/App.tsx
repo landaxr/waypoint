@@ -6,7 +6,6 @@ import Explore from "./components/Explore";
 import YourWorlds from "./components/World/YourWorlds";
 import NewWorld from "./components/World/New";
 import WorldFromIpfsRoute from "./components/World/WorldFromIpfs";
-import { useCallback, useState } from "react";
 import useClickedAndAudioListener, {
   ClickedAndAudioContext,
 } from "./components/World/useClickedAndAudioListener";
@@ -24,8 +23,11 @@ function App() {
               <Route path="new" element={<NewWorld />} />
               <Route path="ipfs/:cid">
                 <Route path="" element={<WorldFromIpfsRoute fork={false} />} />
-                <Route path="fork" element={<WorldFromIpfsRoute fork={true} />} />
-              </Route> 
+                <Route
+                  path="fork"
+                  element={<WorldFromIpfsRoute fork={true} />}
+                />
+              </Route>
             </Route>
           </Routes>
         </HashRouter>

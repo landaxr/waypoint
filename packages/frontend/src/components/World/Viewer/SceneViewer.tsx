@@ -1,4 +1,3 @@
-
 import { useContextBridge } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
@@ -17,26 +16,29 @@ const rootPath: string[] = [];
 
 const viewMenu = ({
   worldId,
+  handleStartFork,
 }: {
   worldId: string;
+  handleStartFork: () => void;
 }): MenuItem[] => {
   return [
     { link: "#", title: `Viewing ${worldId}`, kind: LinkKind.link },
-    // {
-    //   action: handleSaveToIpfs,
-    //   title: savingScene ? "Saving to IPFS" : "Save to IPFS",
-    //   kind: LinkKind.button,
-    //   disabled: savingScene,
-    // },
+    {
+      action: handleStartFork,
+      title: "Fork",
+      kind: LinkKind.button,
+    },
   ];
 };
 
 const SceneViewer = ({
-  sceneAndFiles: { scene, files},
+  sceneAndFiles: { scene, files },
   worldId,
+  handleStartFork,
 }: {
   sceneAndFiles: SceneAndFiles;
   worldId: string;
+  handleStartFork: () => void;
 }) => {
   const cursorClass = useMemo(() => {
     return "cursor-pointer";
@@ -48,9 +50,10 @@ const SceneViewer = ({
     setMenuItems(
       viewMenu({
         worldId,
+        handleStartFork,
       })
     );
-  }, [worldId]);
+  }, [worldId, handleStartFork]);
 
   const raycasterRef = useRef(new Raycaster());
 
@@ -59,9 +62,7 @@ const SceneViewer = ({
   return (
     <>
       <Navbar centerItems={menuItems} />
-      <div
-        className={clsx("w-screen h-screen", cursorClass,)}
-      >
+      <div className={clsx("w-screen h-screen", cursorClass)}>
         <Canvas>
           <ContextBridge>
             <>
@@ -71,14 +72,14 @@ const SceneViewer = ({
                 environment={scene.environment}
                 files={files}
               />
-                <ElementsTree
-                  elements={scene.elements}
-                  parentId={null}
-                  parentPath={rootPath}
-                  files={files}
-                />
+              <ElementsTree
+                elements={scene.elements}
+                parentId={null}
+                parentPath={rootPath}
+                files={files}
+              />
             </>
-          <ViewerControls/>
+            <ViewerControls />
           </ContextBridge>
         </Canvas>
       </div>
