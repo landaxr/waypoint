@@ -160,6 +160,13 @@ export const useBuilder = ({
     set({ transform: TransformMode.translate });
   }, [set]);
 
+  const setTransformMode = useCallback(
+    (mode: TransformMode) => {
+      set({ transform: mode });
+    },
+    [set]
+  );
+
   const transformMode = values.transform;
 
   const handleTransformComplete = useCallback(() => {
@@ -203,6 +210,7 @@ export const useBuilder = ({
     handleTransformComplete,
     handleSaveToIpfs,
     saveSceneStatus,
+    setTransformMode,
     canSave: hasChangesToSave,
     scene: sceneWithUpdates,
     files: filesWithUpdates,

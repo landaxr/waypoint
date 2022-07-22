@@ -41,7 +41,7 @@ const BuilderControls = ({
         </>
       )}
 
-      {enableTransform && targetElement && (
+      {enableTransform && targetElement && transformMode && (
         <TransformAndOrbitControls
           targetElement={targetElement}
           transformMode={transformMode}

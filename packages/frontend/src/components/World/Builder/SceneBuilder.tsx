@@ -30,10 +30,12 @@ const buildMenu = ({
   savingScene: boolean;
   disabled: boolean;
 }): MenuItem[] => {
-  const elementName = isNew ? "Draft World" : worldId || "World";
+  const title = isNew
+    ? "Building Draft World"
+    : `Forking ${worldId}` || "Forking world";
 
   return [
-    { link: "#", title: `Forking ${elementName}`, kind: LinkKind.link },
+    { link: "#", title, kind: LinkKind.link },
     {
       action: handleSaveToIpfs,
       title: savingScene ? "Saving to IPFS" : "Save to IPFS",
@@ -98,7 +100,7 @@ const SceneBuilder = ({
         {...getRootProps()}
       >
         <input type="hidden" {...getInputProps()} />
-        <BuilderMenu />
+        <BuilderMenu {...builderState} />
         <Canvas>
           <ContextBridge>
             <SetRaycasterFromCamera raycasterRef={raycasterRef} />
