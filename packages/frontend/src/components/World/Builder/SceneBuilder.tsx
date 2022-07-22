@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { SceneAndFiles } from "../../../types/scene";
 import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
 import { useBuilder } from "./useBuilder";
-import Controls from "../Controls";
+import BuilderControls from "./BuilderControls";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";
 import BuilderMenu from "./Menu";
@@ -31,7 +31,7 @@ const buildMenu = ({
   const elementName = isNew ? "Draft World" : worldId || "World";
 
   return [
-    { link: "#", title: `Building ${elementName}`, kind: LinkKind.link },
+    { link: "#", title: `Forking ${elementName}`, kind: LinkKind.link },
     {
       action: handleSaveToIpfs,
       title: savingScene ? "Saving to IPFS" : "Save to IPFS",
@@ -93,9 +93,8 @@ const SceneBuilder = ({
         <BuilderMenu />
         <Canvas>
           <ContextBridge>
-            <SetRaycasterFromCamera raycasterRef={raycasterRef} />
-            <>
-<AttachAudioListenerToCamera />
+              <SetRaycasterFromCamera raycasterRef={raycasterRef} />
+              <AttachAudioListenerToCamera />
               <DynamicEnvironment
                 environment={builderState.scene.environment}
                 files={builderState.files}
@@ -105,11 +104,10 @@ const SceneBuilder = ({
                   elements={builderState.scene.elements}
                   parentId={null}
                   parentPath={rootPath}
-                  builderState={builderState}
+                  files={builderState.files}
                 />
               </Select>
-            </>
-            <Controls {...builderState} />
+            <BuilderControls {...builderState} />
           </ContextBridge>
         </Canvas>
         <div className="absolute right-5 top-20">

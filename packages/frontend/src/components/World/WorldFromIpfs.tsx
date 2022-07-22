@@ -4,8 +4,9 @@ import loadSceneFromIpfs from "../../api/ipfsLoader";
 import { SceneAndFiles } from "../../types/scene";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
+import SceneViewer from "./Viewer/SceneViewer";
 
-const WorldFromIpfs = ({ cid }: { cid: string }) => {
+const WorldFromIpfs = ({ cid, edit }: { cid: string, edit: boolean }) => {
   const [{ progress, sceneAndFiles }, setLoadedState] = useState<{
     loaded: boolean;
     progress: number;
@@ -60,7 +61,9 @@ const WorldFromIpfs = ({ cid }: { cid: string }) => {
   }, [cid]);
 
   if (sceneAndFiles) {
+    if (edit)
     return <SceneBuilder sceneAndFiles={sceneAndFiles} worldId={cid} />;
+  return <SceneViewer sceneAndFiles={sceneAndFiles} worldId={cid} />;
   }
 
   return (
@@ -71,7 +74,11 @@ const WorldFromIpfs = ({ cid }: { cid: string }) => {
   );
 };
 
-const WorldFromIpfsRoute = () => {
+const WorldFromIpfsRoute = ({
+    fork
+}: {
+    fork: boolean;
+}) => {
   let params = useParams();
 
   const { cid } = params;
@@ -80,7 +87,7 @@ const WorldFromIpfsRoute = () => {
     throw new Error("should have had a cid in params");
   }
 
-  return <WorldFromIpfs cid={cid} />;
+  return <WorldFromIpfs cid={cid} edit={fork} />;
 };
 
 export default WorldFromIpfsRoute;

@@ -10,7 +10,7 @@ export enum LinkKind {
 export type MenuItem = (
   | { link: string; action?: undefined }
   | { action: () => any; link?: undefined; disabled?: boolean }
-) & { title: string; kind?: LinkKind };
+) & { title: string | JSX.Element; kind?: LinkKind };
 
 const linkClass = ({
   isActive,
@@ -82,7 +82,7 @@ const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => (
       >
         <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
           {centerItems.map((menuItem) => (
-            <li key={menuItem.link || menuItem.title}>
+            <li key={menuItem.link}>
               {menuItem.link && (
                 <NavLink
                   className={({ isActive }) =>

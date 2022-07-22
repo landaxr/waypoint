@@ -22,7 +22,10 @@ function App() {
             <Route path="/your-worlds" element={<YourWorlds />} />
             <Route path="/worlds">
               <Route path="new" element={<NewWorld />} />
-              <Route path="ipfs/:cid" element={<WorldFromIpfsRoute />} />
+              <Route path="ipfs/:cid">
+                <Route path="" element={<WorldFromIpfsRoute fork={false} />} />
+                <Route path="fork" element={<WorldFromIpfsRoute fork={true} />} />
+              </Route> 
             </Route>
           </Routes>
         </HashRouter>

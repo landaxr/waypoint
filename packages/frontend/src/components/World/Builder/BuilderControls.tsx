@@ -1,10 +1,10 @@
 import { PointerLockControls, FlyControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
-import { BuilderState } from "../Builder/useBuilder";
-import TransformAndOrbitControls from "./TransformAndOrbitControls";
+import { BuilderState } from "./useBuilder";
+import TransformAndOrbitControls from "../Controls/TransformAndOrbitControls";
 
-const Controls = ({
+const BuilderControls = ({
   isDragging,
   transforming,
   targetElement,
@@ -52,4 +52,4 @@ const Controls = ({
   );
 };
 
-export default Controls;
+export default BuilderControls;
