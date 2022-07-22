@@ -8,7 +8,7 @@ import { isElementUserData } from "../../Elements/ElementsTree";
 import useAddFile from "./useAddFile";
 import useSaveToIpfs from "./useSaveToIpfs";
 import { useSceneUpdater } from "./useSceneUpdater";
-import useWorldUpdater, { useWorldCreator } from "./useWorldMinter";
+import useWorldUpdater, { useWorldCreator } from "../../Minter/useWorldMinter";
 
 export enum TransformMode {
   translate = "translate",
@@ -51,8 +51,9 @@ export const useBuilder = ({
 }) => {
   const raycasterRef = useRef<Raycaster>(new Raycaster());
 
-  const [{ scene: sceneWithUpdates, files: filesWithUpdates }, updateScene] =
-    useState<SceneAndFiles>(() => sceneAndFiles);
+  const [updatedSceneWithFiles, updateScene] = useState<SceneAndFiles>(
+    () => sceneAndFiles
+  );
 
   const {
     createNewElementForFile,
@@ -63,13 +64,14 @@ export const useBuilder = ({
     updateScene,
   });
 
-  const { updateWorld, status: mintWorldStatus } = useWorldUpdater();
+  const { updateWorld, status: mintWorldStatus } = useWorldUpdater(
+    updatedSceneWithFiles
+  );
   const { createWorld, status: createWorldStatus } = useWorldCreator();
 
   const { handleSaveToIpfs, hasChangesToSave, saveSceneStatus } = useSaveToIpfs(
     {
-      scene: sceneWithUpdates,
-      files: filesWithUpdates,
+      ...updatedSceneWithFiles,
       updateCount,
     }
   );
@@ -190,8 +192,7 @@ export const useBuilder = ({
     saveSceneStatus,
     setTransformMode,
     canSave: hasChangesToSave,
-    scene: sceneWithUpdates,
-    files: filesWithUpdates,
+    ...updatedSceneWithFiles,
     setNewSkyboxFile,
     updateWorld,
     mintWorldStatus,

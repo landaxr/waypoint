@@ -14,6 +14,9 @@ import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
 import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
 import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
+import { MintWorldStatus } from "../Minter/useWorldMinter";
+import { filterUndefined } from "../../../api/sceneParser";
+import MintDialogModal from "../Minter/MintDialogModal";
 
 const rootPath: string[] = [];
 
@@ -23,16 +26,33 @@ const buildMenu = ({
   handleSaveToIpfs,
   savingScene,
   disabled,
+  updateWorldStatus,
+  handleOpenMintDialog,
 }: {
   isNew?: boolean;
   worldId?: string;
   handleSaveToIpfs: () => void;
   savingScene: boolean;
   disabled: boolean;
+  // createWorld: () => void;
+  // updateWorld: (tokenId: string) => void;
+  createWorldStatus: MintWorldStatus;
+  updateWorldStatus: MintWorldStatus;
+  handleOpenMintDialog: () => void;
 }): MenuItem[] => {
   const title = isNew
     ? "Building Draft World"
     : `Forking ${worldId}` || "Forking world";
+
+  const mintButton = filterUndefined([
+    updateWorldStatus.isAllowedToMint
+      ? {
+          action: handleOpenMintDialog,
+          title: "Mint World",
+          kind: LinkKind.button,
+        }
+      : undefined,
+  ]);
 
   return [
     { link: "#", title, kind: LinkKind.link },
@@ -42,6 +62,7 @@ const buildMenu = ({
       kind: LinkKind.button,
       disabled,
     },
+    ...mintButton,
   ];
 };
 
@@ -49,10 +70,12 @@ const SceneBuilder = ({
   sceneAndFiles,
   isNew,
   worldId,
+  tokenId,
 }: {
   sceneAndFiles: SceneAndFiles;
   isNew?: boolean;
   worldId?: string;
+  tokenId?: string;
 }) => {
   const builderState = useBuilder({ sceneAndFiles });
 
@@ -64,6 +87,8 @@ const SceneBuilder = ({
     builderState;
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+
+  const [mintDialogOpen, setMintDialogOpen] = useState(false);
 
   useEffect(() => {
     console.log({
@@ -77,6 +102,11 @@ const SceneBuilder = ({
         handleSaveToIpfs: builderState.handleSaveToIpfs,
         savingScene: builderState.saveSceneStatus.saving,
         disabled: builderState.saveSceneStatus.saving || !builderState.canSave,
+        // createWorld: builderState.createWorld,
+        // updateWorld: builderState.updateWorld,
+        createWorldStatus: builderState.createWorldStatus,
+        updateWorldStatus: builderState.mintWorldStatus,
+        handleOpenMintDialog: () => setMintDialogOpen(true),
       })
     );
   }, [
@@ -85,6 +115,8 @@ const SceneBuilder = ({
     builderState.canSave,
     isNew,
     worldId,
+    builderState.createWorldStatus,
+    builderState.mintWorldStatus,
   ]);
 
   const ContextBridge = useContextBridge(ClickedAndAudioContext);
@@ -126,6 +158,14 @@ const SceneBuilder = ({
         {builderState.saveSceneStatus.saved && (
           <SavedSceneSuccessModal
             savedCid={builderState.saveSceneStatus.savedCid}
+          />
+        )}
+        {mintDialogOpen && (
+          <MintDialogModal
+            currentWorldTokenId={tokenId}
+            handleClose={() => setMintDialogOpen(false)}
+            updateWorld={builderState.updateWorld}
+            updateWorldStatus={builderState.mintWorldStatus}
           />
         )}
       </div>

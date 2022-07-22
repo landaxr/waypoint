@@ -3,11 +3,11 @@ import { useContractWrite, useSigner, useAccount } from "wagmi";
 import {
   saveErc721ToIpfs,
   saveTokenMetadataAndSceneToIpfs,
-} from "../../../../api/tokenSaver";
-import { emptyWorldToken } from "../../../../api/worlds";
-import deployedContracts from "../../../../contracts/Waypoint.json";
-import { SceneAndFiles } from "../../../../types/scene";
-import { WorldErc721 } from "../../../../types/world";
+} from "../../../api/tokenSaver";
+import { emptyWorldToken } from "../../../api/worlds";
+import deployedContracts from "../../../contracts/Waypoint.json";
+import { SceneAndFiles } from "../../../types/scene";
+import { WorldErc721 } from "../../../types/world";
 
 export type MintedWorld = {
   erc721Cid: string;
@@ -27,13 +27,14 @@ export function useWorldCreator() {
   const [status, setStatus] = useState<MintWorldStatus>({
     minting: false,
     isAllowedToMint: false,
-    canMint: false,
+    canMint: true,
   });
 
   const { data: signerData } = useSigner();
   const { isConnected } = useAccount();
 
   useEffect(() => {
+    console.log({isConnected})
     setStatus((existing) => ({
       ...existing,
       isAllowedToMint: isConnected,
@@ -90,11 +91,11 @@ export function useWorldCreator() {
   };
 }
 
-export function useWorldUpdater() {
+export function useWorldUpdater(sceneAndFiles: SceneAndFiles) {
   const [status, setStatus] = useState<MintWorldStatus>({
     minting: false,
     isAllowedToMint: false,
-    canMint: false,
+    canMint: true,
   });
 
   const { data: signerData } = useSigner();
@@ -117,7 +118,7 @@ export function useWorldUpdater() {
   const { canMint, minting } = status;
 
   const updateWorld = useCallback(
-    async (tokenId: string, sceneAndFiles: SceneAndFiles) => {
+    async (tokenId: string) => {
       if (!canMint) throw new Error("Cannot mint!");
 
       if (minting) return;
@@ -147,7 +148,7 @@ export function useWorldUpdater() {
         },
       }));
     },
-    [writeAsync, canMint, minting]
+    [writeAsync, canMint, minting, sceneAndFiles]
   );
 
   return {
