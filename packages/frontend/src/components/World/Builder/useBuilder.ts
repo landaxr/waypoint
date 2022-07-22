@@ -53,17 +53,20 @@ export const useBuilder = ({
   const [{ scene: sceneWithUpdates, files: filesWithUpdates }, updateScene] =
     useState<SceneAndFiles>(() => sceneAndFiles);
 
-  useEffect(() => {
-    updateScene(sceneAndFiles);
-  }, [sceneAndFiles]);
-
-  const { createNewElementForFile, updateElement } = useSceneUpdater({
-    updateScene,
-  });
+  const { createNewElementForFile, updateElement, updateCount } =
+    useSceneUpdater({
+      updateScene,
+    });
 
   const [saveSceneStatus, setSaveSceneStatus] = useState<SceneSaveStatus>({
     saving: false,
   });
+
+  const [hasChangesToSave, setHasChangesToSave] = useState(false);
+
+  useEffect(() => {
+    if (updateCount > 0) setHasChangesToSave(true);
+  }, [updateCount]);
 
   const handleSaveToIpfs = useCallback(async () => {
     if (saveSceneStatus.saving) return;
@@ -81,6 +84,8 @@ export const useBuilder = ({
         saving: false,
         saved: true,
       });
+
+      setHasChangesToSave(false);
     } catch (e) {
       console.error(e);
 
@@ -198,6 +203,7 @@ export const useBuilder = ({
     handleTransformComplete,
     handleSaveToIpfs,
     saveSceneStatus,
+    canSave: hasChangesToSave,
     scene: sceneWithUpdates,
     files: filesWithUpdates,
   };

@@ -22,11 +22,13 @@ const buildMenu = ({
   worldId,
   handleSaveToIpfs,
   savingScene,
+  disabled,
 }: {
   isNew?: boolean;
   worldId?: string;
   handleSaveToIpfs: () => void;
   savingScene: boolean;
+  disabled: boolean;
 }): MenuItem[] => {
   const elementName = isNew ? "Draft World" : worldId || "World";
 
@@ -36,7 +38,7 @@ const buildMenu = ({
       action: handleSaveToIpfs,
       title: savingScene ? "Saving to IPFS" : "Save to IPFS",
       kind: LinkKind.button,
-      disabled: savingScene,
+      disabled,
     },
   ];
 };
@@ -62,17 +64,23 @@ const SceneBuilder = ({
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
+    console.log({
+      canSave: builderState.canSave,
+      saving: builderState.saveSceneStatus.saving,
+    });
     setMenuItems(
       buildMenu({
         isNew,
         worldId,
         handleSaveToIpfs: builderState.handleSaveToIpfs,
         savingScene: builderState.saveSceneStatus.saving,
+        disabled: builderState.saveSceneStatus.saving || !builderState.canSave,
       })
     );
   }, [
     builderState.handleSaveToIpfs,
     builderState.saveSceneStatus.saving,
+    builderState.canSave,
     isNew,
     worldId,
   ]);
