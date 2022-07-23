@@ -8,7 +8,7 @@ import {
 import { filterUndefined } from "./sceneParser";
 import { makeWeb3StorageClient } from "./web3Storage";
 
-const applicationCid = "Qmd2jeJvashH7Hb6JFpsnM4mHvGGdTdS6todHHMHPpwaw3";
+const applicationCid = "QmSc3vonb6g9quEf32RE1ZXhU7q8Vr3Y6CPc4PFUTpkxKi";
 // todo: use ipfs url
 const makeInteractiveApplicationUrl = (tokenId: string) =>
   `ipfs://${applicationCid}/#/worlds/${tokenId}`;
