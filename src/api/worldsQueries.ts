@@ -120,6 +120,19 @@ export function useWorldsOwnedByAddress(address: string | undefined) {
   };
 }
 
+export function useWorlds() {
+  const { loading, data } = useQuery<SpacesQueryData>(spacesQuery(), {
+    pollInterval: 2500,
+  });
+
+  return {
+    loading,
+    data,
+  };
+}
+
+
+
 export function useWorld(tokenId: string) {
   const worldGql = useMemo(() => spaceQuery(tokenId), [tokenId]);
 

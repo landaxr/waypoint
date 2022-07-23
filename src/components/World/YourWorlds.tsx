@@ -9,7 +9,7 @@ import {
 import MainNavbar from "../Nav/MainNavbar";
 import { useWorldTokenCreator } from "./Minter/useWorldMinter";
 
-const World = ({ world }: { world: WorldData }) => {
+export const World = ({ world }: { world: WorldData }) => {
   // const { loading, error, data } = useQuery<WorldsData>(GET_LOCAL_WORLDS);
 
   const { erc721Token, loading } = useErc721TokenForFileUrl(world.uri);
@@ -51,7 +51,7 @@ const YourWorlds = () => {
             }
             className="rounded-full bg-red text-white text-md font-medium active:bg-red focus:outline-none focus:ring focus:ring-red-light py-2 pr-4 pl-3 md:p-2 m-4 font-monospace"
           >
-            Create a World on Polygon
+            Mint a New World
           </button>
         </p>
         <div className="grid grid-cols-3 gap-4">
