@@ -26,13 +26,7 @@ export const useErc721TokenForFileUrl = (fileUrl: string | undefined) => {
 
         const fileContents = JSON.parse(fileContentsText) as WorldErc721;
 
-        // hack - get cid from url:
-        const urlSplit = tokenUrl.split("/");
-        const cid = urlSplit[urlSplit.length - 2];
-
-        const withPathsFixed = appendIpfsPathToContents(fileContents, cid);
-
-        setErc721Token(withPathsFixed);
+        setErc721Token(fileContents);
       } finally {
         setLoading(false);
       }

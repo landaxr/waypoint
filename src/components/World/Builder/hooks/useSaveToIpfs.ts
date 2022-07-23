@@ -31,7 +31,7 @@ const useSaveToIpfs = ({
       saving: true,
     });
     try {
-      const cid = await saveSceneToIpfs({
+      const { cid } = await saveSceneToIpfs({
         scene: scene,
         files: files,
         forkedFrom,

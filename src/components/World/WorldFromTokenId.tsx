@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import loadSceneFromIpfs from "../../api/ipfsLoader";
-import { useWorld } from "../../api/worldsQueries";
+import { useHttpsUriForIpfs } from "../../api/ipfsUrls";
+import { useErc721TokenForFileUrl, useWorld } from "../../api/worldsQueries";
 import { SceneAndFiles } from "../../types/scene";
 import { WorldErc721 } from "../../types/world";
 import LoadingScreen from "../Shared/LoadingScreen";
@@ -29,19 +30,20 @@ const WorldFromTokenId = ({
 
   const { world } = useWorld(tokenId);
 
-  const erc721TokenUri = world?.uri;
+  const tokenMetadata = useErc721TokenForFileUrl(world?.uri);
 
   const worldsCid = useMemo(() => {
-    if (!erc721TokenUri) return null;
-    // hack: grab the cid from the full url of the token
+    if (!tokenMetadata || !tokenMetadata.erc721Token?.scene_graph_url)
+      return null;
 
-    // url looks like: ipfs://bafybeiax4pfaedwoykqfyqiwyrgtl5ya3vdwjkw2etc4sbljy5rdtkte3m/erc721.json
+    // hack: grab the cid from the full url of the metadata so we can fetch it at once.
+    // url looks like: ipfs://bafybeiax4pfaedwoykqfyqiwyrgtl5ya3vdwjkw2etc4sbljy5rdtkte3m/metadata.json
 
-    const parts = erc721TokenUri.split("/");
+    const parts = tokenMetadata.erc721Token.scene_graph_url.split("/");
 
     // second to last part is cid
     return parts[parts.length - 2];
-  }, [erc721TokenUri]);
+  }, [tokenMetadata]);
 
   useEffect(() => {
     setLoadedState({
