@@ -1,9 +1,27 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import CreatePortalDialogModal from "../BuilderDialogs/CreatePortalDialog";
 import EditSkyboxDialog from "./EditSkyboxDialog";
 import { BuilderState, TransformMode } from "./hooks/useBuilder";
 
 const transformIconClass = "mr-2 w-4 h-4 fill-current";
+
+const DocumentAddIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+    />
+  </svg>
+);
 
 const TransformControlButton = ({
   setTransformMode,
@@ -129,6 +147,26 @@ const EditSkyboxButton = ({ editSkybox }: { editSkybox: () => void }) => {
   );
 };
 
+const CreatePortalButton = ({ openDialog }: { openDialog: () => void }) => {
+  return (
+    <>
+      <div className="inline-flex rounded-md shadow-sm" role="group">
+        <button
+          type="button"
+          className={clsx(
+            "inline-flex items-center py-2 px-4 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700",
+            "rounded-l-lg rounded-r-lg"
+          )}
+          onClick={openDialog}
+        >
+          <DocumentAddIcon />
+          Create a Portal
+        </button>
+      </div>
+    </>
+  );
+};
+
 const BuilderMenu = ({
   scene,
   setTransformMode,
@@ -137,9 +175,21 @@ const BuilderMenu = ({
   targetElement,
   transformMode,
   setNewSkyboxFile,
+  tokenId,
+  portalCreator,
 }: BuilderState) => {
   const shouldBeTransforming = isTransforming && elementPath && targetElement;
   const [editingSkybox, setEditingSkybox] = useState(false);
+
+  const [creatingPortal, setCreatingPortal] = useState(false);
+
+  useEffect(() => {
+    if (editingSkybox) setCreatingPortal(false);
+  }, [editingSkybox]);
+
+  useEffect(() => {
+    if (creatingPortal) setEditingSkybox(false);
+  }, [creatingPortal]);
 
   return (
     <>
@@ -151,7 +201,10 @@ const BuilderMenu = ({
           />
         )}
         {!shouldBeTransforming && (
-          <EditSkyboxButton editSkybox={() => setEditingSkybox(true)} />
+          <>
+            <EditSkyboxButton editSkybox={() => setEditingSkybox(true)} />
+            <CreatePortalButton openDialog={() => setCreatingPortal(true)} />
+          </>
         )}
       </div>
       {editingSkybox && (
@@ -160,6 +213,13 @@ const BuilderMenu = ({
           skyboxFile={scene.environment?.environmentMap}
           files={files}
           handleClose={() => setEditingSkybox(false)}
+        />
+      )}
+      {creatingPortal && (
+        <CreatePortalDialogModal
+          currentWorldTokenId={tokenId}
+          handleClose={() => setCreatingPortal(false)}
+          portalCreator={portalCreator}
         />
       )}
     </>

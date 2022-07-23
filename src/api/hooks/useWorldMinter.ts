@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useContractWrite, useSigner, useAccount } from "wagmi";
-import {
-  createImageFromDataUri,
-  saveSceneToIpfs,
-} from "../ipfsSaver";
+import { createImageFromDataUri, saveSceneToIpfs } from "../ipfsSaver";
 import { buildAndSaveTokenMetadataToIpfs } from "../tokenSaver";
 import deployedContracts from "../../contracts/Waypoint.json";
 // import deployedContracts from "../../../contracts/WayPoint.json";

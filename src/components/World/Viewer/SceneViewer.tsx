@@ -54,8 +54,6 @@ const SceneViewer = ({
   handleStartEdit: () => void;
   editText?: string;
 }) => {
-
-
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {

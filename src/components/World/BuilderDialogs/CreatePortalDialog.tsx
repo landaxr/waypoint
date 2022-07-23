@@ -4,11 +4,14 @@ import { convertURIToHTTPS } from "../../../api/ipfsUrls";
 import {
   SpacesQueryData,
   useErc721TokenForFileUrl,
-  useWorldsOwnedByAddress,
+  useWorlds,
   WorldData,
 } from "../../../api/worldsQueries";
 import Modal, { ModalHeader3 } from "../../Shared/Modal";
 import { MintWorldStatus } from "../../../api/hooks/useWorldMinter";
+import { CreatePortalResponse } from "../../../api/hooks/usePortalCreator";
+import { zeroPad } from "ethers/lib/utils";
+import ErrorBoundary from "../../Shared/ErrorBoundary";
 
 const WorldEntry = ({
   world,
@@ -34,7 +37,7 @@ const WorldEntry = ({
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-            World: {world.id}
+            World: {erc721Token.name} ({world.id})
           </p>
           <p className="text-sm text-gray-500 truncate dark:text-gray-400">
             Has a scene?: {erc721Token.scene_graph_url ? "Yes" : "No"}
@@ -48,21 +51,23 @@ const WorldEntry = ({
   );
 };
 
-const SelectWorldToMintTo = ({
+const SelectWorldToPortalTo = ({
   setTokenId,
-  worlds: { spaces },
+  worlds,
 }: {
   setTokenId: (tokenId: string) => void;
-  worlds: SpacesQueryData;
+  worlds: WorldData[];
 }) => {
   return (
     <>
-      <p>Select a world to mint to:</p>
+      <p>Select a world to portal to:</p>
 
       <div className="flow-root">
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-          {spaces.map((world, id) => (
-            <WorldEntry key={id} world={world} onSelect={setTokenId} />
+          {worlds.map((world, id) => (
+            <ErrorBoundary key={id}>
+              <WorldEntry key={id} world={world} onSelect={setTokenId} />
+            </ErrorBoundary>
           ))}
         </ul>
       </div>
@@ -75,9 +80,9 @@ const SelectedWorld = ({
   worlds,
 }: {
   tokenId: string;
-  worlds: SpacesQueryData;
+  worlds: WorldData[];
 }) => {
-  const world = worlds.spaces.find((x) => x.id === tokenId);
+  const world = worlds.find((x) => x.id === tokenId);
 
   const { erc721Token, loading } = useErc721TokenForFileUrl(world?.uri);
   // const worldImageUrl = useHttpsUriForIpfs(world?.tokenErc721.image);
@@ -100,49 +105,67 @@ const SelectedWorld = ({
 };
 
 const CreatePortalDialogModal = ({
-  updateWorldStatus,
-  handleClose,
-  updateWorld,
+  portalCreator: { canCreatePortal, createPortal, isRunning },
   currentWorldTokenId,
+  handleClose,
 }: {
-  updateWorldStatus: MintWorldStatus;
-  handleClose: () => void;
-  updateWorld: (tokenId: string) => void;
+  portalCreator: CreatePortalResponse;
   currentWorldTokenId: string | undefined;
+  handleClose: () => void;
 }) => {
-  const [tokenId, setTokenId] = useState<string | undefined>(
-    currentWorldTokenId
+  const [selectedWorldTokenId, setSelectedWorldTokenId] = useState<
+    string | undefined
+  >();
+  const { data: worldsResult } = useWorlds();
+
+  const worldsWithoutCurrent = worldsResult?.spaces.filter(
+    (x) => x.id !== currentWorldTokenId
   );
-  const { address } = useAccount();
-  const { data: worlds, loading } = useWorldsOwnedByAddress(address);
 
   return (
     <Modal
       handleClose={handleClose}
       show
-      header={<ModalHeader3 text="Mint this Scene to your World to Polygon" />}
+      header={<ModalHeader3 text="Creaet a Portal to Another World" />}
       footer={
         <button
           className="text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red dark:hover:bg-red-light dark:focus:ring-red-light disabled:bg-gray-300"
-          disabled={
-            !tokenId ||
-            !updateWorldStatus.canMint ||
-            !updateWorldStatus.isAllowedToMint ||
-            updateWorldStatus.minting
+          disabled={!canCreatePortal || isRunning || !selectedWorldTokenId}
+          onClick={() =>
+            selectedWorldTokenId
+              ? createPortal({
+                  targetId: +selectedWorldTokenId,
+                  x: 0,
+                  y: 0,
+                  z: 0,
+                  toX: 0,
+                  toY: 0,
+                  toZ: 0,
+                })
+              : undefined
           }
-          onClick={tokenId ? () => updateWorld(tokenId) : undefined}
         >
-          Mint Scene to World
+          Create a Portal to This World
         </button>
       }
       size={"lg"}
     >
       <div className="text-base leading-relaxed text-gray-500 dark:text-gray-400 space-y-6">
-        {!tokenId && worlds && (
-          <SelectWorldToMintTo setTokenId={setTokenId} worlds={worlds} />
-        )}
-        {tokenId && worlds && (
-          <SelectedWorld tokenId={tokenId} worlds={worlds} />
+        {worldsWithoutCurrent && (
+          <>
+            {worldsWithoutCurrent && (
+              <SelectWorldToPortalTo
+                setTokenId={setSelectedWorldTokenId}
+                worlds={worldsWithoutCurrent}
+              />
+            )}
+            {selectedWorldTokenId && worldsWithoutCurrent && (
+              <SelectedWorld
+                tokenId={selectedWorldTokenId}
+                worlds={worldsWithoutCurrent}
+              />
+            )}
+          </>
         )}
       </div>
     </Modal>

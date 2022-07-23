@@ -16,7 +16,7 @@ import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
 import { MintWorldStatus } from "../../../api/hooks/useWorldMinter";
 import { filterUndefined } from "../../../api/sceneParser";
-import MintDialogModal from "../Minter/MintDialogModal";
+import MintDialogModal from "../BuilderDialogs/MintDialogModal";
 import SetCaptureScreenshotFn from "../../Shared/SetCaptureScreenshotFn";
 
 const rootPath: string[] = [];
@@ -74,7 +74,7 @@ const SceneBuilder = ({
   tokenId?: string;
   pageTitle: string;
 }) => {
-  const builderState = useBuilder({ sceneAndFiles });
+  const builderState = useBuilder({ sceneAndFiles, tokenId });
 
   const cursorClass = useMemo(() => {
     return "cursor-pointer";
@@ -86,6 +86,7 @@ const SceneBuilder = ({
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   const [mintDialogOpen, setMintDialogOpen] = useState(false);
+  const [portalDialogOpen, setPortalDialogOpen] = useState(false);
 
   useEffect(() => {
     setMenuItems(

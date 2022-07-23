@@ -11,6 +11,7 @@ import { useSceneUpdater } from "./useSceneUpdater";
 import useWorldTokenUpdater, {
   useWorldTokenCreator,
 } from "../../../../api/hooks/useWorldMinter";
+import usePortalCreator from "../../../../api/hooks/usePortalCreator";
 
 export enum TransformMode {
   translate = "translate",
@@ -48,8 +49,10 @@ const toIVector3 = (vector3: Vector3 | Euler): IVector3 => ({
 
 export const useBuilder = ({
   sceneAndFiles,
+  tokenId,
 }: {
   sceneAndFiles: SceneAndFiles;
+  tokenId: string | undefined;
 }) => {
   const raycasterRef = useRef<Raycaster>(new Raycaster());
 
@@ -75,6 +78,9 @@ export const useBuilder = ({
     captureScreenshotFn: captureScreenshotFn?.fn,
     existingSceneCid: sceneAndFiles.cid,
   });
+
+  const portalCreator = usePortalCreator({ tokenId });
+
   const { createWorld, status: createWorldStatus } = useWorldTokenCreator();
 
   const { handleSaveToIpfs, hasChangesToSave, saveSceneStatus } = useSaveToIpfs(
@@ -208,6 +214,8 @@ export const useBuilder = ({
     createWorld,
     createWorldStatus,
     setCaptureScreenShotFn,
+    portalCreator,
+    tokenId,
   };
 };
 
