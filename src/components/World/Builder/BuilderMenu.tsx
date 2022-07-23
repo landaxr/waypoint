@@ -203,7 +203,9 @@ const BuilderMenu = ({
         {!shouldBeTransforming && (
           <>
             <EditSkyboxButton editSkybox={() => setEditingSkybox(true)} />
-            <CreatePortalButton openDialog={() => setCreatingPortal(true)} />
+            {portalCreator.canCreatePortal && (
+              <CreatePortalButton openDialog={() => setCreatingPortal(true)} />
+            )}
           </>
         )}
       </div>

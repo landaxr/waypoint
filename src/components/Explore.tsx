@@ -1,4 +1,4 @@
-import { useWorlds } from "../api/worldsQueries";
+import { useWorlds } from "../api/theGraph/worldsQueries";
 import MainNavbar from "./Nav/MainNavbar";
 import { World } from "./World/YourWorlds";
 

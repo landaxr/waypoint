@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import loadSceneFromIpfs from "../../api/ipfsLoader";
+import loadSceneFromIpfs from "../../api/ipfs/ipfsLoader";
 import { SceneAndFiles } from "../../types/scene";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
@@ -73,6 +73,7 @@ const WorldFromIpfs = ({ cid, edit }: { cid: string; edit: boolean }) => {
           sceneAndFiles={sceneAndFiles}
           cid={cid}
           pageTitle={`Forking ipfs://${cid}`}
+          portals={undefined}
         />
       );
     return (
@@ -82,6 +83,7 @@ const WorldFromIpfs = ({ cid, edit }: { cid: string; edit: boolean }) => {
         pageTitle={`Viewing world from ipfs://${cid}`}
         canEdit
         editText="Fork"
+        portals={undefined}
       />
     );
   }

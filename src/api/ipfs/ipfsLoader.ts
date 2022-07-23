@@ -1,5 +1,5 @@
 import { Web3File } from "web3.storage";
-import { SceneAndFiles, StoredSceneAndFiles } from "../types/scene";
+import { SceneAndFiles, StoredSceneAndFiles } from "../../types/scene";
 import {
   FileLocationKindLocal,
   FileLocationKindStored,
@@ -7,9 +7,9 @@ import {
   FileLocationStored,
   SceneFilesLocal,
   SceneFilesStored,
-} from "../types/shared";
+} from "../../types/shared";
 import { metadataFileName } from "./ipfsSaver";
-import { makeWeb3StorageClient } from "./lib/web3Storage";
+import { makeWeb3StorageClient } from "../lib/web3Storage";
 
 async function toLocalFile(
   fileLocation: FileLocationStored,

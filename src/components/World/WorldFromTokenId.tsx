@@ -1,7 +1,8 @@
 import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
-import useLoadWorldAndScene from "../../api/useLoadWorldAndScene";
+import useLoadWorldAndScene from "../../api/nft/useLoadWorldAndScene";
+import { usePortalsFromWorld } from "../../api/theGraph/portalQueries";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
 import SceneViewer from "./Viewer/SceneViewer";
@@ -16,6 +17,9 @@ const WorldFromTokenId = ({
   const { progress, sceneAndFiles, world, worldsCid } = useLoadWorldAndScene({
     tokenId,
   });
+
+  const portalsOfWorld = usePortalsFromWorld(tokenId);
+
   const navigate = useNavigate();
 
   const handleStartFork = useCallback(() => {
@@ -33,6 +37,7 @@ const WorldFromTokenId = ({
           cid={worldsCid}
           tokenId={tokenId}
           pageTitle={`Editing world at token ${tokenId}`}
+          portals={portalsOfWorld.data?.portals}
         />
       );
     return (
@@ -42,6 +47,7 @@ const WorldFromTokenId = ({
         handleStartEdit={handleStartFork}
         canEdit={canBuild}
         editText="Edit"
+        portals={portalsOfWorld.data?.portals}
       />
     );
   }

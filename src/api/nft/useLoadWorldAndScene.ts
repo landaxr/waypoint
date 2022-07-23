@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { SceneAndFiles } from "../types/scene";
-import { WorldErc721 } from "../types/world";
-import loadSceneFromIpfs from "./ipfsLoader";
-import { useErc721TokenForFileUrl, useWorld } from "./worldsQueries";
+import { SceneAndFiles } from "../../types/scene";
+import { WorldErc721 } from "../../types/world";
+import loadSceneFromIpfs from "../ipfs/ipfsLoader";
+import { useErc721TokenForFileUrl, useWorld } from "../theGraph/worldsQueries";
 
 const useLoadWorldAndScene = ({ tokenId }: { tokenId: string }) => {
   const [{ progress, sceneAndFiles }, setLoadedState] = useState<{

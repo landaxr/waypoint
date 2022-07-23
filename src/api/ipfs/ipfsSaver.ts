@@ -1,11 +1,11 @@
 import { CIDString } from "web3.storage";
-import { SceneConfiguration, StoredSceneAndFiles } from "../types/scene";
-import { SceneFilesLocal } from "../types/shared";
+import { SceneConfiguration, StoredSceneAndFiles } from "../../types/scene";
+import { SceneFilesLocal } from "../../types/shared";
 import {
   extractFilesToUploadAndLocations,
   filterUndefined,
-} from "./sceneParser";
-import { makeWeb3StorageClient } from "./lib/web3Storage";
+} from "../sceneParser";
+import { makeWeb3StorageClient } from "../lib/web3Storage";
 
 export const metadataFileName = "metadata.json";
 

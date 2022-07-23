@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useContractWrite, useSigner, useAccount } from "wagmi";
-import { createImageFromDataUri, saveSceneToIpfs } from "../ipfsSaver";
-import { buildAndSaveTokenMetadataToIpfs } from "../tokenSaver";
+import { createImageFromDataUri, saveSceneToIpfs } from "../ipfs/ipfsSaver";
+import { buildAndSaveTokenMetadataToIpfs } from "../nft/tokenSaver";
 import deployedContracts from "../../contracts/Waypoint.json";
 // import deployedContracts from "../../../contracts/WayPoint.json";
 import { SceneAndFiles } from "../../types/scene";

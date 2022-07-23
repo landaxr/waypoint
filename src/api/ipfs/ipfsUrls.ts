@@ -3,8 +3,8 @@ import {
   FileLocationKindLocal,
   FileLocationLocal,
   SceneFilesLocal,
-} from "../types/shared";
-import { FileReference, Optional } from "../types/shared";
+} from "../../types/shared";
+import { FileReference, Optional } from "../../types/shared";
 
 function convertURIToHTTPSInner({
   url,

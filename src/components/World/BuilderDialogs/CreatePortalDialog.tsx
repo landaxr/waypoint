@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useAccount } from "wagmi";
-import { convertURIToHTTPS } from "../../../api/ipfsUrls";
+import { convertURIToHTTPS } from "../../../api/ipfs/ipfsUrls";
 import {
   SpacesQueryData,
   useErc721TokenForFileUrl,
   useWorlds,
   WorldData,
-} from "../../../api/worldsQueries";
+} from "../../../api/theGraph/worldsQueries";
 import Modal, { ModalHeader3 } from "../../Shared/Modal";
-import { MintWorldStatus } from "../../../api/hooks/useWorldMinter";
-import { CreatePortalResponse } from "../../../api/hooks/usePortalCreator";
+import { MintWorldStatus } from "../../../api/smartContracts/useWorldMinter";
+import { CreatePortalResponse } from "../../../api/smartContracts/usePortalCreator";
 import { zeroPad } from "ethers/lib/utils";
 import ErrorBoundary from "../../Shared/ErrorBoundary";
 

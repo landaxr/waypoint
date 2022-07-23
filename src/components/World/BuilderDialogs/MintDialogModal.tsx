@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useAccount } from "wagmi";
-import { convertURIToHTTPS } from "../../../api/ipfsUrls";
+import { convertURIToHTTPS } from "../../../api/ipfs/ipfsUrls";
 import {
   SpacesQueryData,
   useErc721TokenForFileUrl,
   useWorldsOwnedByAddress,
   WorldData,
-} from "../../../api/worldsQueries";
+} from "../../../api/theGraph/worldsQueries";
 import Modal, { ModalHeader3 } from "../../Shared/Modal";
-import { MintWorldStatus } from "../../../api/hooks/useWorldMinter";
+import { MintWorldStatus } from "../../../api/smartContracts/useWorldMinter";
 
 const WorldEntry = ({
   world,

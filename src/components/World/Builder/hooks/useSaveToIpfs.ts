@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from "react";
-import { saveSceneToIpfs } from "../../../../api/ipfsSaver";
+import { saveSceneToIpfs } from "../../../../api/ipfs/ipfsSaver";
 import { SceneConfiguration } from "../../../../types/scene";
 import { SceneFilesLocal } from "../../../../types/shared";
 import { SceneSaveStatus } from "./useBuilder";

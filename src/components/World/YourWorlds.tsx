@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { useHttpsUriForIpfs } from "../../api/ipfsUrls";
+import { useHttpsUriForIpfs } from "../../api/ipfs/ipfsUrls";
 import {
   useErc721TokenForFileUrl,
   useWorldsOwnedByAddress,
   WorldData,
-} from "../../api/worldsQueries";
+} from "../../api/theGraph/worldsQueries";
 import MainNavbar from "../Nav/MainNavbar";
-import { useWorldTokenCreator } from "../../api/hooks/useWorldMinter";
+import { useWorldTokenCreator } from "../../api/smartContracts/useWorldMinter";
 
 export const World = ({ world }: { world: WorldData }) => {
   // const { loading, error, data } = useQuery<WorldsData>(GET_LOCAL_WORLDS);

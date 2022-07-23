@@ -14,10 +14,14 @@ import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
 import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
 import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
-import { MintWorldStatus } from "../../../api/hooks/useWorldMinter";
+import { MintWorldStatus } from "../../../api/smartContracts/useWorldMinter";
 import { filterUndefined } from "../../../api/sceneParser";
 import MintDialogModal from "../BuilderDialogs/MintDialogModal";
 import SetCaptureScreenshotFn from "../../Shared/SetCaptureScreenshotFn";
+import WorldPortals from "../Portals/WorldPortals";
+import { PortalData } from "../../../api/theGraph/portalQueries";
+import { useNavigate } from "react-router";
+import { getWorldsPath } from "../Viewer/SceneViewer";
 
 const rootPath: string[] = [];
 
@@ -67,12 +71,14 @@ const SceneBuilder = ({
   cid,
   tokenId,
   pageTitle,
+  portals,
 }: {
   sceneAndFiles: SceneAndFiles;
   isNew?: boolean;
   cid?: string;
   tokenId?: string;
   pageTitle: string;
+  portals: PortalData[] | undefined;
 }) => {
   const builderState = useBuilder({ sceneAndFiles, tokenId });
 
@@ -86,7 +92,6 @@ const SceneBuilder = ({
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   const [mintDialogOpen, setMintDialogOpen] = useState(false);
-  const [portalDialogOpen, setPortalDialogOpen] = useState(false);
 
   useEffect(() => {
     setMenuItems(
@@ -114,6 +119,8 @@ const SceneBuilder = ({
   ]);
 
   const ContextBridge = useContextBridge(ClickedAndAudioContext);
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -147,6 +154,13 @@ const SceneBuilder = ({
               />
             </Select>
             <BuilderControls {...builderState} />
+            {portals ? (
+              <WorldPortals
+                portals={portals}
+                navigate={navigate}
+                getWorldPath={getWorldsPath}
+              />
+            ) : null}
           </ContextBridge>
         </Canvas>
         <div className="absolute right-5 top-20">

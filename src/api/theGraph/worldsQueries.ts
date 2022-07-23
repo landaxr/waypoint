@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { WorldErc721 } from "../types/world";
+import { WorldErc721 } from "../../types/world";
 import { gql, useQuery } from "@apollo/client";
-import { convertURIToHTTPS } from "./ipfsUrls";
+import { convertURIToHTTPS } from "../ipfs/ipfsUrls";
 
 export type WorldFetchResponse = {
   tokenId: string;

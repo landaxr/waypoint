@@ -1,6 +1,6 @@
 import { ModelConfig } from "../../../types/elements";
 import { useGLTF } from "@react-three/drei";
-import { useHttpsUrl } from "../../../api/ipfsUrls";
+import { useHttpsUrl } from "../../../api/ipfs/ipfsUrls";
 import { SceneFilesLocal } from "../../../types/shared";
 
 const Model = ({
