@@ -5,17 +5,33 @@ import { makeWeb3StorageClient } from "./web3Storage";
 
 export const metadataFileName = "metadata.json";
 
-const createSceneJsonFile = (scene: StoredSceneAndFiles) => {
-  const fileContents = JSON.stringify(scene);
+// source: https://stackoverflow.com/questions/12168909/blob-from-dataurl
+async function dataURItoBlob(dataURI: string) {
+  return await (await fetch(dataURI)).blob();
+}
 
-  const blob = new Blob([fileContents], { type: "application/json" });
+export const createImageFromDataUri = async (
+  dataUri: string,
+  fileName: string
+) => {
+  const blob = await dataURItoBlob(dataUri);
 
-  const file = new File([blob], metadataFileName);
+  const file = new File([blob], fileName);
 
   return file;
 };
 
-export const saveSceneToIpfs = async ({
+export const createJsonFileFromObject = (object: Object, fileName: string) => {
+  const fileContents = JSON.stringify(object);
+
+  const blob = new Blob([fileContents], { type: "application/json" });
+
+  const file = new File([blob], fileName);
+
+  return file;
+};
+
+export const makeIpfsSceneFiles = async ({
   scene,
   files,
 }: {
@@ -30,7 +46,10 @@ export const saveSceneToIpfs = async ({
     files: storedFileLocations,
   };
 
-  const sceneConfigMetadata = createSceneJsonFile(storedSceneAndFiles);
+  const sceneConfigMetadata = createJsonFileFromObject(
+    storedSceneAndFiles,
+    metadataFileName
+  );
 
   console.log({
     files,
@@ -39,7 +58,24 @@ export const saveSceneToIpfs = async ({
     toUpload,
   });
 
-  const allFiles = [sceneConfigMetadata, ...toUpload];
+  return {
+    sceneConfigMetadata,
+    sceneAssetsToUpload: toUpload,
+  };
+};
+
+export const saveSceneToIpfs = async ({
+  scene,
+  files,
+}: {
+  scene: SceneConfiguration;
+  files: SceneFilesLocal;
+}) => {
+  const { sceneConfigMetadata, sceneAssetsToUpload } = await makeIpfsSceneFiles(
+    { scene, files }
+  );
+
+  const allFiles = [sceneConfigMetadata, ...sceneAssetsToUpload];
 
   const client = makeWeb3StorageClient();
 

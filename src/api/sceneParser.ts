@@ -14,7 +14,7 @@ import {
   FileLocationKindLocal,
 } from "../types/shared";
 
-function filterUndefined<T>(ids: (T | undefined)[]): T[] {
+export function filterUndefined<T>(ids: (T | undefined)[]): T[] {
   return ids.filter((x) => x !== null && typeof x !== "undefined") as T[];
 }
 

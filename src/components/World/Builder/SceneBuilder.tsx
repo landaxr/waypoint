@@ -5,7 +5,7 @@ import { Leva } from "leva";
 import { useEffect, useMemo, useState } from "react";
 import { SceneAndFiles } from "../../../types/scene";
 import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
-import { useBuilder } from "./useBuilder";
+import { useBuilder } from "./hooks/useBuilder";
 import BuilderControls from "./BuilderControls";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";
@@ -14,45 +14,65 @@ import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
 import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
 import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
+import { MintWorldStatus } from "../Minter/useWorldMinter";
+import { filterUndefined } from "../../../api/sceneParser";
+import MintDialogModal from "../Minter/MintDialogModal";
+import SetCaptureScreenshotFn from "../../Shared/SetCaptureScreenshotFn";
 
 const rootPath: string[] = [];
 
 const buildMenu = ({
-  isNew,
-  worldId,
   handleSaveToIpfs,
   savingScene,
   disabled,
+  updateWorldStatus,
+  handleOpenMintDialog,
+  pageTitle,
 }: {
-  isNew?: boolean;
-  worldId?: string;
   handleSaveToIpfs: () => void;
   savingScene: boolean;
   disabled: boolean;
+  // createWorld: () => void;
+  // updateWorld: (tokenId: string) => void;
+  createWorldStatus: MintWorldStatus;
+  updateWorldStatus: MintWorldStatus;
+  handleOpenMintDialog: () => void;
+  pageTitle: string;
 }): MenuItem[] => {
-  const title = isNew
-    ? "Building Draft World"
-    : `Forking ${worldId}` || "Forking world";
+  const mintButton = filterUndefined([
+    updateWorldStatus.isAllowedToMint
+      ? {
+          action: handleOpenMintDialog,
+          title: "Mint to Token",
+          kind: LinkKind.button,
+        }
+      : undefined,
+  ]);
 
   return [
-    { link: "#", title, kind: LinkKind.link },
+    { link: "#", title: pageTitle, kind: LinkKind.link },
     {
       action: handleSaveToIpfs,
       title: savingScene ? "Saving to IPFS" : "Save to IPFS",
       kind: LinkKind.button,
       disabled,
     },
+    ...mintButton,
   ];
 };
 
 const SceneBuilder = ({
   sceneAndFiles,
   isNew,
-  worldId,
+  cid,
+  tokenId,
+  pageTitle,
 }: {
   sceneAndFiles: SceneAndFiles;
   isNew?: boolean;
-  worldId?: string;
+  cid?: string;
+  tokenId?: string;
+  pageTitle: string;
 }) => {
   const builderState = useBuilder({ sceneAndFiles });
 
@@ -65,6 +85,8 @@ const SceneBuilder = ({
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
+  const [mintDialogOpen, setMintDialogOpen] = useState(false);
+
   useEffect(() => {
     console.log({
       canSave: builderState.canSave,
@@ -72,11 +94,15 @@ const SceneBuilder = ({
     });
     setMenuItems(
       buildMenu({
-        isNew,
-        worldId,
+        pageTitle,
         handleSaveToIpfs: builderState.handleSaveToIpfs,
         savingScene: builderState.saveSceneStatus.saving,
         disabled: builderState.saveSceneStatus.saving || !builderState.canSave,
+        // createWorld: builderState.createWorld,
+        // updateWorld: builderState.updateWorld,
+        createWorldStatus: builderState.createWorldStatus,
+        updateWorldStatus: builderState.mintWorldStatus,
+        handleOpenMintDialog: () => setMintDialogOpen(true),
       })
     );
   }, [
@@ -84,7 +110,10 @@ const SceneBuilder = ({
     builderState.saveSceneStatus.saving,
     builderState.canSave,
     isNew,
-    worldId,
+    cid,
+    builderState.createWorldStatus,
+    builderState.mintWorldStatus,
+    pageTitle,
   ]);
 
   const ContextBridge = useContextBridge(ClickedAndAudioContext);
@@ -102,6 +131,9 @@ const SceneBuilder = ({
         <input type="hidden" {...getInputProps()} />
         <BuilderMenu {...builderState} />
         <Canvas>
+          <SetCaptureScreenshotFn
+            setCaptureScreenShotFn={builderState.setCaptureScreenShotFn}
+          />
           <ContextBridge>
             <SetRaycasterFromCamera raycasterRef={raycasterRef} />
             <AttachAudioListenerToCamera />
@@ -126,6 +158,14 @@ const SceneBuilder = ({
         {builderState.saveSceneStatus.saved && (
           <SavedSceneSuccessModal
             savedCid={builderState.saveSceneStatus.savedCid}
+          />
+        )}
+        {mintDialogOpen && (
+          <MintDialogModal
+            currentWorldTokenId={tokenId}
+            handleClose={() => setMintDialogOpen(false)}
+            updateWorld={builderState.updateWorld}
+            updateWorldStatus={builderState.mintWorldStatus}
           />
         )}
       </div>

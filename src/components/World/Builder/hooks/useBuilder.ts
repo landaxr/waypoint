@@ -1,13 +1,16 @@
 import { useControls } from "leva";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Euler, Object3D, Raycaster, Vector3 } from "three";
-import { saveSceneToIpfs } from "../../../api/ipfsSaver";
-import { Transform, Element, IVector3 } from "../../../types/elements";
-import { SceneAndFiles } from "../../../types/scene";
-import { Optional } from "../../../types/shared";
-import { isElementUserData } from "../Elements/ElementsTree";
+import { Transform, Element, IVector3 } from "../../../../types/elements";
+import { SceneAndFiles } from "../../../../types/scene";
+import { Optional } from "../../../../types/shared";
+import { isElementUserData } from "../../Elements/ElementsTree";
 import useAddFile from "./useAddFile";
+import useSaveToIpfs from "./useSaveToIpfs";
 import { useSceneUpdater } from "./useSceneUpdater";
+import useWorldTokenUpdater, {
+  useWorldTokenCreator,
+} from "../../Minter/useWorldMinter";
 
 export enum TransformMode {
   translate = "translate",
@@ -50,8 +53,9 @@ export const useBuilder = ({
 }) => {
   const raycasterRef = useRef<Raycaster>(new Raycaster());
 
-  const [{ scene: sceneWithUpdates, files: filesWithUpdates }, updateScene] =
-    useState<SceneAndFiles>(() => sceneAndFiles);
+  const [updatedSceneWithFiles, updateScene] = useState<SceneAndFiles>(
+    () => sceneAndFiles
+  );
 
   const {
     createNewElementForFile,
@@ -62,43 +66,22 @@ export const useBuilder = ({
     updateScene,
   });
 
-  const [saveSceneStatus, setSaveSceneStatus] = useState<SceneSaveStatus>({
-    saving: false,
+  const [captureScreenshotFn, setCaptureScreenShotFn] = useState<{
+    fn: () => string;
+  }>();
+
+  const { updateWorld, status: mintWorldStatus } = useWorldTokenUpdater({
+    sceneAndFiles: updatedSceneWithFiles,
+    captureScreenshotFn: captureScreenshotFn?.fn,
   });
+  const { createWorld, status: createWorldStatus } = useWorldTokenCreator();
 
-  const [hasChangesToSave, setHasChangesToSave] = useState(false);
-
-  useEffect(() => {
-    if (updateCount > 0) setHasChangesToSave(true);
-  }, [updateCount]);
-
-  const handleSaveToIpfs = useCallback(async () => {
-    if (saveSceneStatus.saving) return;
-    setSaveSceneStatus({
-      saving: true,
-    });
-    try {
-      const cid = await saveSceneToIpfs({
-        scene: sceneWithUpdates,
-        files: filesWithUpdates,
-      });
-
-      setSaveSceneStatus({
-        savedCid: cid,
-        saving: false,
-        saved: true,
-      });
-
-      setHasChangesToSave(false);
-    } catch (e) {
-      console.error(e);
-
-      setSaveSceneStatus({
-        saving: false,
-        error: e as Error,
-      });
+  const { handleSaveToIpfs, hasChangesToSave, saveSceneStatus } = useSaveToIpfs(
+    {
+      ...updatedSceneWithFiles,
+      updateCount,
     }
-  }, [sceneWithUpdates, saveSceneStatus.saving, filesWithUpdates]);
+  );
 
   const [transforming, setTransforming] = useState<{
     isTransforming: boolean;
@@ -216,9 +199,13 @@ export const useBuilder = ({
     saveSceneStatus,
     setTransformMode,
     canSave: hasChangesToSave,
-    scene: sceneWithUpdates,
-    files: filesWithUpdates,
+    ...updatedSceneWithFiles,
     setNewSkyboxFile,
+    updateWorld,
+    mintWorldStatus,
+    createWorld,
+    createWorldStatus,
+    setCaptureScreenShotFn,
   };
 };
 

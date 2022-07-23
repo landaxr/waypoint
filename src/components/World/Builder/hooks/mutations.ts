@@ -1,6 +1,10 @@
-import { EnvironmentConfig, SceneConfiguration } from "../types/scene";
-import { Element } from "../types/elements";
-import { Optional, FileLocationLocal, SceneFilesLocal } from "../types/shared";
+import { EnvironmentConfig, SceneConfiguration } from "../../../../types/scene";
+import { Element } from "../../../../types/elements";
+import {
+  Optional,
+  FileLocationLocal,
+  SceneFilesLocal,
+} from "../../../../types/shared";
 import { merge } from "lodash";
 import { newId } from "./utils";
 

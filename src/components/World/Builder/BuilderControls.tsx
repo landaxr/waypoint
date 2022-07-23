@@ -1,7 +1,7 @@
 import { PointerLockControls, FlyControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
-import { BuilderState } from "./useBuilder";
+import { BuilderState } from "./hooks/useBuilder";
 import TransformAndOrbitControls from "../Controls/TransformAndOrbitControls";
 
 const BuilderControls = ({

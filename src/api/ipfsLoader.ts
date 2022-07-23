@@ -83,10 +83,13 @@ async function storedFilesToLocal(
 
 // function localFilesToStored
 
-const loadSceneFromIpfs = async (
-  cid: string,
-  handleProgress: (progress: number) => void
-): Promise<SceneAndFiles> => {
+export const loadStoredSceneAndFilesFromIpfs = async (
+  cid: string
+): Promise<
+  StoredSceneAndFiles & {
+    storedFiles: Web3File[];
+  }
+> => {
   const client = makeWeb3StorageClient();
 
   const res = await client.get(cid);
@@ -97,20 +100,33 @@ const loadSceneFromIpfs = async (
     );
   }
 
-  const files = await res?.files();
+  const storedFiles = await res?.files();
 
-  const metadataFile = files.find((x) => x.name === metadataFileName);
+  const metadataFile = storedFiles.find((x) => x.name === metadataFileName);
 
   if (!metadataFile)
     throw new Error("missing metadata.json files from archive");
 
   const metadataText = await metadataFile.text();
 
-  const { scene, files: configuredFiles } = JSON.parse(
-    metadataText
-  ) as StoredSceneAndFiles;
+  const { scene, files } = JSON.parse(metadataText) as StoredSceneAndFiles;
 
-  const localFiles = await storedFilesToLocal(configuredFiles, files, cid);
+  return {
+    scene,
+    files,
+    storedFiles,
+  };
+};
+
+const loadSceneFromIpfs = async (
+  cid: string,
+  handleProgress: (progress: number) => void
+): Promise<SceneAndFiles> => {
+  const { scene, files, storedFiles } = await loadStoredSceneAndFilesFromIpfs(
+    cid
+  );
+
+  const localFiles = await storedFilesToLocal(files, storedFiles, cid);
 
   return {
     scene,

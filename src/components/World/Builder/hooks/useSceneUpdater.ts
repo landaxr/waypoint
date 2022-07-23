@@ -1,21 +1,21 @@
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
-import { SceneAndFiles, SceneConfiguration } from "../../../types/scene";
+import { SceneAndFiles, SceneConfiguration } from "../../../../types/scene";
 import {
   createNewElement,
   updateElement,
   addElement,
   SceneUpdateFn,
   addFile,
-} from "../../../editorDb/mutations";
-import { newId } from "../../../editorDb/utils";
+} from "./mutations";
+import { newId } from "./utils";
 import {
   ElementType,
   ImageElement,
   ModelElement,
   Transform,
   VideoElement,
-} from "../../../types/elements";
-import { FileLocationKindLocal, Optional } from "../../../types/shared";
+} from "../../../../types/elements";
+import { FileLocationKindLocal, Optional } from "../../../../types/shared";
 
 enum FileType {
   image = "image",
