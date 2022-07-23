@@ -30,14 +30,13 @@ export const useErc721TokenForFileUrl = (fileUrl: string | undefined) => {
 
         const fileContents = JSON.parse(fileContentsText) as WorldErc721;
 
-
         // hack - get cid from url:
-        const urlSplit = tokenUrl.split('/');
-        const cid = urlSplit[urlSplit.length-2];
+        const urlSplit = tokenUrl.split("/");
+        const cid = urlSplit[urlSplit.length - 2];
 
-        const withPathsFixed = appendIpfsPathToContents(fileContents, cid );
+        const withPathsFixed = appendIpfsPathToContents(fileContents, cid);
 
-        console.log({withPathsFixed, fileContents});
+        console.log({ withPathsFixed, fileContents });
 
         setErc721Token(withPathsFixed);
       } finally {
@@ -131,8 +130,6 @@ export function useWorlds() {
   };
 }
 
-
-
 export function useWorld(tokenId: string) {
   const worldGql = useMemo(() => spaceQuery(tokenId), [tokenId]);
 
@@ -146,14 +143,13 @@ export function useWorld(tokenId: string) {
   };
 }
 
-const makeIpfsUrlFromPath = (path: string|undefined, cid: string) => {
+const makeIpfsUrlFromPath = (path: string | undefined, cid: string) => {
   if (!path) return undefined;
 
   return `ipfs://${cid}/${path}`;
-}
+};
 
 function appendIpfsPathToContents(fileContents: WorldErc721, cid: string) {
-
   const result: WorldErc721 = {
     ...fileContents,
     animation_url: makeIpfsUrlFromPath(fileContents.animation_url, cid),
@@ -163,4 +159,3 @@ function appendIpfsPathToContents(fileContents: WorldErc721, cid: string) {
 
   return result;
 }
-

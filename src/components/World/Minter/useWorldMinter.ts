@@ -143,12 +143,12 @@ export function useWorldTokenUpdater({
       if (captureScreenshotFn) {
         const screenShot = captureScreenshotFn();
 
-        debugger
-        console.log('capture screenshot');
+        debugger;
+        console.log("capture screenshot");
 
-        screenshotFile = await createImageFromDataUri(screenShot, 'image.jpg');
-      
-        console.log({screenshotFile});
+        screenshotFile = await createImageFromDataUri(screenShot, "image.jpg");
+
+        console.log({ screenshotFile });
       }
 
       const { erc721Cid, erc721 } = await saveTokenMetadataAndSceneToIpfs({

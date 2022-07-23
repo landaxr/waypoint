@@ -66,8 +66,9 @@ export const useBuilder = ({
     updateScene,
   });
 
-  const [captureScreenshotFn, setCaptureScreenShotFn] =
-    useState<{fn: () => string}>();
+  const [captureScreenshotFn, setCaptureScreenShotFn] = useState<{
+    fn: () => string;
+  }>();
 
   const { updateWorld, status: mintWorldStatus } = useWorldTokenUpdater({
     sceneAndFiles: updatedSceneWithFiles,

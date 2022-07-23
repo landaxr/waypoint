@@ -24,13 +24,13 @@ const useCaptureScreenshot = () => {
 const SetCaptureScreenshotFn = ({
   setCaptureScreenShotFn,
 }: {
-  setCaptureScreenShotFn: (arg: {fn: () => string}) => void;
+  setCaptureScreenShotFn: (arg: { fn: () => string }) => void;
 }) => {
   const captureScreenshot = useCaptureScreenshot();
 
   useEffect(() => {
-    console.log('set capture sreenshot')
-    setCaptureScreenShotFn({fn: captureScreenshot});
+    console.log("set capture sreenshot");
+    setCaptureScreenShotFn({ fn: captureScreenshot });
   }, [setCaptureScreenShotFn, captureScreenshot]);
 
   return null;

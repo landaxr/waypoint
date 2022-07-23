@@ -7,16 +7,19 @@ export const metadataFileName = "metadata.json";
 
 // source: https://stackoverflow.com/questions/12168909/blob-from-dataurl
 async function dataURItoBlob(dataURI: string) {
-  return await (await fetch(dataURI)).blob();  
+  return await (await fetch(dataURI)).blob();
 }
 
-export const createImageFromDataUri = async (dataUri: string, fileName: string) => {
-const blob = await dataURItoBlob(dataUri);
+export const createImageFromDataUri = async (
+  dataUri: string,
+  fileName: string
+) => {
+  const blob = await dataURItoBlob(dataUri);
 
   const file = new File([blob], fileName);
 
   return file;
-}
+};
 
 export const createJsonFileFromObject = (object: Object, fileName: string) => {
   const fileContents = JSON.stringify(object);
