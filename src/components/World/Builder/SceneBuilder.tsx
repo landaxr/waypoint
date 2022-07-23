@@ -17,6 +17,7 @@ import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerTo
 import { MintWorldStatus } from "../Minter/useWorldMinter";
 import { filterUndefined } from "../../../api/sceneParser";
 import MintDialogModal from "../Minter/MintDialogModal";
+import SetCaptureScreenshotFn from "../../Shared/SetCaptureScreenshotFn";
 
 const rootPath: string[] = [];
 
@@ -130,6 +131,9 @@ const SceneBuilder = ({
         <input type="hidden" {...getInputProps()} />
         <BuilderMenu {...builderState} />
         <Canvas>
+          <SetCaptureScreenshotFn
+            setCaptureScreenShotFn={builderState.setCaptureScreenShotFn}
+          />
           <ContextBridge>
             <SetRaycasterFromCamera raycasterRef={raycasterRef} />
             <AttachAudioListenerToCamera />

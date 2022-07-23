@@ -8,7 +8,9 @@ import { isElementUserData } from "../../Elements/ElementsTree";
 import useAddFile from "./useAddFile";
 import useSaveToIpfs from "./useSaveToIpfs";
 import { useSceneUpdater } from "./useSceneUpdater";
-import useWorldUpdater, { useWorldCreator } from "../../Minter/useWorldMinter";
+import useWorldTokenUpdater, {
+  useWorldTokenCreator,
+} from "../../Minter/useWorldMinter";
 
 export enum TransformMode {
   translate = "translate",
@@ -64,10 +66,14 @@ export const useBuilder = ({
     updateScene,
   });
 
-  const { updateWorld, status: mintWorldStatus } = useWorldUpdater(
-    updatedSceneWithFiles
-  );
-  const { createWorld, status: createWorldStatus } = useWorldCreator();
+  const [captureScreenshotFn, setCaptureScreenShotFn] =
+    useState<{fn: () => string}>();
+
+  const { updateWorld, status: mintWorldStatus } = useWorldTokenUpdater({
+    sceneAndFiles: updatedSceneWithFiles,
+    captureScreenshotFn: captureScreenshotFn?.fn,
+  });
+  const { createWorld, status: createWorldStatus } = useWorldTokenCreator();
 
   const { handleSaveToIpfs, hasChangesToSave, saveSceneStatus } = useSaveToIpfs(
     {
@@ -198,6 +204,7 @@ export const useBuilder = ({
     mintWorldStatus,
     createWorld,
     createWorldStatus,
+    setCaptureScreenShotFn,
   };
 };
 

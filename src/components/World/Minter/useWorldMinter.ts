@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useContractWrite, useSigner, useAccount } from "wagmi";
+import { createImageFromDataUri } from "../../../api/ipfsSaver";
 import { saveTokenMetadataAndSceneToIpfs } from "../../../api/tokenSaver";
 import deployedContracts from "../../../contracts/WayPoint.json";
 import { SceneAndFiles } from "../../../types/scene";
@@ -22,7 +23,7 @@ export type MintWorldStatus = {
 
 const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
-export function useWorldCreator() {
+export function useWorldTokenCreator() {
   const [status, setStatus] = useState<MintWorldStatus>({
     minting: false,
     isAllowedToMint: false,
@@ -94,7 +95,13 @@ export function useWorldCreator() {
   };
 }
 
-export function useWorldUpdater(sceneAndFiles: SceneAndFiles) {
+export function useWorldTokenUpdater({
+  sceneAndFiles,
+  captureScreenshotFn,
+}: {
+  sceneAndFiles: SceneAndFiles;
+  captureScreenshotFn: (() => string) | undefined;
+}) {
   const [status, setStatus] = useState<MintWorldStatus>({
     minting: false,
     isAllowedToMint: false,
@@ -121,7 +128,7 @@ export function useWorldUpdater(sceneAndFiles: SceneAndFiles) {
   const { canMint, minting } = status;
 
   const updateWorld = useCallback(
-    async (tokenId: string, screenShot?: File) => {
+    async (tokenId: string) => {
       if (!canMint) throw new Error("Cannot mint!");
 
       if (minting) return;
@@ -132,10 +139,22 @@ export function useWorldUpdater(sceneAndFiles: SceneAndFiles) {
         mintedWorld: undefined,
       }));
 
+      let screenshotFile: File | undefined;
+      if (captureScreenshotFn) {
+        const screenShot = captureScreenshotFn();
+
+        debugger
+        console.log('capture screenshot');
+
+        screenshotFile = await createImageFromDataUri(screenShot, 'image.jpg');
+      
+        console.log({screenshotFile});
+      }
+
       const { erc721Cid, erc721 } = await saveTokenMetadataAndSceneToIpfs({
         tokenId,
         name: "my world",
-        sceneImage: screenShot,
+        sceneImage: screenshotFile,
         sceneAndFiles,
       });
 
@@ -153,7 +172,7 @@ export function useWorldUpdater(sceneAndFiles: SceneAndFiles) {
         },
       }));
     },
-    [writeAsync, canMint, minting, sceneAndFiles]
+    [writeAsync, canMint, minting, sceneAndFiles, captureScreenshotFn]
   );
 
   return {
@@ -162,4 +181,4 @@ export function useWorldUpdater(sceneAndFiles: SceneAndFiles) {
   };
 }
 
-export default useWorldUpdater;
+export default useWorldTokenUpdater;

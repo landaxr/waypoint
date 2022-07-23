@@ -7,7 +7,7 @@ import {
   WorldData,
 } from "../../api/worldsQueries";
 import MainNavbar from "../Nav/MainNavbar";
-import { useWorldCreator } from "./Minter/useWorldMinter";
+import { useWorldTokenCreator } from "./Minter/useWorldMinter";
 
 const World = ({ world }: { world: WorldData }) => {
   // const { loading, error, data } = useQuery<WorldsData>(GET_LOCAL_WORLDS);
@@ -36,7 +36,7 @@ const World = ({ world }: { world: WorldData }) => {
 const YourWorlds = () => {
   const { address } = useAccount();
   const worldsResponse = useWorldsOwnedByAddress(address);
-  const { createWorld, status } = useWorldCreator();
+  const { createWorld, status } = useWorldTokenCreator();
 
   return (
     <>

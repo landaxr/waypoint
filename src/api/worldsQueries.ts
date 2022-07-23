@@ -30,7 +30,16 @@ export const useErc721TokenForFileUrl = (fileUrl: string | undefined) => {
 
         const fileContents = JSON.parse(fileContentsText) as WorldErc721;
 
-        setErc721Token(fileContents);
+
+        // hack - get cid from url:
+        const urlSplit = tokenUrl.split('/');
+        const cid = urlSplit[urlSplit.length-2];
+
+        const withPathsFixed = appendIpfsPathToContents(fileContents, cid );
+
+        console.log({withPathsFixed, fileContents});
+
+        setErc721Token(withPathsFixed);
       } finally {
         setLoading(false);
       }
@@ -123,3 +132,22 @@ export function useWorld(tokenId: string) {
     world: data ? data.spaces[0] : undefined,
   };
 }
+
+const makeIpfsUrlFromPath = (path: string|undefined, cid: string) => {
+  if (!path) return undefined;
+
+  return `ipfs://${cid}/${path}`;
+}
+
+function appendIpfsPathToContents(fileContents: WorldErc721, cid: string) {
+
+  const result: WorldErc721 = {
+    ...fileContents,
+    animation_url: makeIpfsUrlFromPath(fileContents.animation_url, cid),
+    image: makeIpfsUrlFromPath(fileContents.image, cid),
+    scene_graph_url: makeIpfsUrlFromPath(fileContents.scene_graph_url, cid),
+  };
+
+  return result;
+}
+
