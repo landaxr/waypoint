@@ -8,10 +8,12 @@ const useSaveToIpfs = ({
   scene,
   files,
   updateCount,
+  forkedFrom,
 }: {
   scene: SceneConfiguration;
   files: SceneFilesLocal;
   updateCount: number;
+  forkedFrom?: string;
 }) => {
   const [hasChangesToSave, setHasChangesToSave] = useState(false);
 
@@ -29,9 +31,10 @@ const useSaveToIpfs = ({
       saving: true,
     });
     try {
-      const cid = await saveSceneToIpfs({
+      const { cid } = await saveSceneToIpfs({
         scene: scene,
         files: files,
+        forkedFrom,
       });
 
       setSaveSceneStatus({
@@ -49,7 +52,7 @@ const useSaveToIpfs = ({
         error: e as Error,
       });
     }
-  }, [scene, saveSceneStatus.saving, files]);
+  }, [saveSceneStatus.saving, scene, files, forkedFrom]);
 
   return {
     handleSaveToIpfs,

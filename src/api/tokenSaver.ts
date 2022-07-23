@@ -1,11 +1,5 @@
-import { SceneAndFiles } from "../types/scene";
 import { WorldErc721 } from "../types/world";
-import {
-  createJsonFileFromObject,
-  makeIpfsSceneFiles,
-  metadataFileName,
-} from "./ipfsSaver";
-import { filterUndefined } from "./sceneParser";
+import { createJsonFileFromObject } from "./ipfsSaver";
 import { makeWeb3StorageClient } from "./web3Storage";
 
 const applicationCid = "QmSc3vonb6g9quEf32RE1ZXhU7q8Vr3Y6CPc4PFUTpkxKi";
@@ -25,24 +19,22 @@ export async function saveErc721ToIpfs(toSave: object) {
   return cid;
 }
 
-export async function saveTokenMetadataAndSceneToIpfs({
+export async function buildAndSaveTokenMetadataToIpfs({
   tokenId,
-  sceneImage,
   name,
-  sceneAndFiles,
+  sceneImagePath,
+  sceneGraphPath,
 }: {
   tokenId: string | undefined;
   name: string;
-  sceneImage?: File;
-  sceneAndFiles: SceneAndFiles;
-}): Promise<{ erc721Cid: string; erc721: WorldErc721 }> {
-  const sceneIpfsFiles = await makeIpfsSceneFiles(sceneAndFiles);
-
+  sceneImagePath?: string;
+  sceneGraphPath?: string;
+}): Promise<{ cid: string; metadata: WorldErc721; url: string }> {
   const erc721Metadata: WorldErc721 = {
-    image: sceneImage ? `${sceneImage.name}` : undefined,
+    image: sceneImagePath,
     name,
     animation_url: tokenId ? makeInteractiveApplicationUrl(tokenId) : undefined,
-    scene_graph_url: metadataFileName,
+    scene_graph_url: sceneGraphPath,
   };
 
   const erc721MetadataFile = createJsonFileFromObject(
@@ -52,17 +44,18 @@ export async function saveTokenMetadataAndSceneToIpfs({
 
   const client = makeWeb3StorageClient();
 
-  const allFiles = filterUndefined([
-    ...sceneIpfsFiles.sceneAssetsToUpload,
-    sceneImage,
-    sceneIpfsFiles.sceneConfigMetadata,
+  console.log({
     erc721MetadataFile,
-  ]);
+    sceneImagePath,sceneGraphPath
+  })
 
-  const cid = await client.put(allFiles);
+  const cid = await client.put([erc721MetadataFile]);
+
+  const erc721Url = `ipfs://${cid}/erc721.json`;
 
   return {
-    erc721: erc721Metadata,
-    erc721Cid: cid,
+    metadata: erc721Metadata,
+    cid: cid,
+    url: erc721Url,
   };
 }

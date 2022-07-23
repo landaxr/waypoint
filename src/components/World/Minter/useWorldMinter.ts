@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useContractWrite, useSigner, useAccount } from "wagmi";
-import { createImageFromDataUri } from "../../../api/ipfsSaver";
-import { saveTokenMetadataAndSceneToIpfs } from "../../../api/tokenSaver";
+import {
+  createImageFromDataUri,
+  saveSceneToIpfs,
+} from "../../../api/ipfsSaver";
+import { buildAndSaveTokenMetadataToIpfs } from "../../../api/tokenSaver";
 import deployedContracts from "../../../contracts/Waypoint.json";
 // import deployedContracts from "../../../contracts/WayPoint.json";
 import { SceneAndFiles } from "../../../types/scene";
@@ -22,8 +25,10 @@ export type MintWorldStatus = {
   mintedWorld?: MintedWorld;
 };
 
-export const localContractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const rinkebyContractAddress = "0x8f181e382dF37f4DAB729c1868D0A190A929D614";
+export const localContractAddress =
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const rinkebyContractAddress =
+  "0x8f181e382dF37f4DAB729c1868D0A190A929D614";
 
 const contractAddress = rinkebyContractAddress;
 
@@ -66,14 +71,27 @@ export function useWorldTokenCreator() {
 
     const emptyScene = makeNewScene();
 
-    const { erc721Cid, erc721 } = await saveTokenMetadataAndSceneToIpfs({
-      sceneAndFiles: emptyScene,
+    const { sceneGraphFileUrl } = await saveSceneToIpfs(emptyScene);
+
+    const {
+      cid: erc721Cid,
+      metadata: erc721,
+      url,
+    } = await buildAndSaveTokenMetadataToIpfs({
       name: "New World",
       tokenId: undefined,
+      sceneGraphPath: sceneGraphFileUrl,
+    });
+
+    console.log("saved new: ", {
+      erc721,
+      erc721Cid,
+      erc721Url: url,
+      sceneGraphFileUrl,
     });
 
     await writeAsync({
-      args: [`ipfs://${erc721Cid}/erc721.json`],
+      args: [url],
     });
 
     setStatus((existing) => ({
@@ -97,9 +115,11 @@ export function useWorldTokenCreator() {
 export function useWorldTokenUpdater({
   sceneAndFiles,
   captureScreenshotFn,
+  existingSceneCid,
 }: {
   sceneAndFiles: SceneAndFiles;
   captureScreenshotFn: (() => string) | undefined;
+  existingSceneCid: string | undefined;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
     minting: false,
@@ -117,7 +137,13 @@ export function useWorldTokenUpdater({
     }));
   }, [isConnected]);
 
-  const { writeAsync, error, data, isError, isSuccess } = useContractWrite({
+  const {
+    writeAsync: changeURI,
+    error,
+    data,
+    isError,
+    isSuccess,
+  } = useContractWrite({
     addressOrName: contractAddress,
     contractInterface: deployedContracts,
     signerOrProvider: signerData,
@@ -145,15 +171,33 @@ export function useWorldTokenUpdater({
         screenshotFile = await createImageFromDataUri(screenShot, "image.jpg");
       }
 
-      const { erc721Cid, erc721 } = await saveTokenMetadataAndSceneToIpfs({
+      const { sceneGraphFileUrl, sceneImageUrl: imageFileUrl } =
+        await saveSceneToIpfs({
+          ...sceneAndFiles,
+          sceneImage: screenshotFile,
+          forkedFrom: existingSceneCid,
+        });
+
+      const {
+        cid: erc721Cid,
+        metadata: erc721,
+        url: erc721Url,
+      } = await buildAndSaveTokenMetadataToIpfs({
         tokenId,
         name: "my world",
-        sceneImage: screenshotFile,
-        sceneAndFiles,
+        sceneGraphPath: sceneGraphFileUrl,
+        sceneImagePath: imageFileUrl,
       });
 
-      await writeAsync({
-        args: [tokenId, `ipfs://${erc721Cid}/erc721.json`],
+      console.log("updated: ", {
+        erc721,
+        erc721Cid,
+        erc721Url,
+        sceneGraphFileUrl,
+      });
+
+      await changeURI({
+        args: [tokenId, erc721Url],
       });
 
       setStatus((existing) => ({
@@ -166,7 +210,14 @@ export function useWorldTokenUpdater({
         },
       }));
     },
-    [writeAsync, canMint, minting, sceneAndFiles, captureScreenshotFn]
+    [
+      canMint,
+      captureScreenshotFn,
+      changeURI,
+      existingSceneCid,
+      minting,
+      sceneAndFiles,
+    ]
   );
 
   return {

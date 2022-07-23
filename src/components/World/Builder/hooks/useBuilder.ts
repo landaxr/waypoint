@@ -73,6 +73,7 @@ export const useBuilder = ({
   const { updateWorld, status: mintWorldStatus } = useWorldTokenUpdater({
     sceneAndFiles: updatedSceneWithFiles,
     captureScreenshotFn: captureScreenshotFn?.fn,
+    existingSceneCid: sceneAndFiles.cid,
   });
   const { createWorld, status: createWorldStatus } = useWorldTokenCreator();
 
@@ -80,6 +81,7 @@ export const useBuilder = ({
     {
       ...updatedSceneWithFiles,
       updateCount,
+      forkedFrom: sceneAndFiles.cid,
     }
   );
 

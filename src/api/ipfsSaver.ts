@@ -1,6 +1,10 @@
+import { CIDString } from "web3.storage";
 import { SceneConfiguration, StoredSceneAndFiles } from "../types/scene";
 import { SceneFilesLocal } from "../types/shared";
-import { extractFilesToUploadAndLocations } from "./sceneParser";
+import {
+  extractFilesToUploadAndLocations,
+  filterUndefined,
+} from "./sceneParser";
 import { makeWeb3StorageClient } from "./web3Storage";
 
 export const metadataFileName = "metadata.json";
@@ -34,9 +38,13 @@ export const createJsonFileFromObject = (object: Object, fileName: string) => {
 export const makeIpfsSceneFiles = async ({
   scene,
   files,
+  forkedFrom,
+  sceneImage,
 }: {
   scene: SceneConfiguration;
   files: SceneFilesLocal;
+  forkedFrom?: string;
+  sceneImage?: File;
 }) => {
   const { fileLocations: storedFileLocations, toUpload } =
     extractFilesToUploadAndLocations({ scene, files });
@@ -44,6 +52,7 @@ export const makeIpfsSceneFiles = async ({
   const storedSceneAndFiles: StoredSceneAndFiles = {
     scene,
     files: storedFileLocations,
+    forkedFrom,
   };
 
   const sceneConfigMetadata = createJsonFileFromObject(
@@ -57,22 +66,46 @@ export const makeIpfsSceneFiles = async ({
   };
 };
 
+const toFileInIpfsFolder = (cid: CIDString, file: File | undefined) => {
+  if (!file) return undefined;
+
+  return `ipfs://${cid}/${file.name}`;
+};
+
 export const saveSceneToIpfs = async ({
   scene,
   files,
+  sceneImage,
+  forkedFrom,
 }: {
   scene: SceneConfiguration;
   files: SceneFilesLocal;
+  sceneImage?: File;
+  forkedFrom?: string;
 }) => {
   const { sceneConfigMetadata, sceneAssetsToUpload } = await makeIpfsSceneFiles(
-    { scene, files }
+    { scene, files, forkedFrom }
   );
 
-  const allFiles = [sceneConfigMetadata, ...sceneAssetsToUpload];
+  const allFiles = filterUndefined([
+    sceneConfigMetadata,
+    ...sceneAssetsToUpload,
+    sceneImage,
+  ]);
 
   const client = makeWeb3StorageClient();
 
   const cid = await client.put(allFiles);
 
-  return cid;
+  const sceneGraphFileUrl = toFileInIpfsFolder(
+    cid,
+    sceneConfigMetadata
+  ) as string;
+  const sceneImageUrl = toFileInIpfsFolder(cid, sceneImage);
+
+  return {
+    cid,
+    sceneGraphFileUrl,
+    sceneImageUrl: sceneImageUrl,
+  };
 };

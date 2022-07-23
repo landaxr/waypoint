@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { useHttpsUriForIpfs } from "../../api/ipfsUrls";
@@ -15,6 +16,11 @@ export const World = ({ world }: { world: WorldData }) => {
   const { erc721Token, loading } = useErc721TokenForFileUrl(world.uri);
 
   const imageUrl = useHttpsUriForIpfs(erc721Token?.image);
+
+  useEffect(() => {
+    if (world.id === '3')
+    console.log(world.uri, erc721Token, imageUrl, loading);
+  }, [world.uri, imageUrl, world.id, erc721Token, loading])
 
   return (
     <div className="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">

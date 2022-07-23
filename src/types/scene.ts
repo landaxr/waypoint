@@ -18,12 +18,11 @@ export type SceneConfiguration = {
 export type SceneAndFiles = {
   scene: SceneConfiguration;
   files: SceneFilesLocal;
+  cid?: string;
 };
 
 export type StoredSceneAndFiles = {
-  previousVersion?: {
-    cid?: string;
-  };
   scene: SceneConfiguration;
   files: SceneFilesStored;
+  forkedFrom?: string;
 };
