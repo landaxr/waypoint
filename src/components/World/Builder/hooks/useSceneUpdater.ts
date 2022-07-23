@@ -80,8 +80,6 @@ const newFileToElementConfig = ({
       },
     };
 
-    console.log("added", result);
-
     return result;
   }
 

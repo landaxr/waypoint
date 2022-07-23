@@ -8,8 +8,6 @@ const ViewerControls = () => {
   const showPointerLockControls = true;
 
   useEffect(() => {
-    console.log("enabled:", showPointerLockControls);
-
     if (!showPointerLockControls) {
       document.exitPointerLock();
     }

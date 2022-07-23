@@ -26,15 +26,12 @@ const VideoHtmlElement = ({
 }) => {
   const onLoaded = useCallback(
     (e: SyntheticEvent<HTMLVideoElement>) => {
-      console.log("video loaded");
       const { videoHeight, videoWidth } = e.target as HTMLVideoElement;
 
       handleDimensionsDetermined([videoWidth / videoHeight, 1]);
     },
     [handleDimensionsDetermined]
   );
-
-  console.log("added wrapper");
 
   return (
     <HtmlWrapper>

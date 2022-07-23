@@ -39,7 +39,7 @@ export async function saveTokenMetadataAndSceneToIpfs({
   const sceneIpfsFiles = await makeIpfsSceneFiles(sceneAndFiles);
 
   const erc721Metadata: WorldErc721 = {
-    image: sceneImage ? sceneImage.name : undefined,
+    image: sceneImage ? `${sceneImage.name}` : undefined,
     name,
     animation_url: tokenId ? makeInteractiveApplicationUrl(tokenId) : undefined,
     scene_graph_url: metadataFileName,

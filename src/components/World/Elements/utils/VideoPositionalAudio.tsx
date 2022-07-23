@@ -28,7 +28,6 @@ const VideoPositionalAudio = React.forwardRef(
     const sound = React.useRef<PositionalAudioImpl>();
 
     React.useEffect(() => {
-      console.log("audio,", { listener: !!listener });
       if (!listener) return;
 
       sound.current = new PositionalAudioImpl(listener);

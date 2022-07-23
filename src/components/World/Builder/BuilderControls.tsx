@@ -25,8 +25,6 @@ const BuilderControls = ({
   const { gl, camera } = useThree();
 
   useEffect(() => {
-    console.log("enabled:", showPointerLockControls);
-
     if (!showPointerLockControls) {
       document.exitPointerLock();
     }

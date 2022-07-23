@@ -22,7 +22,6 @@ export const useErc721TokenForFileUrl = (fileUrl: string | undefined) => {
 
     (async () => {
       try {
-        console.log("fetching", tokenUrl);
         const fileContentsText = await (await fetch(tokenUrl)).text();
 
         const fileContents = JSON.parse(fileContentsText) as WorldErc721;
@@ -32,8 +31,6 @@ export const useErc721TokenForFileUrl = (fileUrl: string | undefined) => {
         const cid = urlSplit[urlSplit.length - 2];
 
         const withPathsFixed = appendIpfsPathToContents(fileContents, cid);
-
-        console.log({ withPathsFixed, fileContents });
 
         setErc721Token(withPathsFixed);
       } finally {

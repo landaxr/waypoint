@@ -38,7 +38,6 @@ export function useWorldTokenCreator() {
   const { isConnected } = useAccount();
 
   useEffect(() => {
-    console.log({ isConnected });
     setStatus((existing) => ({
       ...existing,
       isAllowedToMint: isConnected,
@@ -73,13 +72,9 @@ export function useWorldTokenCreator() {
       tokenId: undefined,
     });
 
-    console.log("saving new world");
-
     await writeAsync({
       args: [`ipfs://${erc721Cid}/erc721.json`],
     });
-
-    console.log("saved new world");
 
     setStatus((existing) => ({
       ...existing,
@@ -147,12 +142,7 @@ export function useWorldTokenUpdater({
       if (captureScreenshotFn) {
         const screenShot = captureScreenshotFn();
 
-        debugger;
-        console.log("capture screenshot");
-
         screenshotFile = await createImageFromDataUri(screenShot, "image.jpg");
-
-        console.log({ screenshotFile });
       }
 
       const { erc721Cid, erc721 } = await saveTokenMetadataAndSceneToIpfs({

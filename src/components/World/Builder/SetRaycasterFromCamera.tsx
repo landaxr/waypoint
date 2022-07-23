@@ -12,7 +12,6 @@ const SetCursorAndRaycaster = ({
   const meshRef = useRef<Mesh | null>(null);
 
   useFrame(({ mouse, camera }) => {
-    // console.log(raycasterRef.current.ray.direction);
     raycasterRef.current.setFromCamera(mouse, camera);
 
     if (meshRef.current) {

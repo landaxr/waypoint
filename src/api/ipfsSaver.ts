@@ -51,13 +51,6 @@ export const makeIpfsSceneFiles = async ({
     metadataFileName
   );
 
-  console.log({
-    files,
-    scene,
-    storedFileLocations,
-    toUpload,
-  });
-
   return {
     sceneConfigMetadata,
     sceneAssetsToUpload: toUpload,

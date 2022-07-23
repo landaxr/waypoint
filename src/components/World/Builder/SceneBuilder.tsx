@@ -88,10 +88,6 @@ const SceneBuilder = ({
   const [mintDialogOpen, setMintDialogOpen] = useState(false);
 
   useEffect(() => {
-    console.log({
-      canSave: builderState.canSave,
-      saving: builderState.saveSceneStatus.saving,
-    });
     setMenuItems(
       buildMenu({
         pageTitle,

@@ -61,7 +61,6 @@ const SceneViewer = ({
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
-    console.log({ canEdit, editText });
     setMenuItems(
       viewMenu({
         pageTitle,
