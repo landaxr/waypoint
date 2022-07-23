@@ -26,7 +26,7 @@ const linkClass = ({
       "font-bold active": isActive,
       "rounded-full bg-red text-white text-md font-medium active:bg-red focus:outline-none focus:ring focus:ring-red-light":
         kind === LinkKind.button,
-      "bg-red-700 rounded md:bg-transparent text-red dark:text-white":
+      "bg-red-700 rounded md:bg-transparent text-red text-white":
         kind === LinkKind.link,
     },
     {
@@ -35,7 +35,7 @@ const linkClass = ({
     {
       "hover:bg-red-light": !disabled && kind === LinkKind.button,
     },
-    "block py-2 pr-4 pl-3 md:p-2 font-monospace"
+    "block py-2 pr-4 pl-3 md:p-2 font-monospace dark:text-white"
   );
 
 const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => (

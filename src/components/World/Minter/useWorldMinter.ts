@@ -1,13 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useContractWrite, useSigner, useAccount } from "wagmi";
-import {
-  saveErc721ToIpfs,
-  saveTokenMetadataAndSceneToIpfs,
-} from "../../../api/tokenSaver";
-import { emptyWorldToken } from "../../../api/worlds";
-import deployedContracts from "../../../contracts/Waypoint.json";
+import { saveTokenMetadataAndSceneToIpfs } from "../../../api/tokenSaver";
+import deployedContracts from "../../../contracts/WayPoint.json";
 import { SceneAndFiles } from "../../../types/scene";
 import { WorldErc721 } from "../../../types/world";
+import { makeNewScene } from "../New";
 
 export type MintedWorld = {
   erc721Cid: string;
@@ -23,6 +20,8 @@ export type MintWorldStatus = {
   mintedWorld?: MintedWorld;
 };
 
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+
 export function useWorldCreator() {
   const [status, setStatus] = useState<MintWorldStatus>({
     minting: false,
@@ -34,7 +33,7 @@ export function useWorldCreator() {
   const { isConnected } = useAccount();
 
   useEffect(() => {
-    console.log({isConnected})
+    console.log({ isConnected });
     setStatus((existing) => ({
       ...existing,
       isAllowedToMint: isConnected,
@@ -42,7 +41,7 @@ export function useWorldCreator() {
   }, [isConnected]);
 
   const { writeAsync } = useContractWrite({
-    addressOrName: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    addressOrName: contractAddress,
     contractInterface: deployedContracts,
     signerOrProvider: signerData,
     functionName: "mintNewSpace",
@@ -61,14 +60,18 @@ export function useWorldCreator() {
       mintedWorld: undefined,
     }));
 
-    const erc721 = emptyWorldToken();
+    const emptyScene = makeNewScene();
 
-    const erc721Cid = await saveErc721ToIpfs(erc721);
+    const { erc721Cid, erc721 } = await saveTokenMetadataAndSceneToIpfs({
+      sceneAndFiles: emptyScene,
+      name: "New World",
+      tokenId: undefined,
+    });
 
     console.log("saving new world");
 
     await writeAsync({
-      args: [erc721Cid],
+      args: [`ipfs://${erc721Cid}/erc721.json`],
     });
 
     console.log("saved new world");
@@ -108,8 +111,8 @@ export function useWorldUpdater(sceneAndFiles: SceneAndFiles) {
     }));
   }, [isConnected]);
 
-  const { writeAsync } = useContractWrite({
-    addressOrName: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+  const { writeAsync, error, data, isError, isSuccess } = useContractWrite({
+    addressOrName: contractAddress,
     contractInterface: deployedContracts,
     signerOrProvider: signerData,
     functionName: "changeURI",
@@ -118,7 +121,7 @@ export function useWorldUpdater(sceneAndFiles: SceneAndFiles) {
   const { canMint, minting } = status;
 
   const updateWorld = useCallback(
-    async (tokenId: string) => {
+    async (tokenId: string, screenShot?: File) => {
       if (!canMint) throw new Error("Cannot mint!");
 
       if (minting) return;
@@ -131,11 +134,13 @@ export function useWorldUpdater(sceneAndFiles: SceneAndFiles) {
 
       const { erc721Cid, erc721 } = await saveTokenMetadataAndSceneToIpfs({
         tokenId,
+        name: "my world",
+        sceneImage: screenShot,
         sceneAndFiles,
       });
 
       await writeAsync({
-        args: [tokenId, erc721Cid],
+        args: [tokenId, `ipfs://${erc721Cid}/erc721.json`],
       });
 
       setStatus((existing) => ({

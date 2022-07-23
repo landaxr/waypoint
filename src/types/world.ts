@@ -10,6 +10,7 @@ export type World<T extends SceneFilesLocal | SceneFilesStored> = {
 
 export type WorldErc721 = {
   animation_url?: string;
-  image: string;
+  image?: string;
+  name: string;
   scene_graph_url?: string;
 };

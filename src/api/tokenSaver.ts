@@ -5,8 +5,8 @@ import {
   makeIpfsSceneFiles,
   metadataFileName,
 } from "./ipfsSaver";
+import { filterUndefined } from "./sceneParser";
 import { makeWeb3StorageClient } from "./web3Storage";
-import { catImage } from "./worlds";
 
 const applicationCid = "Qmd2jeJvashH7Hb6JFpsnM4mHvGGdTdS6todHHMHPpwaw3";
 // todo: use ipfs url
@@ -27,16 +27,21 @@ export async function saveErc721ToIpfs(toSave: object) {
 
 export async function saveTokenMetadataAndSceneToIpfs({
   tokenId,
+  sceneImage,
+  name,
   sceneAndFiles,
 }: {
-  tokenId: string;
+  tokenId: string | undefined;
+  name: string;
+  sceneImage?: File;
   sceneAndFiles: SceneAndFiles;
 }): Promise<{ erc721Cid: string; erc721: WorldErc721 }> {
   const sceneIpfsFiles = await makeIpfsSceneFiles(sceneAndFiles);
 
   const erc721Metadata: WorldErc721 = {
-    image: catImage,
-    animation_url: makeInteractiveApplicationUrl(tokenId),
+    image: sceneImage ? sceneImage.name : undefined,
+    name,
+    animation_url: tokenId ? makeInteractiveApplicationUrl(tokenId) : undefined,
     scene_graph_url: metadataFileName,
   };
 
@@ -47,11 +52,12 @@ export async function saveTokenMetadataAndSceneToIpfs({
 
   const client = makeWeb3StorageClient();
 
-  const allFiles = [
+  const allFiles = filterUndefined([
     ...sceneIpfsFiles.sceneAssetsToUpload,
+    sceneImage,
     sceneIpfsFiles.sceneConfigMetadata,
     erc721MetadataFile,
-  ];
+  ]);
 
   const cid = await client.put(allFiles);
 

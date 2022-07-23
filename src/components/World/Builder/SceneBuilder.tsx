@@ -21,16 +21,13 @@ import MintDialogModal from "../Minter/MintDialogModal";
 const rootPath: string[] = [];
 
 const buildMenu = ({
-  isNew,
-  worldId,
   handleSaveToIpfs,
   savingScene,
   disabled,
   updateWorldStatus,
   handleOpenMintDialog,
+  pageTitle,
 }: {
-  isNew?: boolean;
-  worldId?: string;
   handleSaveToIpfs: () => void;
   savingScene: boolean;
   disabled: boolean;
@@ -39,23 +36,20 @@ const buildMenu = ({
   createWorldStatus: MintWorldStatus;
   updateWorldStatus: MintWorldStatus;
   handleOpenMintDialog: () => void;
+  pageTitle: string;
 }): MenuItem[] => {
-  const title = isNew
-    ? "Building Draft World"
-    : `Forking ${worldId}` || "Forking world";
-
   const mintButton = filterUndefined([
     updateWorldStatus.isAllowedToMint
       ? {
           action: handleOpenMintDialog,
-          title: "Mint World",
+          title: "Mint to Token",
           kind: LinkKind.button,
         }
       : undefined,
   ]);
 
   return [
-    { link: "#", title, kind: LinkKind.link },
+    { link: "#", title: pageTitle, kind: LinkKind.link },
     {
       action: handleSaveToIpfs,
       title: savingScene ? "Saving to IPFS" : "Save to IPFS",
@@ -69,13 +63,15 @@ const buildMenu = ({
 const SceneBuilder = ({
   sceneAndFiles,
   isNew,
-  worldId,
+  cid,
   tokenId,
+  pageTitle,
 }: {
   sceneAndFiles: SceneAndFiles;
   isNew?: boolean;
-  worldId?: string;
+  cid?: string;
   tokenId?: string;
+  pageTitle: string;
 }) => {
   const builderState = useBuilder({ sceneAndFiles });
 
@@ -97,8 +93,7 @@ const SceneBuilder = ({
     });
     setMenuItems(
       buildMenu({
-        isNew,
-        worldId,
+        pageTitle,
         handleSaveToIpfs: builderState.handleSaveToIpfs,
         savingScene: builderState.saveSceneStatus.saving,
         disabled: builderState.saveSceneStatus.saving || !builderState.canSave,
@@ -114,9 +109,10 @@ const SceneBuilder = ({
     builderState.saveSceneStatus.saving,
     builderState.canSave,
     isNew,
-    worldId,
+    cid,
     builderState.createWorldStatus,
     builderState.mintWorldStatus,
+    pageTitle,
   ]);
 
   const ContextBridge = useContextBridge(ClickedAndAudioContext);

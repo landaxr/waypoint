@@ -19,7 +19,7 @@ const randomEnvironmentFile = (): { file: FileLocationLocal; id: string } => {
   };
 };
 
-const makeNewScene = (): SceneAndFiles => {
+export const makeNewScene = (): SceneAndFiles => {
   const { file, id: fileId } = randomEnvironmentFile();
 
   return {
@@ -40,7 +40,13 @@ const makeNewScene = (): SceneAndFiles => {
 const New = () => {
   const [sceneAndFiles] = useState<SceneAndFiles>(() => makeNewScene());
 
-  return <SceneBuilder sceneAndFiles={sceneAndFiles} isNew />;
+  return (
+    <SceneBuilder
+      sceneAndFiles={sceneAndFiles}
+      isNew
+      pageTitle="Building Draft World"
+    />
+  );
 };
 
 export default New;

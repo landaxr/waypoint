@@ -4,6 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "@apollo/client": "^3.6.9",
     "@craco/craco": "^6.4.5",
     "@react-three/drei": "^9.17.1",
     "@react-three/fiber": "^8.2.0",
@@ -17,6 +18,7 @@
     "autoprefixer": "^10.4.7",
     "clsx": "^1.2.1",
     "ethers": "^5.6.9",
+    "graphql": "^16.5.0",
     "leva": "^0.9.29",
     "lodash": "^4.17.21",
     "postcss": "^8.2.6",

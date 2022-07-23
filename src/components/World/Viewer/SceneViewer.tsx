@@ -11,34 +11,48 @@ import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
 import { Raycaster } from "three";
 import ViewerControls from "./ViewerControls";
+import { filterUndefined } from "../../../api/sceneParser";
 
 const rootPath: string[] = [];
 
 const viewMenu = ({
-  worldId,
+  pageTitle,
   handleStartFork,
+  canEdit,
+  editText,
 }: {
-  worldId: string;
+  pageTitle: string;
   handleStartFork: () => void;
+  canEdit?: boolean;
+  editText?: string;
 }): MenuItem[] => {
-  return [
-    { link: "#", title: `Viewing ${worldId}`, kind: LinkKind.link },
-    {
-      action: handleStartFork,
-      title: "Fork",
-      kind: LinkKind.button,
-    },
+  const items: (MenuItem | undefined)[] = [
+    { link: "#", title: pageTitle, kind: LinkKind.link },
+    canEdit && editText
+      ? {
+          action: handleStartFork,
+          title: editText,
+          kind: LinkKind.button,
+        }
+      : undefined,
   ];
+  const result: MenuItem[] = filterUndefined(items);
+
+  return result;
 };
 
 const SceneViewer = ({
   sceneAndFiles: { scene, files },
-  worldId,
-  handleStartFork,
+  pageTitle,
+  handleStartEdit,
+  canEdit,
+  editText,
 }: {
   sceneAndFiles: SceneAndFiles;
-  worldId: string;
-  handleStartFork: () => void;
+  pageTitle: string;
+  canEdit?: boolean;
+  handleStartEdit: () => void;
+  editText?: string;
 }) => {
   const cursorClass = useMemo(() => {
     return "cursor-pointer";
@@ -47,13 +61,16 @@ const SceneViewer = ({
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
+    console.log({ canEdit, editText });
     setMenuItems(
       viewMenu({
-        worldId,
-        handleStartFork,
+        pageTitle,
+        handleStartFork: handleStartEdit,
+        canEdit,
+        editText,
       })
     );
-  }, [worldId, handleStartFork]);
+  }, [handleStartEdit, editText, pageTitle, canEdit]);
 
   const raycasterRef = useRef(new Raycaster());
 
