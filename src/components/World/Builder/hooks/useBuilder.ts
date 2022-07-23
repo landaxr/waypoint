@@ -10,7 +10,7 @@ import useSaveToIpfs from "./useSaveToIpfs";
 import { useSceneUpdater } from "./useSceneUpdater";
 import useWorldTokenUpdater, {
   useWorldTokenCreator,
-} from "../../Minter/useWorldMinter";
+} from "../../../../api/hooks/useWorldMinter";
 
 export enum TransformMode {
   translate = "translate",

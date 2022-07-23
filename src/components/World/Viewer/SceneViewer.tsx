@@ -54,9 +54,7 @@ const SceneViewer = ({
   handleStartEdit: () => void;
   editText?: string;
 }) => {
-  const cursorClass = useMemo(() => {
-    return "cursor-pointer";
-  }, []);
+
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
@@ -72,6 +70,10 @@ const SceneViewer = ({
   }, [handleStartEdit, editText, pageTitle, canEdit]);
 
   const raycasterRef = useRef(new Raycaster());
+
+  const cursorClass = useMemo(() => {
+    return "cursor-pointer";
+  }, []);
 
   const ContextBridge = useContextBridge(ClickedAndAudioContext);
 

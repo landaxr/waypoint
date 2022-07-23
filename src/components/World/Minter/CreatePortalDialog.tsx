@@ -99,7 +99,7 @@ const SelectedWorld = ({
   );
 };
 
-const MintDialogModal = ({
+const CreatePortalDialogModal = ({
   updateWorldStatus,
   handleClose,
   updateWorld,
@@ -149,4 +149,4 @@ const MintDialogModal = ({
   );
 };
 
-export default MintDialogModal;
+export default CreatePortalDialogModal;

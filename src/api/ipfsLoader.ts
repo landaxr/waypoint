@@ -9,7 +9,7 @@ import {
   SceneFilesStored,
 } from "../types/shared";
 import { metadataFileName } from "./ipfsSaver";
-import { makeWeb3StorageClient } from "./web3Storage";
+import { makeWeb3StorageClient } from "./lib/web3Storage";
 
 async function toLocalFile(
   fileLocation: FileLocationStored,

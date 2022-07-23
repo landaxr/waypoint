@@ -8,7 +8,7 @@ import {
   WorldData,
 } from "../../api/worldsQueries";
 import MainNavbar from "../Nav/MainNavbar";
-import { useWorldTokenCreator } from "./Minter/useWorldMinter";
+import { useWorldTokenCreator } from "../../api/hooks/useWorldMinter";
 
 export const World = ({ world }: { world: WorldData }) => {
   // const { loading, error, data } = useQuery<WorldsData>(GET_LOCAL_WORLDS);

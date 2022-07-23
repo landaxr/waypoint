@@ -5,7 +5,7 @@ import {
   extractFilesToUploadAndLocations,
   filterUndefined,
 } from "./sceneParser";
-import { makeWeb3StorageClient } from "./web3Storage";
+import { makeWeb3StorageClient } from "./lib/web3Storage";
 
 export const metadataFileName = "metadata.json";
 
