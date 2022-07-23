@@ -38,6 +38,8 @@ const YourWorlds = () => {
   const worldsResponse = useWorldsOwnedByAddress(address);
   const { createWorld, status } = useWorldTokenCreator();
 
+  if (!address) return null;
+
   return (
     <>
       <MainNavbar />

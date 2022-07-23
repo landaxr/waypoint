@@ -13,7 +13,8 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import WorldFromTokenId from "./components/World/WorldFromTokenId";
 
 const subgraphUri =
-  "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract";
+  "https://api.thegraph.com/subgraphs/name/lpscrypt/waypointrinkeby"
+  // "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract";
 
 const client = new ApolloClient({
   uri: subgraphUri,

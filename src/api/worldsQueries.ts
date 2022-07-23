@@ -3,9 +3,6 @@ import { WorldErc721 } from "../types/world";
 import { gql, useQuery } from "@apollo/client";
 import { convertURIToHTTPS } from "./ipfsUrls";
 
-export const catImage =
-  "https://ipfs.io/ipfs/bafybeido4mv24yrnidcebqdl5yrvm5xittpynsjnnuh53phss3mwsuyhxe/CatImage.png";
-
 export type WorldFetchResponse = {
   tokenId: string;
   ownerAddress: string;
