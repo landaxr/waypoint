@@ -46,8 +46,9 @@ export async function buildAndSaveTokenMetadataToIpfs({
 
   console.log({
     erc721MetadataFile,
-    sceneImagePath,sceneGraphPath
-  })
+    sceneImagePath,
+    sceneGraphPath,
+  });
 
   const cid = await client.put([erc721MetadataFile]);
 

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import loadSceneFromIpfs from "../../api/ipfsLoader";
-import { useHttpsUriForIpfs } from "../../api/ipfsUrls";
 import { useErc721TokenForFileUrl, useWorld } from "../../api/worldsQueries";
 import { SceneAndFiles } from "../../types/scene";
 import { WorldErc721 } from "../../types/world";

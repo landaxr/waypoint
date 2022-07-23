@@ -17,7 +17,7 @@ const WorldEntry = ({
   world: WorldData;
   onSelect: (tokenId: string) => void;
 }) => {
-  const { loading, erc721Token } = useErc721TokenForFileUrl(world.uri);
+  const { erc721Token } = useErc721TokenForFileUrl(world.uri);
 
   if (!erc721Token) return <p>loading...</p>;
 

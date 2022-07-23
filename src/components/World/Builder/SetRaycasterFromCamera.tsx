@@ -1,6 +1,6 @@
-import { useFrame, useThree } from "@react-three/fiber";
-import { MutableRefObject, useCallback, useRef } from "react";
-import { Mesh, Object3D, Raycaster, Vector3 } from "three";
+import { useFrame } from "@react-three/fiber";
+import { MutableRefObject, useRef } from "react";
+import { Mesh, Raycaster } from "three";
 
 const debug = false;
 
