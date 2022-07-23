@@ -22,8 +22,10 @@ export type MintWorldStatus = {
   mintedWorld?: MintedWorld;
 };
 
-export const localContractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const rinkebyContractAddress = "0x8f181e382dF37f4DAB729c1868D0A190A929D614";
+export const localContractAddress =
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const rinkebyContractAddress =
+  "0x8f181e382dF37f4DAB729c1868D0A190A929D614";
 
 const contractAddress = rinkebyContractAddress;
 

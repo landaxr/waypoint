@@ -131,6 +131,7 @@ const loadSceneFromIpfs = async (
   return {
     scene,
     files: localFiles,
+    cid,
   };
 };
 

@@ -34,9 +34,13 @@ export const createJsonFileFromObject = (object: Object, fileName: string) => {
 export const makeIpfsSceneFiles = async ({
   scene,
   files,
+  tokenId,
+  forkedFrom,
 }: {
   scene: SceneConfiguration;
   files: SceneFilesLocal;
+  tokenId?: string;
+  forkedFrom?: string;
 }) => {
   const { fileLocations: storedFileLocations, toUpload } =
     extractFilesToUploadAndLocations({ scene, files });
@@ -44,6 +48,7 @@ export const makeIpfsSceneFiles = async ({
   const storedSceneAndFiles: StoredSceneAndFiles = {
     scene,
     files: storedFileLocations,
+    forkedFrom,
   };
 
   const sceneConfigMetadata = createJsonFileFromObject(
@@ -60,12 +65,14 @@ export const makeIpfsSceneFiles = async ({
 export const saveSceneToIpfs = async ({
   scene,
   files,
+  forkedFrom,
 }: {
   scene: SceneConfiguration;
   files: SceneFilesLocal;
+  forkedFrom?: string;
 }) => {
   const { sceneConfigMetadata, sceneAssetsToUpload } = await makeIpfsSceneFiles(
-    { scene, files }
+    { scene, files, forkedFrom }
   );
 
   const allFiles = [sceneConfigMetadata, ...sceneAssetsToUpload];

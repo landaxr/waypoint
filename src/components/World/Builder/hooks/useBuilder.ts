@@ -80,6 +80,7 @@ export const useBuilder = ({
     {
       ...updatedSceneWithFiles,
       updateCount,
+      forkedFrom: sceneAndFiles.cid,
     }
   );
 
