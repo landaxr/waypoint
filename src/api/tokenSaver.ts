@@ -2,10 +2,10 @@ import { WorldErc721 } from "../types/world";
 import { createJsonFileFromObject } from "./ipfsSaver";
 import { makeWeb3StorageClient } from "./web3Storage";
 
-const applicationCid = "QmSc3vonb6g9quEf32RE1ZXhU7q8Vr3Y6CPc4PFUTpkxKi";
+const applicationCid = "QmcPnK7wxgWhm969f4QNMXUiSyhvowS388ELJMRx6pdVn2";
 // todo: use ipfs url
 const makeInteractiveApplicationUrl = (tokenId: string) =>
-  `ipfs://${applicationCid}/#/worlds/${tokenId}`;
+  `ipfs://${applicationCid}/#/${tokenId}`;
 
 export const erc721TokenFileName = "erc721.json";
 
