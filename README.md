@@ -1,46 +1,40 @@
-# Getting Started with Create React App
+# w@y_p01nt - Build and Mint a Virtual World, all from the Browser
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The application is entirely serverless.
 
-## Available Scripts
+## High level features:
 
-In the project directory, you can run:
+* Build an interactive 3d virtual world, all from the browser.
+  * Drag and drop files to build a 3d metaverse.  Current files supported are
+    * images of `.jpg` and `.png`
+    * movies of type `.mp4` 
+    * 3d models of type `.glb`
+  * Videos have spatial audio 
+* Upload an entire virtual world to IPFS
+* Load the virtual world from IPFS
+* Mint a virtual world to an erc721 compatible NFT to Polygon, or any EVM compatible blockchain. 
+* Load the virtual world NFT in any marketplace as an interactive application which is loaded from IPFS.
+* If you are the owner of a world, you can edit it and update the world via a smart contract operation.
+* Create an on-chain portal between virtual worlds.  Travel through the portal to go to the target world.
 
-### `npm start`
+## Overview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Technologies Used
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+* ipfs + web3.storage
+* Polygon (or any EVM compatible chaing)
+* The Graph
+* react three fiber
 
-### `npm test`
+## Future Work
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Encryption with 
 
-### `npm run build`
+## Tutorial
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## How it Works
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+##
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Local Development Setup
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
