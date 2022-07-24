@@ -81,7 +81,9 @@ export const useBuilder = ({
 
   const portalCreator = usePortalCreator({ tokenId });
 
-  const { createWorld, status: createWorldStatus } = useWorldTokenCreator();
+  const { createWorld, status: createWorldStatus } = useWorldTokenCreator({
+    captureScreenshotFn: captureScreenshotFn?.fn,
+  });
 
   const { handleSaveToIpfs, hasChangesToSave, saveSceneStatus } = useSaveToIpfs(
     {

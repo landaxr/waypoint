@@ -29,10 +29,16 @@ export const localContractAddress =
   "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 export const rinkebyContractAddress =
   "0x8f181e382dF37f4DAB729c1868D0A190A929D614";
+export const mumbaiContractAddress =
+  "0x9db2f20e541412292677aa43e8d09732f3998992";
 
-export const contractAddress = rinkebyContractAddress;
+export const contractAddress = mumbaiContractAddress;
 
-export function useWorldTokenCreator() {
+export function useWorldTokenCreator({
+  captureScreenshotFn,
+}: {
+  captureScreenshotFn: (() => string) | undefined;
+}) {
   const [status, setStatus] = useState<MintWorldStatus>({
     minting: false,
     isAllowedToMint: false,
@@ -77,7 +83,17 @@ export function useWorldTokenCreator() {
         mintedWorld: undefined,
       }));
 
-      const { sceneGraphFileUrl } = await saveSceneToIpfs(sceneAndFiles);
+      let screenshotFile: File | undefined;
+      if (captureScreenshotFn) {
+        const screenShot = captureScreenshotFn();
+
+        screenshotFile = await createImageFromDataUri(screenShot, "image.jpg");
+      }
+
+      const { sceneGraphFileUrl } = await saveSceneToIpfs({
+        ...sceneAndFiles,
+        sceneImage: screenshotFile,
+      });
 
       const {
         cid: erc721Cid,
@@ -111,7 +127,7 @@ export function useWorldTokenCreator() {
         },
       }));
     },
-    [writeAsync, canMint, minting]
+    [canMint, minting, captureScreenshotFn, writeAsync]
   );
 
   return {

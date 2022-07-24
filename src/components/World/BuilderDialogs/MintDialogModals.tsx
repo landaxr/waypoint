@@ -107,26 +107,30 @@ export const UpdateWorldDialogModal = ({
 
 const labelClass = "text-monospace text-black dark:text-white";
 
-const SceneGraphRender = ({sceneAndFiles}:{sceneAndFiles: SceneAndFiles}) => (
-<>
-<label className={labelClass}>scene graph:</label>
-        <div className="w-full h-32 overflow-scroll">
-          <pre className="text-xs" style={{ marginTop: "0px" }}>
-            {JSON.stringify(sceneAndFiles.scene, null, 2)}
-          </pre>
-        </div>
-        <label className={labelClass}>files:</label>
-        <div className="w-full m-h-1 overflow-scroll">
-          <pre className="text-xs" style={{ marginTop: "0px" }}>
-            <ul className="p-0 m-0">
-              {Object.keys(sceneAndFiles.files).map((file, id) => (
-                <li key={id}>{file}</li>
-              ))}
-            </ul>
-          </pre>
-        </div>
-</>
-)
+const SceneGraphRender = ({
+  sceneAndFiles,
+}: {
+  sceneAndFiles: SceneAndFiles;
+}) => (
+  <>
+    <label className={labelClass}>scene graph:</label>
+    <div className="w-full h-32 overflow-scroll">
+      <pre className="text-xs" style={{ marginTop: "0px" }}>
+        {JSON.stringify(sceneAndFiles.scene, null, 2)}
+      </pre>
+    </div>
+    <label className={labelClass}>files:</label>
+    <div className="w-full m-h-1 overflow-scroll">
+      <pre className="text-xs" style={{ marginTop: "0px" }}>
+        <ul className="p-0 m-0">
+          {Object.keys(sceneAndFiles.files).map((file, id) => (
+            <li key={id}>{file}</li>
+          ))}
+        </ul>
+      </pre>
+    </div>
+  </>
+);
 
 export const MintToNewWorldDialogModal = ({
   createNewWorld,
