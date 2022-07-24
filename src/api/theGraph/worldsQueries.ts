@@ -149,7 +149,9 @@ export function useWorlds() {
 }
 
 export function useExtendedWorlds() {
-  const { loading, data } = useQuery<ExtendedWorldData>(extendedSpacesQuery(), {
+  const extendedWorldsGql = useMemo(()=> extendedSpacesQuery(),[]);
+  
+  const { loading, data } = useQuery<ExtendedWorldData>(extendedWorldsGql, {
     pollInterval: 2500,
   });
 
