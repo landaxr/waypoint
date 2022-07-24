@@ -4,10 +4,14 @@ import { makeWeb3StorageClient } from "../ipfs/web3Storage";
 
 // this is the ipfs cid of the most recent version of the application hosted on fleek.
 // todo: figure out how to get this dynamically.
-const applicationCid = "QmSdXPrYd6FG5qRyERy9sfwRg7W8Sd19yWbF2KvGT2B7Lb";
+export const applicationCid = "QmSdXPrYd6FG5qRyERy9sfwRg7W8Sd19yWbF2KvGT2B7Lb";
 // todo: use ipfs url
-const makeInteractiveApplicationUrl = (tokenId: string) =>
-  `ipfs://${applicationCid}/#/${tokenId}`;
+// const makeInteractiveApplicationUrl = (tokenId: string) =>
+//   `ipfs://${applicationCid}/#/${tokenId}`;
+const makeInteractiveApplicationUrlForTokenId = (tokenId: string) =>
+  `https://waypoint-nft.on.fleek.co/#/${tokenId}`;
+
+
 
 export const erc721TokenFileName = "erc721.json";
 
@@ -35,7 +39,7 @@ export async function buildAndSaveTokenMetadataToIpfs({
   const erc721Metadata: WorldErc721 = {
     image: sceneImagePath,
     name,
-    animation_url: tokenId ? makeInteractiveApplicationUrl(tokenId) : undefined,
+    animation_url: tokenId ? makeInteractiveApplicationUrlForTokenId(tokenId) : undefined,
     scene_graph_url: sceneGraphPath,
   };
 
