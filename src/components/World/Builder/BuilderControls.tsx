@@ -3,6 +3,7 @@ import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
 import { BuilderState } from "./hooks/useBuilder";
 import TransformAndOrbitControls from "../Controls/TransformAndOrbitControls";
+import TurnWithKeysControls from "../Controls/TurnWithKeysControls";
 
 const BuilderControls = ({
   isDragging,
@@ -32,6 +33,7 @@ const BuilderControls = ({
 
   return (
     <>
+      <TurnWithKeysControls />
       {showPointerLockControls && (
         <>
           <PointerLockControls args={[camera, gl.domElement]} />

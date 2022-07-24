@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { SyntheticEvent, useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import {
   convertURIToHTTPS,
@@ -135,6 +135,15 @@ const MintDialogModal = ({
     setWorldName(name);
   }, []);
 
+  const handleWorldTextChanged = useCallback(
+    (e: SyntheticEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      // @ts-ignore
+      setWorldName(e.target.value);
+    },
+    []
+  );
+
   return (
     <Modal
       handleClose={handleClose}
@@ -146,7 +155,7 @@ const MintDialogModal = ({
           <input
             type="text"
             value={worldName}
-            onChange={(e) => setWorldName(e.target.value)}
+            onChange={handleWorldTextChanged}
           />
           <button
             className="text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red dark:hover:bg-red-light dark:focus:ring-red-light disabled:bg-gray-300"
