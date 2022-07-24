@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-const TurnWithKeysControls = ({
+const KeyboardTurnControls = ({
   turnSpeed = 1000,
   movementSpeed = 0.002,
 }: {
@@ -31,7 +31,7 @@ const TurnWithKeysControls = ({
       }
     };
     document.addEventListener("keydown", keyDown);
-    document.addEventListener("keyup", keyDown);
+    document.addEventListener("keyup", keyUp);
     return () => {
       document.removeEventListener("keydown", keyDown);
       document.removeEventListener("keyup", keyUp);
@@ -60,4 +60,4 @@ const TurnWithKeysControls = ({
   return null;
 };
 
-export default TurnWithKeysControls;
+export default KeyboardTurnControls;

@@ -137,6 +137,7 @@ const MintDialogModal = ({
 
   const handleWorldTextChanged = useCallback(
     (e: SyntheticEvent<HTMLInputElement>) => {
+      e.stopPropagation();
       e.preventDefault();
       // @ts-ignore
       setWorldName(e.target.value);
