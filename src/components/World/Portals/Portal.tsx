@@ -13,6 +13,14 @@ const teleportDistance = 1;
 
 const portalScale = 1;
 
+// cylinder args
+//radiusTop : Float, radiusBottom : Float, height : Float, radialSegments : Integer, heightSegments : Integer, openEnded : Boolean, thetaStart : Float, thetaLength : Float)
+
+const cylinderRadius = 0.02
+const radialSegments = 10;
+
+const cylinderArgs = (height: number): number[] => ([cylinderRadius, cylinderRadius, height + cylinderRadius, radialSegments ]);
+
 const Portal = ({
   portal: { portal, scene },
   navigate,
@@ -99,6 +107,27 @@ const Portal = ({
             />
           )}
         </mesh>
+        <mesh position-x={-portalSize[0]/2}>
+        <cylinderBufferGeometry 
+        // @ts-ignore
+        args={cylinderArgs(portalSize[1])} />
+        </mesh>
+        <mesh position-x={portalSize[0]/2}>
+        <cylinderBufferGeometry 
+        // @ts-ignore
+        args={cylinderArgs(portalSize[1])} />
+        </mesh>
+<mesh position-y={portalSize[1]/2} rotation-z={Math.PI/2}>
+        <cylinderBufferGeometry 
+        // @ts-ignore
+        args={cylinderArgs(portalSize[0])} />
+        </mesh>
+<mesh position-y={-portalSize[1]/2} rotation-z={Math.PI/2}>
+        <cylinderBufferGeometry 
+        // @ts-ignore
+        args={cylinderArgs(portalSize[0])} />
+        </mesh>
+ 
       </group>
       <IpfsImageTextureLoader
         fileUrl={scene?.token.image}
