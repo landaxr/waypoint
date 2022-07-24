@@ -39,7 +39,7 @@ export const useErc721TokenForFileUrl = (fileUrl: string | undefined) => {
   };
 };
 
-const spacesQuery = () => gql`
+const spacesQuery = gql`
   {
     spaces {
       owner {
@@ -93,7 +93,7 @@ export type SpacesQueryData = {
 
 export function useWorldsOwnedByAddress(address: string | undefined) {
   const spacesGql = useMemo(
-    () => (address ? spacesOfOwnerQuery(address) : spacesQuery()),
+    () => (address ? spacesOfOwnerQuery(address) : spacesQuery),
     [address]
   );
 
@@ -108,8 +108,8 @@ export function useWorldsOwnedByAddress(address: string | undefined) {
 }
 
 export function useWorlds() {
-  const { loading, data } = useQuery<SpacesQueryData>(spacesQuery(), {
-    pollInterval: 2500,
+  const { loading, data } = useQuery<SpacesQueryData>(spacesQuery, {
+    pollInterval: 1000,
   });
 
   return {

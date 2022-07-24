@@ -90,7 +90,7 @@ export function useWorldTokenCreator({
         screenshotFile = await createImageFromDataUri(screenShot, "image.jpg");
       }
 
-      const { sceneGraphFileUrl } = await saveSceneToIpfs({
+      const { sceneGraphFileUrl, sceneImageUrl: imageFileUrl } = await saveSceneToIpfs({
         ...sceneAndFiles,
         sceneImage: screenshotFile,
       });
@@ -103,6 +103,7 @@ export function useWorldTokenCreator({
         name,
         tokenId: undefined,
         sceneGraphPath: sceneGraphFileUrl,
+        sceneImagePath: imageFileUrl
       });
 
       console.log("saved new: ", {

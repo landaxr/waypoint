@@ -2,7 +2,7 @@ import { WorldErc721 } from "../../types/world";
 import { createJsonFileFromObject } from "../ipfs/ipfsSceneSaver";
 import { makeWeb3StorageClient } from "../ipfs/web3Storage";
 
-const applicationCid = "QmcPnK7wxgWhm969f4QNMXUiSyhvowS388ELJMRx6pdVn2";
+const applicationCid = "Qme1CJqiXCo78gQKJC8F6H51ToCByYLYnsm3UTaVgtcC7T";
 // todo: use ipfs url
 const makeInteractiveApplicationUrl = (tokenId: string) =>
   `ipfs://${applicationCid}/#/${tokenId}`;
