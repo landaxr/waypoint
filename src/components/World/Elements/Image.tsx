@@ -4,15 +4,16 @@ import { SceneFilesLocal } from "../../../types/shared";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import { useEffect, useState } from "react";
+import ErrorBoundary from "../../Shared/ErrorBoundary";
+import useWhyDidYouUpdate from "../../../utils/useWhyDidYouUpdate";
 
 export const useImageTexture = ({ fileUrl }: { fileUrl: string }) => {
-  const httpsUrl = useHttpsUriForIpfs(fileUrl) as string;
-  const texture = useLoader(TextureLoader, httpsUrl);
-
-  const [dimensions, setDimensions] = useState<[number, number]>(() => [0, 1]);
+  const texture = useLoader(TextureLoader, fileUrl);
+  const [dimensions, setDimensions] = useState<[number, number]>(() => [1, 1]);
 
   useEffect(() => {
     if (texture) {
+      console.log("texture changed");
       const { height, width } = texture.image as
         | HTMLImageElement
         | HTMLCanvasElement;
@@ -31,7 +32,7 @@ export const useImageTexture = ({ fileUrl }: { fileUrl: string }) => {
 
 export type TextureAndDimensions = ReturnType<typeof useImageTexture>;
 
-const ImageTextureLoaderInner = ({
+const ImageTextureLoader = ({
   fileUrl,
   setTexture,
 }: {
@@ -47,16 +48,22 @@ const ImageTextureLoaderInner = ({
   return null;
 };
 
-export const ImageTextureLoader = ({
+export const IpfsImageTextureLoader = ({
   fileUrl,
   setTexture,
 }: {
   fileUrl: string | undefined;
   setTexture: (texture: TextureAndDimensions) => void;
 }) => {
-  if (!fileUrl) return null;
+  const httpsUrl = useHttpsUriForIpfs(fileUrl);
+  if (!httpsUrl) return null;
 
-  return <ImageTextureLoaderInner fileUrl={fileUrl} setTexture={setTexture} />;
+  // return null;
+  return (
+    <ErrorBoundary>
+      <ImageTextureLoader fileUrl={httpsUrl} setTexture={setTexture} />
+    </ErrorBoundary>
+  );
 };
 
 const Image = ({

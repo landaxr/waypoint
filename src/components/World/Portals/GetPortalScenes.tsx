@@ -38,7 +38,11 @@ const GetPortalScenes = ({
   return (
     <>
       {portalsInSpace.map((portal) => (
-        <PortalSceneLoader portal={portal} setPortalScene={setPortalScene} />
+        <PortalSceneLoader
+          key={portal.id}
+          portal={portal}
+          setPortalScene={setPortalScene}
+        />
       ))}
     </>
   );
