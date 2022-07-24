@@ -10,7 +10,7 @@ import Modal, { ModalActionButton, ModalHeader3 } from "../../Shared/Modal";
 import { MintWorldStatus } from "../../../api/smartContract/useWorldMinter";
 import { SceneAndFiles } from "../../../types/scene";
 
-const SelectedWorld = ({
+export const SelectedWorld = ({
   tokenId,
   worlds,
 }: {
@@ -99,15 +99,34 @@ export const UpdateWorldDialogModal = ({
       size={"lg"}
     >
       <div className="text-base leading-relaxed text-gray-500 dark:text-gray-400 space-y-6">
-        {tokenId && worlds && (
-          <SelectedWorld tokenId={tokenId} worlds={worlds} />
-        )}
+        <SceneGraphRender sceneAndFiles={sceneAndFiles} />
       </div>
     </Modal>
   );
 };
 
 const labelClass = "text-monospace text-black dark:text-white";
+
+const SceneGraphRender = ({sceneAndFiles}:{sceneAndFiles: SceneAndFiles}) => (
+<>
+<label className={labelClass}>scene graph:</label>
+        <div className="w-full h-32 overflow-scroll">
+          <pre className="text-xs" style={{ marginTop: "0px" }}>
+            {JSON.stringify(sceneAndFiles.scene, null, 2)}
+          </pre>
+        </div>
+        <label className={labelClass}>files:</label>
+        <div className="w-full m-h-1 overflow-scroll">
+          <pre className="text-xs" style={{ marginTop: "0px" }}>
+            <ul className="p-0 m-0">
+              {Object.keys(sceneAndFiles.files).map((file, id) => (
+                <li key={id}>{file}</li>
+              ))}
+            </ul>
+          </pre>
+        </div>
+</>
+)
 
 export const MintToNewWorldDialogModal = ({
   createNewWorld,
@@ -171,22 +190,7 @@ export const MintToNewWorldDialogModal = ({
       size={"lg"}
     >
       <div className="text-base leading-relaxed text-gray-500 dark:text-gray-400 space-y-6">
-        <label className={labelClass}>scene graph:</label>
-        <div className="w-full h-32 overflow-scroll">
-          <pre className="text-xs" style={{ marginTop: "0px" }}>
-            {JSON.stringify(sceneAndFiles.scene, null, 2)}
-          </pre>
-        </div>
-        <label className={labelClass}>files:</label>
-        <div className="w-full m-h-1 overflow-scroll">
-          <pre className="text-xs" style={{ marginTop: "0px" }}>
-            <ul className="p-0 m-0">
-              {Object.keys(sceneAndFiles.files).map((file, id) => (
-                <li key={id}>{file}</li>
-              ))}
-            </ul>
-          </pre>
-        </div>
+        <SceneGraphRender sceneAndFiles={sceneAndFiles} />
         <div>
           <label htmlFor="worldName" className={labelClass}>
             world name
