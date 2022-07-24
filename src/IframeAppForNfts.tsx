@@ -3,16 +3,9 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import useClickedAndAudioListener, {
   ClickedAndAudioContext,
 } from "./components/World/useClickedAndAudioListener";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import WorldFromTokenIdViewOnly from "./components/World/WorldFromTokenIdViewOnly";
-
-const subgraphUri =
-  "https://api.thegraph.com/subgraphs/name/lpscrypt/waypointrinkeby";
-
-const client = new ApolloClient({
-  uri: subgraphUri,
-  cache: new InMemoryCache(),
-});
+import { client } from "./api/theGraph/client";
 
 function IFrameAppForNfts() {
   const clickedAndAudiListener = useClickedAndAudioListener();

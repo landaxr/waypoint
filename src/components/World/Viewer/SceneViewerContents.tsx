@@ -40,7 +40,7 @@ const SceneViewerContents = ({
 
   return (
     <>
-      <Navbar centerItems={menuItems} />
+      {menuItems.length > 0 && (<Navbar centerItems={menuItems} />)}
       <div className={clsx("w-screen h-screen", cursorClass)}>
         <Canvas>
           <ContextBridge>

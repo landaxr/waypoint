@@ -9,18 +9,9 @@ import WorldFromIpfsRoute from "./components/World/WorldFromIpfs";
 import useClickedAndAudioListener, {
   ClickedAndAudioContext,
 } from "./components/World/useClickedAndAudioListener";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { ApolloProvider, InMemoryCache } from "@apollo/client";
 import WorldFromTokenId from "./components/World/WorldFromTokenId";
-
-const subgraphUri =
-  "https://api.thegraph.com/subgraphs/name/lpscrypt/waypointmumbai";
-// "https://api.thegraph.com/subgraphs/name/lpscrypt/waypointrinkeby";
-// "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract";
-
-const client = new ApolloClient({
-  uri: subgraphUri,
-  cache: new InMemoryCache(),
-});
+import { client } from "./api/theGraph/client";
 
 function App() {
   const clickedAndAudiListener = useClickedAndAudioListener();
