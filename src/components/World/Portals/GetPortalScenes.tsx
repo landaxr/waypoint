@@ -21,7 +21,7 @@ const PortalSceneLoader = ({
   useEffect(() => {
     if (erc721Token) {
       setPortalScene(worldId, {
-        imageUrl: erc721Token.image,
+        token: erc721Token,
       });
     }
   }, [erc721Token, setPortalScene, worldId]);

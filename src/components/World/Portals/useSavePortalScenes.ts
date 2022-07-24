@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { PortalData } from "../../../api/theGraph/portalQueries";
+import { WorldErc721 } from "../../../types/world";
 
 export type PortalScene = {
-  imageUrl: string | undefined;
+  token: Pick<WorldErc721, "image" | "scene_graph_url" | "name">;
 };
 
 export type PortalWithScene = {
