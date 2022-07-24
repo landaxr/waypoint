@@ -51,6 +51,23 @@ const spacesQuery = gql`
   }
 `;
 
+const extendedSpacesQuery = () => gql`
+  {
+    spaces {
+      owner {
+        id
+      }
+      portals {
+        id
+        targetId
+        portalId
+      }
+      uri
+      id
+    }
+  }
+`;
+
 const spacesOfOwnerQuery = (ownerAddress: string) => gql`
 {
   spaces(
@@ -78,6 +95,19 @@ const spaceQuery = (tokenId: string) => gql`
   }
 }
 `;
+
+export type ExtendedWorldData = {
+  owner: {
+    id: string;
+  };
+  portals: {
+    id: string;
+    targetId: string;
+    portalId: string;
+  };
+  uri: string;
+  id: string;
+}
 
 export type WorldData = {
   owner: {
@@ -110,6 +140,17 @@ export function useWorldsOwnedByAddress(address: string | undefined) {
 export function useWorlds() {
   const { loading, data } = useQuery<SpacesQueryData>(spacesQuery, {
     pollInterval: 1000,
+  });
+
+  return {
+    loading,
+    data,
+  };
+}
+
+export function useExtendedWorlds() {
+  const { loading, data } = useQuery<ExtendedWorldData>(extendedSpacesQuery(), {
+    pollInterval: 2500,
   });
 
   return {

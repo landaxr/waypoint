@@ -27,6 +27,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.2",
+    "react-flow-renderer": "^10.3.11",
     "react-router": "^6.3.0",
     "react-router-dom": "6",
     "react-scripts": "^5.0.1",
