@@ -15,7 +15,7 @@ The smart contract can be seen at [landaxr/waypoint_contracts](https://github.co
     * 3d models of type `.glb`
   * Videos have spatial audio 
 todo: gif
-* Upload an entire virtual world to IPFS
+* Upload an entire virtual world to IPFS.  This world is blockchain agnostic and can become part of any erc721 compatible NFT.
 todo: gif
 * Load the virtual world from IPFS
 * Mint a virtual world as an erc721 compatible NFT to Polygon, or any EVM compatible blockchain. 
@@ -33,7 +33,13 @@ todo: gif
 
 #### web3.storage 
 
-We use web3.storage to store erc721 token metadata, scene graphs, the scene files, and assets.
+We use [web3.storage](https://web3.storage/) to store erc721 token metadata, scene graphs, the scene files, and assets.  
+
+When building a scene, and a user drags and drops files into the scene, all those files are stored as local `File` variables.  When uploading the scene to ipfs, the scene graph and all of those files uploaded together using the web3storage sdk;  This way they are all packaged together into the same folder on ipfs.  
+
+* [Code to package and upload a scene to IPFS](/api/ipfs/ipfsSceneSaver.ts)
+* [Example scene metadata folder on ipfs](ipfs.io://ipfs/bafybeihjrtchuf44b5ud6hpnmxqe7n6ff6t5my6ucis6vet6u445fm7eou)
+* [Example erc721 metadata](https://ipfs.io/ipfs/bafybeicpqgb4r3pncxzsvpjb73ejjcza2az4f5pzlcgabnzm3feclnl6ja/erc721.json)
 
 * Polygon (or any EVM compatible chain)
 * The Graph
