@@ -4,7 +4,7 @@ import loadSceneFromIpfs from "../../api/ipfs/ipfsLoader";
 import { SceneAndFiles } from "../../types/scene";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
-import SceneViewer from "./Viewer/SceneViewer";
+import SceneViewerFull from "./Viewer/SceneViewerFull";
 
 const WorldFromIpfs = ({ cid, edit }: { cid: string; edit: boolean }) => {
   const [{ progress, sceneAndFiles }, setLoadedState] = useState<{
@@ -74,10 +74,11 @@ const WorldFromIpfs = ({ cid, edit }: { cid: string; edit: boolean }) => {
           cid={cid}
           pageTitle={`Forking ipfs://${cid}`}
           portals={undefined}
+          worldName={undefined}
         />
       );
     return (
-      <SceneViewer
+      <SceneViewerFull
         sceneAndFiles={sceneAndFiles}
         handleStartEdit={handleStartFork}
         pageTitle={`Viewing world from ipfs://${cid}`}

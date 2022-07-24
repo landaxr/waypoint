@@ -19,9 +19,9 @@ import { filterUndefined } from "../../../api/sceneParser";
 import MintDialogModal from "../BuilderDialogs/MintDialogModal";
 import SetCaptureScreenshotFn from "../../Shared/SetCaptureScreenshotFn";
 import WorldPortals from "../Portals/WorldPortals";
-import { PortalData } from "../../../api/theGraph/portalQueries";
 import { useNavigate } from "react-router";
-import { getWorldsPath } from "../Viewer/SceneViewer";
+import { getWorldsPath } from "../Viewer/SceneViewerContents";
+import { PortalWithScene } from "../Portals/useSavePortalScenes";
 
 const rootPath: string[] = [];
 
@@ -72,13 +72,15 @@ const SceneBuilder = ({
   tokenId,
   pageTitle,
   portals,
+  worldName,
 }: {
   sceneAndFiles: SceneAndFiles;
   isNew?: boolean;
   cid?: string;
   tokenId?: string;
   pageTitle: string;
-  portals: PortalData[] | undefined;
+  portals: PortalWithScene[] | undefined;
+  worldName: string | undefined;
 }) => {
   const builderState = useBuilder({ sceneAndFiles, tokenId });
 
@@ -177,6 +179,7 @@ const SceneBuilder = ({
             handleClose={() => setMintDialogOpen(false)}
             updateWorld={builderState.updateWorld}
             updateWorldStatus={builderState.mintWorldStatus}
+            currentWorldName={worldName}
           />
         )}
       </div>

@@ -2,7 +2,9 @@ import { useParams } from "react-router-dom";
 import useLoadWorldAndScene from "../../api/nft/useLoadWorldAndScene";
 import { usePortalsFromWorld } from "../../api/theGraph/portalQueries";
 import LoadingScreen from "../Shared/LoadingScreen";
-import SceneViewerNoNav from "./Viewer/SceneViewerNoNav";
+import GetPortalScenes from "./Portals/GetPortalScenes";
+import useSavePortalScenes from "./Portals/useSavePortalScenes";
+import SceneViewerNft from "./Viewer/SceneViewerNft";
 
 const WorldFromTokenIdViewOnly = ({ tokenId }: { tokenId: string }) => {
   const { sceneAndFiles, worldsCid, world, progress } = useLoadWorldAndScene({
@@ -10,17 +12,23 @@ const WorldFromTokenIdViewOnly = ({ tokenId }: { tokenId: string }) => {
   });
 
   const portalsOfWorld = usePortalsFromWorld(tokenId);
+  const portals = portalsOfWorld.data?.portals;
+  const { portalsWithScenes, setPortalScene } = useSavePortalScenes(portals);
 
   if (sceneAndFiles && worldsCid && world) {
     return (
-      <SceneViewerNoNav
-        sceneAndFiles={sceneAndFiles}
-        pageTitle={`Viewing world at token ${tokenId}`}
-        handleStartEdit={() => {}}
-        canEdit={false}
-        editText="Edit"
-        portals={portalsOfWorld.data?.portals}
-      />
+      <>
+        <SceneViewerNft
+          sceneAndFiles={sceneAndFiles}
+          portals={portalsWithScenes}
+        />
+        {portals && (
+          <GetPortalScenes
+            portalsInSpace={portals}
+            setPortalScene={setPortalScene}
+          />
+        )}
+      </>
     );
   }
 
