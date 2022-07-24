@@ -21,7 +21,7 @@ import SetCaptureScreenshotFn from "../../Shared/SetCaptureScreenshotFn";
 import WorldPortals from "../Portals/WorldPortals";
 import { PortalData } from "../../../api/theGraph/portalQueries";
 import { useNavigate } from "react-router";
-import { getWorldsPath } from "../Viewer/SceneViewer";
+import { getWorldsPath } from "../Viewer/SceneViewerContents";
 
 const rootPath: string[] = [];
 

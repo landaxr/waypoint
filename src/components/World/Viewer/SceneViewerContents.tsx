@@ -6,32 +6,27 @@ import { SceneAndFiles } from "../../../types/scene";
 import SetRaycasterFromCamera from "../Builder/SetRaycasterFromCamera";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";
+import Navbar, { MenuItem } from "../../Nav/Navbar";
 import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
 import { Raycaster } from "three";
 import ViewerControls from "./ViewerControls";
-import WorldPortals from "../Portals/WorldPortals";
-import { PortalData } from "../../../api/theGraph/portalQueries";
 import { useNavigate } from "react-router";
+import { PortalData } from "../../../api/theGraph/portalQueries";
+import WorldPortals from "../Portals/WorldPortals";
 
 const rootPath: string[] = [];
 
-const getWorldsPath = (tokenId: string) => `/${tokenId}`;
+export const getWorldsPath = (tokenId: string) => `/worlds/${tokenId}`;
 
-const SceneViewerNoNav = ({
+const SceneViewerContents = ({
   sceneAndFiles: { scene, files },
-  pageTitle,
-  handleStartEdit,
-  canEdit,
-  editText,
   portals,
+  menuItems,
 }: {
   sceneAndFiles: SceneAndFiles;
-  pageTitle: string;
-  canEdit?: boolean;
-  handleStartEdit: () => void;
-  editText?: string;
   portals: PortalData[] | undefined;
+  menuItems: MenuItem[];
 }) => {
   const raycasterRef = useRef(new Raycaster());
 
@@ -40,11 +35,12 @@ const SceneViewerNoNav = ({
   }, []);
 
   const ContextBridge = useContextBridge(ClickedAndAudioContext);
+
   const navigate = useNavigate();
 
-  // todo: share this code with SceneViewer and SceneBuilder
   return (
     <>
+      <Navbar centerItems={menuItems} />
       <div className={clsx("w-screen h-screen", cursorClass)}>
         <Canvas>
           <ContextBridge>
@@ -61,15 +57,15 @@ const SceneViewerNoNav = ({
                 parentPath={rootPath}
                 files={files}
               />
-              {portals && (
-                <WorldPortals
-                  portals={portals}
-                  navigate={navigate}
-                  getWorldPath={getWorldsPath}
-                />
-              )}
             </>
             <ViewerControls />
+            {portals && (
+              <WorldPortals
+                portals={portals}
+                navigate={navigate}
+                getWorldPath={getWorldsPath}
+              />
+            )}
           </ContextBridge>
         </Canvas>
       </div>
@@ -77,4 +73,4 @@ const SceneViewerNoNav = ({
   );
 };
 
-export default SceneViewerNoNav;
+export default SceneViewerContents;

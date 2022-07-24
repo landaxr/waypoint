@@ -5,7 +5,7 @@ import useLoadWorldAndScene from "../../api/nft/useLoadWorldAndScene";
 import { usePortalsFromWorld } from "../../api/theGraph/portalQueries";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
-import SceneViewer from "./Viewer/SceneViewer";
+import SceneViewerFull from "./Viewer/SceneViewerFull";
 
 const WorldFromTokenId = ({
   tokenId,
@@ -18,7 +18,7 @@ const WorldFromTokenId = ({
     tokenId,
   });
 
-  const portalsOfWorld = usePortalsFromWorld(tokenId);
+  const portalsFromWorld = usePortalsFromWorld(tokenId);
 
   const navigate = useNavigate();
 
@@ -37,17 +37,17 @@ const WorldFromTokenId = ({
           cid={worldsCid}
           tokenId={tokenId}
           pageTitle={`Editing world at token ${tokenId}`}
-          portals={portalsOfWorld.data?.portals}
+          portals={portalsFromWorld.data?.portals}
         />
       );
     return (
-      <SceneViewer
+      <SceneViewerFull
         sceneAndFiles={sceneAndFiles}
         pageTitle={`Viewing world at token ${tokenId}`}
         handleStartEdit={handleStartFork}
         canEdit={canBuild}
         editText="Edit"
-        portals={portalsOfWorld.data?.portals}
+        portals={portalsFromWorld.data?.portals}
       />
     );
   }

@@ -1,16 +1,12 @@
 import { useState } from "react";
-import { useAccount } from "wagmi";
 import { convertURIToHTTPS } from "../../../api/ipfs/ipfsUrls";
 import {
-  SpacesQueryData,
   useErc721TokenForFileUrl,
   useWorlds,
   WorldData,
 } from "../../../api/theGraph/worldsQueries";
 import Modal, { ModalHeader3 } from "../../Shared/Modal";
-import { MintWorldStatus } from "../../../api/smartContracts/useWorldMinter";
 import { CreatePortalResponse } from "../../../api/smartContracts/usePortalCreator";
-import { zeroPad } from "ethers/lib/utils";
 import ErrorBoundary from "../../Shared/ErrorBoundary";
 
 const WorldEntry = ({
@@ -126,7 +122,7 @@ const CreatePortalDialogModal = ({
     <Modal
       handleClose={handleClose}
       show
-      header={<ModalHeader3 text="Creaet a Portal to Another World" />}
+      header={<ModalHeader3 text="Create a Portal to Another World" />}
       footer={
         <button
           className="text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red dark:hover:bg-red-light dark:focus:ring-red-light disabled:bg-gray-300"

@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import useLoadWorldAndScene from "../../api/nft/useLoadWorldAndScene";
 import { usePortalsFromWorld } from "../../api/theGraph/portalQueries";
 import LoadingScreen from "../Shared/LoadingScreen";
-import SceneViewerNoNav from "./Viewer/SceneViewerNoNav";
+import SceneViewerNft from "./Viewer/SceneViewerNft";
 
 const WorldFromTokenIdViewOnly = ({ tokenId }: { tokenId: string }) => {
   const { sceneAndFiles, worldsCid, world, progress } = useLoadWorldAndScene({
@@ -13,12 +13,8 @@ const WorldFromTokenIdViewOnly = ({ tokenId }: { tokenId: string }) => {
 
   if (sceneAndFiles && worldsCid && world) {
     return (
-      <SceneViewerNoNav
+      <SceneViewerNft
         sceneAndFiles={sceneAndFiles}
-        pageTitle={`Viewing world at token ${tokenId}`}
-        handleStartEdit={() => {}}
-        canEdit={false}
-        editText="Edit"
         portals={portalsOfWorld.data?.portals}
       />
     );
