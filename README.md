@@ -1,6 +1,9 @@
 # w@y_p01nt - Build and Mint a Virtual World, all from the Browser
 
-The application is entirely serverless.
+This project is built for the [2022 HackFS hackathon](https://ethglobal.com/events/hackfs2022), under the project (w@y_p01nt)[https://ethglobal.com/showcase/w-y-p01nt-890c8]
+
+The application is entirely serverless, and runs on a single-page react app in the browser, hosted at: [waypoint.on.fleek.co](https://waypoint.on.fleek.co/)
+
 
 ## High level features:
 
