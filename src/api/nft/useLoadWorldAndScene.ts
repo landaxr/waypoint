@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { SceneAndFiles } from "../../types/scene";
 import { WorldErc721 } from "../../types/world";
-import loadSceneFromIpfs from "../ipfs/ipfsLoader";
+import loadSceneFromIpfs from "../ipfs/ipfsSceneLoader";
 import { useErc721TokenForFileUrl, useWorld } from "../theGraph/worldsQueries";
 
 const useLoadWorldAndScene = ({ tokenId }: { tokenId: string }) => {

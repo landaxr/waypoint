@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useContractWrite, useSigner, useAccount } from "wagmi";
-import { createImageFromDataUri, saveSceneToIpfs } from "../ipfs/ipfsSaver";
+import {
+  createImageFromDataUri,
+  saveSceneToIpfs,
+} from "../ipfs/ipfsSceneSaver";
 import { buildAndSaveTokenMetadataToIpfs } from "../nft/tokenSaver";
-import deployedContracts from "../../contracts/Waypoint.json";
+import deployedContracts from "./contracts/Waypoint.json";
 // import deployedContracts from "../../../contracts/WayPoint.json";
 import { SceneAndFiles } from "../../types/scene";
 import { WorldErc721 } from "../../types/world";
@@ -55,53 +58,61 @@ export function useWorldTokenCreator() {
 
   const { canMint, minting } = status;
 
-  const createWorld = useCallback(async () => {
-    if (!canMint) throw new Error("Cannot mint!");
+  const createWorld = useCallback(
+    async ({
+      sceneAndFiles = makeNewScene(),
+      name,
+    }: {
+      sceneAndFiles?: SceneAndFiles;
+      name: string;
+    }) => {
+      console.log("minting world");
+      if (!canMint) throw new Error("Cannot mint!");
 
-    if (minting) return;
+      if (minting) return;
 
-    setStatus((existing) => ({
-      ...existing,
-      minting: true,
-      mintedWorld: undefined,
-    }));
+      setStatus((existing) => ({
+        ...existing,
+        minting: true,
+        mintedWorld: undefined,
+      }));
 
-    const emptyScene = makeNewScene();
+      const { sceneGraphFileUrl } = await saveSceneToIpfs(sceneAndFiles);
 
-    const { sceneGraphFileUrl } = await saveSceneToIpfs(emptyScene);
+      const {
+        cid: erc721Cid,
+        metadata: erc721,
+        url,
+      } = await buildAndSaveTokenMetadataToIpfs({
+        name,
+        tokenId: undefined,
+        sceneGraphPath: sceneGraphFileUrl,
+      });
 
-    const {
-      cid: erc721Cid,
-      metadata: erc721,
-      url,
-    } = await buildAndSaveTokenMetadataToIpfs({
-      name: "New World",
-      tokenId: undefined,
-      sceneGraphPath: sceneGraphFileUrl,
-    });
-
-    console.log("saved new: ", {
-      erc721,
-      erc721Cid,
-      erc721Url: url,
-      sceneGraphFileUrl,
-    });
-
-    await writeAsync({
-      args: [url],
-    });
-
-    setStatus((existing) => ({
-      ...existing,
-      minted: true,
-      mintedWorld: {
+      console.log("saved new: ", {
         erc721,
         erc721Cid,
-        // todo: figure out token id
-        tokenId: "0",
-      },
-    }));
-  }, [writeAsync, canMint, minting]);
+        erc721Url: url,
+        sceneGraphFileUrl,
+      });
+
+      await writeAsync({
+        args: [url],
+      });
+
+      setStatus((existing) => ({
+        ...existing,
+        minted: true,
+        mintedWorld: {
+          erc721,
+          erc721Cid,
+          // todo: figure out token id
+          tokenId: "0",
+        },
+      }));
+    },
+    [writeAsync, canMint, minting]
+  );
 
   return {
     createWorld,

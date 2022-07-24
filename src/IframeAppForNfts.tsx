@@ -14,7 +14,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-function App() {
+function IFrameAppForNfts() {
   const clickedAndAudiListener = useClickedAndAudioListener();
   return (
     <ApolloProvider client={client}>
@@ -32,4 +32,4 @@ function App() {
   );
 }
 
-export default App;
+export default IFrameAppForNfts;

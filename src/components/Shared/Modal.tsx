@@ -30,10 +30,32 @@ const CloseButton = ({ handleClose }: { handleClose: () => void }) => (
   </button>
 );
 
+export const ModalActionButton = ({
+  disabled,
+  onClick,
+  text,
+}: {
+  disabled?: boolean;
+  onClick: (() => void) | undefined;
+  text: string;
+}) => (
+  <button
+    className="text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red dark:hover:bg-red-light dark:focus:ring-red-light disabled:bg-gray-300 w-full"
+    disabled={disabled}
+    onClick={(e) => {
+      e.stopPropagation();
+      if (onClick) onClick();
+    }}
+  >
+    {text}
+  </button>
+);
+
 const Modal = ({
   children,
   show,
   handleClose,
+  disableClose = false,
   header,
   footer,
   size = "md",
@@ -44,6 +66,7 @@ const Modal = ({
   header?: JSX.Element;
   footer?: JSX.Element;
   size?: "lg" | "md";
+  disableClose?: boolean;
 }) => {
   const hidden = !show;
   return (
@@ -55,9 +78,7 @@ const Modal = ({
         "bg-black bg-opacity-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 mx-auto w-full md:inset-0 h-modal md:h-full z-50"
       )}`}
     >
-      <div
-        className={`mx-auto relative p-4 w-full max-w-${size} h-full md:h-auto`}
-      >
+      <div className={`mx-auto relative p-4 w-full max-w-md h-full md:h-auto`}>
         {/* <!-- Modal content --> */}
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
           {/* <!-- Modal header --> */}
@@ -66,7 +87,7 @@ const Modal = ({
               {header}
             </div>
           )}
-          <CloseButton handleClose={handleClose} />
+          {!disableClose && <CloseButton handleClose={handleClose} />}
           {/* <!-- Modal body --> */}
           <div className="p-6">{children}</div>
           {/* <!-- Modal footer --> */}

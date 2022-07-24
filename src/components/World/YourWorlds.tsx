@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { useHttpsUriForIpfs } from "../../api/ipfs/ipfsUrls";
+import { useHttpsUriForIpfs } from "../../api/ipfs/ipfsUrlUtils";
 import {
   useErc721TokenForFileUrl,
   useWorldsOwnedByAddress,
   WorldData,
 } from "../../api/theGraph/worldsQueries";
 import MainNavbar from "../Nav/MainNavbar";
-import { useWorldTokenCreator } from "../../api/smartContracts/useWorldMinter";
 
 export const World = ({ world }: { world: WorldData }) => {
   // const { loading, error, data } = useQuery<WorldsData>(GET_LOCAL_WORLDS);
@@ -21,7 +20,6 @@ export const World = ({ world }: { world: WorldData }) => {
     if (world.id === "3")
       console.log(world.uri, erc721Token, imageUrl, loading);
   }, [world.uri, imageUrl, world.id, erc721Token, loading]);
-
 
   return (
     <div className="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
@@ -43,7 +41,7 @@ export const World = ({ world }: { world: WorldData }) => {
 const YourWorlds = () => {
   const { address } = useAccount();
   const worldsResponse = useWorldsOwnedByAddress(address);
-  const { createWorld, status } = useWorldTokenCreator();
+  // const { createWorld, status } = useWorldTokenCreator();
 
   if (!address) return null;
 
@@ -52,9 +50,9 @@ const YourWorlds = () => {
       <MainNavbar />
       <div className="container mx-auto flex flex-col items-center p-8 justify-center">
         <h1 className="text-2xl font-sans font-bold">Your Worlds</h1>
-        <p>
+        {/* <p>
           <button
-            onClick={createWorld}
+            onClick={() => createWorld()}
             disabled={
               !status.canMint || !status.isAllowedToMint || status.minting
             }
@@ -62,7 +60,7 @@ const YourWorlds = () => {
           >
             Mint a New World
           </button>
-        </p>
+        </p> */}
         <div className="grid grid-cols-3 gap-4">
           {worldsResponse.data?.spaces.map((world, id) => (
             <World world={world} key={id} />

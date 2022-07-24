@@ -1,5 +1,8 @@
 import { ImageConfig } from "../../../types/elements";
-import { useHttpsUriForIpfs, useHttpsUrl } from "../../../api/ipfs/ipfsUrls";
+import {
+  useHttpsUriForIpfs,
+  useHttpsUrl,
+} from "../../../api/ipfs/ipfsUrlUtils";
 import { SceneFilesLocal } from "../../../types/shared";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";

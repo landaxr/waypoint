@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { WorldErc721 } from "../../types/world";
 import { gql, useQuery } from "@apollo/client";
-import { convertURIToHTTPS } from "../ipfs/ipfsUrls";
+import { convertURIToHTTPS } from "../ipfs/ipfsUrlUtils";
 
 export type WorldFetchResponse = {
   tokenId: string;
@@ -129,21 +129,4 @@ export function useWorld(tokenId: string) {
     loading,
     world: data ? data.spaces[0] : undefined,
   };
-}
-
-const makeIpfsUrlFromPath = (path: string | undefined, cid: string) => {
-  if (!path) return undefined;
-
-  return `ipfs://${cid}/${path}`;
-};
-
-function appendIpfsPathToContents(fileContents: WorldErc721, cid: string) {
-  const result: WorldErc721 = {
-    ...fileContents,
-    animation_url: makeIpfsUrlFromPath(fileContents.animation_url, cid),
-    image: makeIpfsUrlFromPath(fileContents.image, cid),
-    scene_graph_url: makeIpfsUrlFromPath(fileContents.scene_graph_url, cid),
-  };
-
-  return result;
 }

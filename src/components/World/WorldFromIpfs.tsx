@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import loadSceneFromIpfs from "../../api/ipfs/ipfsLoader";
+import loadSceneFromIpfs from "../../api/ipfs/ipfsSceneLoader";
 import { SceneAndFiles } from "../../types/scene";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
