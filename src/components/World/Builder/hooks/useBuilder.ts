@@ -10,8 +10,8 @@ import useSaveToIpfs from "./useSaveToIpfs";
 import { useSceneUpdater } from "./useSceneUpdater";
 import useWorldTokenUpdater, {
   useWorldTokenCreator,
-} from "../../../../api/smartContracts/useWorldMinter";
-import usePortalCreator from "../../../../api/smartContracts/usePortalCreator";
+} from "../../../../api/smartContract/useWorldMinter";
+import usePortalCreator from "../../../../api/smartContract/usePortalCreator";
 
 export enum TransformMode {
   translate = "translate",

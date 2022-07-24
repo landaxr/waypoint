@@ -2,7 +2,13 @@ import { SceneAndFiles } from "../../../types/scene";
 import SceneViewerContents from "./SceneViewerContents";
 import { PortalWithScene } from "../Portals/useSavePortalScenes";
 
-const SceneViewerNft = ({
+/**
+ * Renders a view only scene viewer, without any smart contract ability.  This is what
+ * is rendered on nft marketplaces
+ * @param param0 
+ * @returns 
+ */
+const SceneViewerIFrame = ({
   sceneAndFiles,
   portals,
 }: {
@@ -19,4 +25,4 @@ const SceneViewerNft = ({
   );
 };
 
-export default SceneViewerNft;
+export default SceneViewerIFrame;

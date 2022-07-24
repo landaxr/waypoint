@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { useHttpsUriForIpfs } from "../../api/ipfs/ipfsUrls";
+import { useHttpsUriForIpfs } from "../../api/ipfs/ipfsUrlUtils";
 import {
   useErc721TokenForFileUrl,
   useWorldsOwnedByAddress,
   WorldData,
 } from "../../api/theGraph/worldsQueries";
 import MainNavbar from "../Nav/MainNavbar";
-import { useWorldTokenCreator } from "../../api/smartContracts/useWorldMinter";
+import { useWorldTokenCreator } from "../../api/smartContract/useWorldMinter";
 
 export const World = ({ world }: { world: WorldData }) => {
   // const { loading, error, data } = useQuery<WorldsData>(GET_LOCAL_WORLDS);
@@ -21,7 +21,6 @@ export const World = ({ world }: { world: WorldData }) => {
     if (world.id === "3")
       console.log(world.uri, erc721Token, imageUrl, loading);
   }, [world.uri, imageUrl, world.id, erc721Token, loading]);
-
 
   return (
     <div className="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">

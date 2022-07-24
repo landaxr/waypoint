@@ -3,7 +3,7 @@ import { useAccount } from "wagmi";
 import {
   convertURIToHTTPS,
   useHttpsUriForIpfs,
-} from "../../../api/ipfs/ipfsUrls";
+} from "../../../api/ipfs/ipfsUrlUtils";
 import {
   SpacesQueryData,
   useErc721TokenForFileUrl,
@@ -11,7 +11,7 @@ import {
   WorldData,
 } from "../../../api/theGraph/worldsQueries";
 import Modal, { ModalHeader3 } from "../../Shared/Modal";
-import { MintWorldStatus } from "../../../api/smartContracts/useWorldMinter";
+import { MintWorldStatus } from "../../../api/smartContract/useWorldMinter";
 
 const WorldEntry = ({
   world,

@@ -83,15 +83,23 @@ function getFileIdsInEnvironment(
   return filterUndefined([environment?.environmentMap?.fileId]);
 }
 
-type Acc = {
-  fileLocations: SceneFilesStored;
+type FilesToUploadAndUpdatedFileConfig = {
+  sceneFiles: SceneFilesStored;
   toUpload: File[];
 };
 
+/**
+ * Filters files from the global list of files for those that
+ * exist in the scene graph or anywhere else in the scene.,
+ * Converts filelocations stored as SceneFilesLocal to SceneFilesStored
+ * @param scene
+ * @param fileLocations
+ * @returns
+ */
 function extractFilesToUploadAndConfigForChildren(
-  scene: SceneConfiguration,
+  scene: Pick<SceneConfiguration, "elements" | "environment">,
   fileLocations: SceneFilesLocal
-): Acc {
+): FilesToUploadAndUpdatedFileConfig {
   const fileIdsInScene = flatten(
     Object.values(scene.elements || {}).map((element) =>
       getElementAndChildrenFileIds(element)
@@ -100,38 +108,41 @@ function extractFilesToUploadAndConfigForChildren(
 
   const fileIdsInEnvironment = getFileIdsInEnvironment(scene.environment);
 
-  const fileLocationsToSave = pick(fileLocations, [
-    ...fileIdsInScene,
-    ...fileIdsInEnvironment,
-  ]);
+  const fileIdsToUpload = [...fileIdsInScene, ...fileIdsInEnvironment];
+
+  const fileLocationsToSave = pick(fileLocations, fileIdsToUpload);
 
   return Object.entries(fileLocationsToSave).reduce(
-    ({ fileLocations, toUpload }: Acc, [id, fileLocation]) => {
+    (
+      { sceneFiles, toUpload }: FilesToUploadAndUpdatedFileConfig,
+      [id, fileLocation]
+    ) => {
       const { fileToUpload, location } =
         toStoredFileLocationWithFileToUpload(fileLocation);
 
-      const updatedFiles = fileToUpload
-        ? [...toUpload, fileToUpload]
-        : toUpload;
-
       return {
-        fileLocations: {
-          ...fileLocations,
+        sceneFiles: {
+          ...sceneFiles,
           [id]: location,
         },
-        toUpload: updatedFiles,
+        toUpload: filterUndefined([...toUpload, fileToUpload]),
       };
     },
     {
-      fileLocations: {},
+      sceneFiles: {},
       toUpload: [],
     }
   );
 }
 
+/**
+ * From scene and files, get the file assets to upload, as well as updated files config
+ * @param param0
+ * @returns
+ */
 export function extractFilesToUploadAndLocations({
   scene,
   files,
-}: SceneAndFiles) {
+}: SceneAndFiles): FilesToUploadAndUpdatedFileConfig {
   return extractFilesToUploadAndConfigForChildren(scene, files);
 }

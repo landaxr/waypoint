@@ -4,7 +4,7 @@ import { usePortalsFromWorld } from "../../api/theGraph/portalQueries";
 import LoadingScreen from "../Shared/LoadingScreen";
 import GetPortalScenes from "./Portals/GetPortalScenes";
 import useSavePortalScenes from "./Portals/useSavePortalScenes";
-import SceneViewerNft from "./Viewer/SceneViewerNft";
+import SceneViewerIFrame from "./Viewer/SceneViewerIFrame";
 
 const WorldFromTokenIdViewOnly = ({ tokenId }: { tokenId: string }) => {
   const { sceneAndFiles, worldsCid, world, progress } = useLoadWorldAndScene({
@@ -18,7 +18,7 @@ const WorldFromTokenIdViewOnly = ({ tokenId }: { tokenId: string }) => {
   if (sceneAndFiles && worldsCid && world) {
     return (
       <>
-        <SceneViewerNft
+        <SceneViewerIFrame
           sceneAndFiles={sceneAndFiles}
           portals={portalsWithScenes}
         />

@@ -14,7 +14,7 @@ import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
 import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
 import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
-import { MintWorldStatus } from "../../../api/smartContracts/useWorldMinter";
+import { MintWorldStatus } from "../../../api/smartContract/useWorldMinter";
 import { filterUndefined } from "../../../api/sceneParser";
 import MintDialogModal from "../BuilderDialogs/MintDialogModal";
 import SetCaptureScreenshotFn from "../../Shared/SetCaptureScreenshotFn";

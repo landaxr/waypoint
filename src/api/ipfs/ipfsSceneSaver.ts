@@ -5,7 +5,7 @@ import {
   extractFilesToUploadAndLocations,
   filterUndefined,
 } from "../sceneParser";
-import { makeWeb3StorageClient } from "../lib/web3Storage";
+import { makeWeb3StorageClient } from "./web3Storage";
 
 export const metadataFileName = "metadata.json";
 
@@ -46,7 +46,7 @@ export const makeIpfsSceneFiles = async ({
   forkedFrom?: string;
   sceneImage?: File;
 }) => {
-  const { fileLocations: storedFileLocations, toUpload } =
+  const { sceneFiles: storedFileLocations, toUpload } =
     extractFilesToUploadAndLocations({ scene, files });
 
   const storedSceneAndFiles: StoredSceneAndFiles = {

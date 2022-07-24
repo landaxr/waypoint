@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { convertURIToHTTPS } from "../../../api/ipfs/ipfsUrls";
+import { convertURIToHTTPS } from "../../../api/ipfs/ipfsUrlUtils";
 import {
   useErc721TokenForFileUrl,
   useWorlds,
   WorldData,
 } from "../../../api/theGraph/worldsQueries";
 import Modal, { ModalHeader3 } from "../../Shared/Modal";
-import { CreatePortalResponse } from "../../../api/smartContracts/usePortalCreator";
+import { CreatePortalResponse } from "../../../api/smartContract/usePortalCreator";
 import ErrorBoundary from "../../Shared/ErrorBoundary";
 
 const WorldEntry = ({

@@ -1,5 +1,5 @@
 import { Environment } from "@react-three/drei";
-import { useHttpsUrl } from "../../api/ipfs/ipfsUrls";
+import { useHttpsUrl } from "../../api/ipfs/ipfsUrlUtils";
 import { SceneConfiguration } from "../../types/scene";
 import { SceneFilesLocal } from "../../types/shared";
 
