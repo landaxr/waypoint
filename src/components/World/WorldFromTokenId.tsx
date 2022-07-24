@@ -11,8 +11,8 @@ import SceneViewerFull from "./Viewer/SceneViewerFull";
 
 /**
  * This loads a world from a token id, along with its scene
- * @param param0 
- * @returns 
+ * @param param0
+ * @returns
  */
 const WorldFromTokenId = ({
   tokenId,
@@ -21,9 +21,10 @@ const WorldFromTokenId = ({
   tokenId: string;
   edit: boolean;
 }) => {
-  const { progress, sceneAndFiles, world, worldsCid } = useLoadWorldAndScene({
-    tokenId,
-  });
+  const { progress, sceneAndFiles, world, worldsCid, name } =
+    useLoadWorldAndScene({
+      tokenId,
+    });
 
   const portalsFromWorld = usePortalsFromWorld(tokenId);
   const portals = portalsFromWorld.data?.portals;
@@ -48,6 +49,7 @@ const WorldFromTokenId = ({
             tokenId={tokenId}
             pageTitle={`Editing world at token ${tokenId}`}
             portals={portalsWithScenes}
+            worldName={name}
           />
         ) : (
           <SceneViewerFull

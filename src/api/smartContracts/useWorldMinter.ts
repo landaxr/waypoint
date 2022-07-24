@@ -150,7 +150,7 @@ export function useWorldTokenUpdater({
   const { canMint, minting } = status;
 
   const updateWorld = useCallback(
-    async (tokenId: string) => {
+    async (tokenId: string, newWorldName: string | undefined) => {
       if (!canMint) throw new Error("Cannot mint!");
 
       if (minting) return;
@@ -181,7 +181,7 @@ export function useWorldTokenUpdater({
         url: erc721Url,
       } = await buildAndSaveTokenMetadataToIpfs({
         tokenId,
-        name: "my world",
+        name: newWorldName || "a World",
         sceneGraphPath: sceneGraphFileUrl,
         sceneImagePath: imageFileUrl,
       });

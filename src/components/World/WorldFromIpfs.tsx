@@ -74,6 +74,7 @@ const WorldFromIpfs = ({ cid, edit }: { cid: string; edit: boolean }) => {
           cid={cid}
           pageTitle={`Forking ipfs://${cid}`}
           portals={undefined}
+          worldName={undefined}
         />
       );
     return (

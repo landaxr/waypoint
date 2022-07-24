@@ -78,7 +78,13 @@ const useLoadWorldAndScene = ({ tokenId }: { tokenId: string }) => {
     })();
   }, [worldsCid]);
 
-  return { progress, sceneAndFiles, world, worldsCid };
+  return {
+    progress,
+    sceneAndFiles,
+    world,
+    worldsCid,
+    name: tokenMetadata.erc721Token?.name,
+  };
 };
 
 export default useLoadWorldAndScene;

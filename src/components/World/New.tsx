@@ -46,6 +46,7 @@ const New = () => {
       isNew
       pageTitle="Building Draft World"
       portals={undefined}
+      worldName={undefined}
     />
   );
 };
