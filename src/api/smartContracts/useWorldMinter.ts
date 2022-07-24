@@ -1,15 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useContractWrite, useSigner, useAccount } from "wagmi";
-import {
-  createImageFromDataUri,
-  saveSceneToIpfs,
-} from "../../../api/ipfsSaver";
-import { buildAndSaveTokenMetadataToIpfs } from "../../../api/tokenSaver";
-import deployedContracts from "../../../contracts/Waypoint.json";
+import { createImageFromDataUri, saveSceneToIpfs } from "../ipfs/ipfsSaver";
+import { buildAndSaveTokenMetadataToIpfs } from "../nft/tokenSaver";
+import deployedContracts from "../../contracts/Waypoint.json";
 // import deployedContracts from "../../../contracts/WayPoint.json";
-import { SceneAndFiles } from "../../../types/scene";
-import { WorldErc721 } from "../../../types/world";
-import { makeNewScene } from "../New";
+import { SceneAndFiles } from "../../types/scene";
+import { WorldErc721 } from "../../types/world";
+import { makeNewScene } from "../../components/World/New";
 
 export type MintedWorld = {
   erc721Cid: string;
@@ -30,7 +27,7 @@ export const localContractAddress =
 export const rinkebyContractAddress =
   "0x8f181e382dF37f4DAB729c1868D0A190A929D614";
 
-const contractAddress = rinkebyContractAddress;
+export const contractAddress = rinkebyContractAddress;
 
 export function useWorldTokenCreator() {
   const [status, setStatus] = useState<MintWorldStatus>({

@@ -1,5 +1,5 @@
 import { VideoConfig } from "../../../types/elements";
-import { useHttpsUrl } from "../../../api/ipfsUrls";
+import { useHttpsUrl } from "../../../api/ipfs/ipfsUrls";
 import { SceneFilesLocal } from "../../../types/shared";
 import { Texture, VideoTexture } from "three";
 import {

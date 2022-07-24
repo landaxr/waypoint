@@ -1,6 +1,6 @@
-import { WorldErc721 } from "../types/world";
-import { createJsonFileFromObject } from "./ipfsSaver";
-import { makeWeb3StorageClient } from "./web3Storage";
+import { WorldErc721 } from "../../types/world";
+import { createJsonFileFromObject } from "../ipfs/ipfsSaver";
+import { makeWeb3StorageClient } from "../lib/web3Storage";
 
 const applicationCid = "QmcPnK7wxgWhm969f4QNMXUiSyhvowS388ELJMRx6pdVn2";
 // todo: use ipfs url

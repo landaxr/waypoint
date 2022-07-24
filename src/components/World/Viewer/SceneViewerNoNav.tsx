@@ -1,4 +1,3 @@
-
 import { useContextBridge } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
@@ -11,8 +10,13 @@ import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
 import { Raycaster } from "three";
 import ViewerControls from "./ViewerControls";
+import WorldPortals from "../Portals/WorldPortals";
+import { PortalData } from "../../../api/theGraph/portalQueries";
+import { useNavigate } from "react-router";
 
 const rootPath: string[] = [];
+
+const getWorldsPath = (tokenId: string) => `/${tokenId}`;
 
 const SceneViewerNoNav = ({
   sceneAndFiles: { scene, files },
@@ -20,12 +24,14 @@ const SceneViewerNoNav = ({
   handleStartEdit,
   canEdit,
   editText,
+  portals,
 }: {
   sceneAndFiles: SceneAndFiles;
   pageTitle: string;
   canEdit?: boolean;
   handleStartEdit: () => void;
   editText?: string;
+  portals: PortalData[] | undefined;
 }) => {
   const raycasterRef = useRef(new Raycaster());
 
@@ -34,6 +40,7 @@ const SceneViewerNoNav = ({
   }, []);
 
   const ContextBridge = useContextBridge(ClickedAndAudioContext);
+  const navigate = useNavigate();
 
   // todo: share this code with SceneViewer and SceneBuilder
   return (
@@ -54,6 +61,13 @@ const SceneViewerNoNav = ({
                 parentPath={rootPath}
                 files={files}
               />
+              {portals && (
+                <WorldPortals
+                  portals={portals}
+                  navigate={navigate}
+                  getWorldPath={getWorldsPath}
+                />
+              )}
             </>
             <ViewerControls />
           </ContextBridge>

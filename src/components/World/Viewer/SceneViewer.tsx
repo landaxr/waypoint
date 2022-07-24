@@ -12,8 +12,13 @@ import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerTo
 import { Raycaster } from "three";
 import ViewerControls from "./ViewerControls";
 import { filterUndefined } from "../../../api/sceneParser";
+import { useNavigate } from "react-router";
+import { PortalData } from "../../../api/theGraph/portalQueries";
+import WorldPortals from "../Portals/WorldPortals";
 
 const rootPath: string[] = [];
+
+export const getWorldsPath = (tokenId: string) => `/worlds/${tokenId}`;
 
 const viewMenu = ({
   pageTitle,
@@ -47,17 +52,15 @@ const SceneViewer = ({
   handleStartEdit,
   canEdit,
   editText,
+  portals,
 }: {
   sceneAndFiles: SceneAndFiles;
   pageTitle: string;
   canEdit?: boolean;
   handleStartEdit: () => void;
   editText?: string;
+  portals: PortalData[] | undefined;
 }) => {
-  const cursorClass = useMemo(() => {
-    return "cursor-pointer";
-  }, []);
-
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
@@ -73,7 +76,13 @@ const SceneViewer = ({
 
   const raycasterRef = useRef(new Raycaster());
 
+  const cursorClass = useMemo(() => {
+    return "cursor-pointer";
+  }, []);
+
   const ContextBridge = useContextBridge(ClickedAndAudioContext);
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -96,6 +105,13 @@ const SceneViewer = ({
               />
             </>
             <ViewerControls />
+            {portals && (
+              <WorldPortals
+                portals={portals}
+                navigate={navigate}
+                getWorldPath={getWorldsPath}
+              />
+            )}
           </ContextBridge>
         </Canvas>
       </div>

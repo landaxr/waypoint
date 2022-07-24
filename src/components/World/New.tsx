@@ -45,6 +45,7 @@ const New = () => {
       sceneAndFiles={sceneAndFiles}
       isNew
       pageTitle="Building Draft World"
+      portals={undefined}
     />
   );
 };
