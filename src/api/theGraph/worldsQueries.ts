@@ -109,6 +109,10 @@ export type ExtendedWorldData = {
   id: string;
 }
 
+export type ExtendedSpacesQueryData = {
+  spaces: ExtendedWorldData[];
+}
+
 export type WorldData = {
   owner: {
     id: string;
@@ -150,8 +154,8 @@ export function useWorlds() {
 
 export function useExtendedWorlds() {
   const extendedWorldsGql = useMemo(()=> extendedSpacesQuery(),[]);
-  
-  const { loading, data } = useQuery<ExtendedWorldData>(extendedWorldsGql, {
+
+  const { loading, data } = useQuery<ExtendedSpacesQueryData>(extendedWorldsGql, {
     pollInterval: 2500,
   });
 

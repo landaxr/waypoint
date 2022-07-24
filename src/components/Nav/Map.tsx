@@ -1,12 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import ReactFlow, {MiniMap, Controls, Background} from 'react-flow-renderer';
-import { useExtendedWorlds } from '../../api/theGraph/worldsQueries';
+import { useExtendedWorlds, ExtendedSpacesQueryData, ExtendedWorldData } from '../../api/theGraph/worldsQueries';
 
 const Map = () => {
 
+  type NodeArray = {
+    id: string;
+    type: string;
+    data: object;
+    position: object;
+    draggable: boolean;
+  }
+
   const worldsResponse = useExtendedWorlds();
 
-  const [nodes, setNodes] = useState([]);
+  const [nodes, setNodes] = useState<NodeArray[] | []>([]);
   const [edges, setEdges] = useState([]);
 
   useEffect(()=> {
@@ -16,8 +24,8 @@ const Map = () => {
     if (worldsResponse && worldsResponse.loading == false) {
       console.log('fire')
       // compose chart
-      if (worldsResponse.data && worldsResponse.data.spaces && worldsResponse.data.spaces.length > 0) {
-        let tempNodes = [];
+      if (worldsResponse.data && worldsResponse?.data?.spaces && worldsResponse.data.spaces.length > 0) {
+        let tempNodes: Array<NodeArray>;
         let tempEdges = [];
         worldsResponse.data.spaces.map(space => {
           let thisX = 100
