@@ -8,7 +8,6 @@ import {
   WorldData,
 } from "../../api/theGraph/worldsQueries";
 import MainNavbar from "../Nav/MainNavbar";
-import { useWorldTokenCreator } from "../../api/smartContract/useWorldMinter";
 
 export const World = ({ world }: { world: WorldData }) => {
   // const { loading, error, data } = useQuery<WorldsData>(GET_LOCAL_WORLDS);
@@ -42,7 +41,7 @@ export const World = ({ world }: { world: WorldData }) => {
 const YourWorlds = () => {
   const { address } = useAccount();
   const worldsResponse = useWorldsOwnedByAddress(address);
-  const { createWorld, status } = useWorldTokenCreator();
+  // const { createWorld, status } = useWorldTokenCreator();
 
   if (!address) return null;
 
@@ -51,9 +50,9 @@ const YourWorlds = () => {
       <MainNavbar />
       <div className="container mx-auto flex flex-col items-center p-8 justify-center">
         <h1 className="text-2xl font-sans font-bold">Your Worlds</h1>
-        <p>
+        {/* <p>
           <button
-            onClick={createWorld}
+            onClick={() => createWorld()}
             disabled={
               !status.canMint || !status.isAllowedToMint || status.minting
             }
@@ -61,7 +60,7 @@ const YourWorlds = () => {
           >
             Mint a New World
           </button>
-        </p>
+        </p> */}
         <div className="grid grid-cols-3 gap-4">
           {worldsResponse.data?.spaces.map((world, id) => (
             <World world={world} key={id} />

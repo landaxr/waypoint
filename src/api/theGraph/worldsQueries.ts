@@ -130,20 +130,3 @@ export function useWorld(tokenId: string) {
     world: data ? data.spaces[0] : undefined,
   };
 }
-
-const makeIpfsUrlFromPath = (path: string | undefined, cid: string) => {
-  if (!path) return undefined;
-
-  return `ipfs://${cid}/${path}`;
-};
-
-function appendIpfsPathToContents(fileContents: WorldErc721, cid: string) {
-  const result: WorldErc721 = {
-    ...fileContents,
-    animation_url: makeIpfsUrlFromPath(fileContents.animation_url, cid),
-    image: makeIpfsUrlFromPath(fileContents.image, cid),
-    scene_graph_url: makeIpfsUrlFromPath(fileContents.scene_graph_url, cid),
-  };
-
-  return result;
-}

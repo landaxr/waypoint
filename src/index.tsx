@@ -4,7 +4,8 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 function importBuildTarget() {
-  if (process.env.REACT_APP_BUILD_TARGET === "nft") return import("./IframeAppForNfts");
+  if (process.env.REACT_APP_BUILD_TARGET === "nft")
+    return import("./IframeAppForNfts");
   return import("./FullApp");
 }
 

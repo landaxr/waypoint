@@ -16,7 +16,10 @@ import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
 import { MintWorldStatus } from "../../../api/smartContract/useWorldMinter";
 import { filterUndefined } from "../../../api/sceneParser";
-import MintDialogModal from "../BuilderDialogs/MintDialogModal";
+import {
+  UpdateWorldDialogModal,
+  MintToNewWorldDialogModal,
+} from "../BuilderDialogs/MintDialogModals";
 import SetCaptureScreenshotFn from "../../Shared/SetCaptureScreenshotFn";
 import WorldPortals from "../Portals/WorldPortals";
 import { useNavigate } from "react-router";
@@ -29,9 +32,12 @@ const buildMenu = ({
   handleSaveToIpfs,
   savingScene,
   disabled,
+  createWorldStatus,
   updateWorldStatus,
-  handleOpenMintDialog,
+  handleOpenUpdateWorldDialog,
+  handleOpenCreateWorlDialog,
   pageTitle,
+  tokenId,
 }: {
   handleSaveToIpfs: () => void;
   savingScene: boolean;
@@ -40,15 +46,24 @@ const buildMenu = ({
   // updateWorld: (tokenId: string) => void;
   createWorldStatus: MintWorldStatus;
   updateWorldStatus: MintWorldStatus;
-  handleOpenMintDialog: () => void;
+  handleOpenUpdateWorldDialog: () => void;
+  handleOpenCreateWorlDialog: () => void;
+  tokenId: string | undefined;
   pageTitle: string;
 }): MenuItem[] => {
   const mintButton = filterUndefined([
-    updateWorldStatus.isAllowedToMint
+    tokenId && updateWorldStatus.isAllowedToMint
       ? {
-          action: handleOpenMintDialog,
-          title: "Mint to Token",
+          action: handleOpenUpdateWorldDialog,
+          title: "Update Token with Scene",
           kind: LinkKind.button,
+        }
+      : undefined,
+    !tokenId && createWorldStatus.isAllowedToMint
+      ? {
+          action: handleOpenCreateWorlDialog,
+          kind: LinkKind.button,
+          title: "Mint World with Scene",
         }
       : undefined,
   ]);
@@ -93,12 +108,14 @@ const SceneBuilder = ({
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
-  const [mintDialogOpen, setMintDialogOpen] = useState(false);
+  const [updateWorldDialogOpen, setUpdateWorldDialogOpen] = useState(false);
+  const [mintNewWorldDialogOpen, setMintNewWorldDialogOpen] = useState(false);
 
   useEffect(() => {
     setMenuItems(
       buildMenu({
         pageTitle,
+        tokenId,
         handleSaveToIpfs: builderState.handleSaveToIpfs,
         savingScene: builderState.saveSceneStatus.saving,
         disabled: builderState.saveSceneStatus.saving || !builderState.canSave,
@@ -106,7 +123,8 @@ const SceneBuilder = ({
         // updateWorld: builderState.updateWorld,
         createWorldStatus: builderState.createWorldStatus,
         updateWorldStatus: builderState.mintWorldStatus,
-        handleOpenMintDialog: () => setMintDialogOpen(true),
+        handleOpenUpdateWorldDialog: () => setUpdateWorldDialogOpen(true),
+        handleOpenCreateWorlDialog: () => setMintNewWorldDialogOpen(true),
       })
     );
   }, [
@@ -118,6 +136,7 @@ const SceneBuilder = ({
     builderState.createWorldStatus,
     builderState.mintWorldStatus,
     pageTitle,
+    tokenId,
   ]);
 
   const ContextBridge = useContextBridge(ClickedAndAudioContext);
@@ -173,13 +192,28 @@ const SceneBuilder = ({
             savedCid={builderState.saveSceneStatus.savedCid}
           />
         )}
-        {mintDialogOpen && (
-          <MintDialogModal
+        {updateWorldDialogOpen && (
+          <UpdateWorldDialogModal
             currentWorldTokenId={tokenId}
-            handleClose={() => setMintDialogOpen(false)}
+            handleClose={() => setUpdateWorldDialogOpen(false)}
             updateWorld={builderState.updateWorld}
             updateWorldStatus={builderState.mintWorldStatus}
             currentWorldName={worldName}
+            sceneAndFiles={{
+              scene: builderState.scene,
+              files: builderState.files,
+            }}
+          />
+        )}
+        {mintNewWorldDialogOpen && (
+          <MintToNewWorldDialogModal
+            handleClose={() => setMintNewWorldDialogOpen(false)}
+            createNewWorld={builderState.createWorld}
+            status={builderState.createWorldStatus}
+            sceneAndFiles={{
+              scene: builderState.scene,
+              files: builderState.files,
+            }}
           />
         )}
       </div>
