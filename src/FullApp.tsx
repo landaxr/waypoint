@@ -9,7 +9,7 @@ import WorldFromIpfsRoute from "./components/World/WorldFromIpfs";
 import useClickedAndAudioListener, {
   ClickedAndAudioContext,
 } from "./components/World/useClickedAndAudioListener";
-import { ApolloProvider, InMemoryCache } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import WorldFromTokenId from "./components/World/WorldFromTokenId";
 import { client } from "./api/theGraph/client";
 

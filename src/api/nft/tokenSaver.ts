@@ -2,7 +2,9 @@ import { WorldErc721 } from "../../types/world";
 import { createJsonFileFromObject } from "../ipfs/ipfsSceneSaver";
 import { makeWeb3StorageClient } from "../ipfs/web3Storage";
 
-const applicationCid = "Qme1CJqiXCo78gQKJC8F6H51ToCByYLYnsm3UTaVgtcC7T";
+// this is the ipfs cid of the most recent version of the application hosted on fleek.
+// todo: figure out how to get this dynamically.
+const applicationCid = "QmSdXPrYd6FG5qRyERy9sfwRg7W8Sd19yWbF2KvGT2B7Lb";
 // todo: use ipfs url
 const makeInteractiveApplicationUrl = (tokenId: string) =>
   `ipfs://${applicationCid}/#/${tokenId}`;
