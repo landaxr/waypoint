@@ -5,6 +5,8 @@ import useLoadWorldAndScene from "../../api/nft/useLoadWorldAndScene";
 import { usePortalsFromWorld } from "../../api/theGraph/portalQueries";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
+import GetPortalScenes from "./Portals/GetPortalScenes";
+import useSavePortalScenes from "./Portals/useSavePortalScenes";
 import SceneViewerFull from "./Viewer/SceneViewerFull";
 
 const WorldFromTokenId = ({
@@ -19,7 +21,8 @@ const WorldFromTokenId = ({
   });
 
   const portalsFromWorld = usePortalsFromWorld(tokenId);
-
+  const portals = portalsFromWorld.data?.portals;
+  const { portalsWithScenes, setPortalScene } = useSavePortalScenes(portals);
   const navigate = useNavigate();
 
   const handleStartFork = useCallback(() => {
@@ -29,26 +32,35 @@ const WorldFromTokenId = ({
   const { address } = useAccount();
 
   const canBuild = world?.owner.id === address?.toLowerCase();
+  const showBuilder = edit && canBuild;
   if (sceneAndFiles && worldsCid && world) {
-    if (edit && canBuild)
-      return (
-        <SceneBuilder
-          sceneAndFiles={sceneAndFiles}
-          cid={worldsCid}
-          tokenId={tokenId}
-          pageTitle={`Editing world at token ${tokenId}`}
-          portals={portalsFromWorld.data?.portals}
-        />
-      );
     return (
-      <SceneViewerFull
-        sceneAndFiles={sceneAndFiles}
-        pageTitle={`Viewing world at token ${tokenId}`}
-        handleStartEdit={handleStartFork}
-        canEdit={canBuild}
-        editText="Edit"
-        portals={portalsFromWorld.data?.portals}
-      />
+      <>
+        {showBuilder ? (
+          <SceneBuilder
+            sceneAndFiles={sceneAndFiles}
+            cid={worldsCid}
+            tokenId={tokenId}
+            pageTitle={`Editing world at token ${tokenId}`}
+            portals={portalsWithScenes}
+          />
+        ) : (
+          <SceneViewerFull
+            sceneAndFiles={sceneAndFiles}
+            pageTitle={`Viewing world at token ${tokenId}`}
+            handleStartEdit={handleStartFork}
+            canEdit={canBuild}
+            editText="Edit"
+            portals={portalsWithScenes}
+          />
+        )}
+        {portals && (
+          <GetPortalScenes
+            portalsInSpace={portals}
+            setPortalScene={setPortalScene}
+          />
+        )}
+      </>
     );
   }
 

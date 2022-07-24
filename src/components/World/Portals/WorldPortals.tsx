@@ -1,17 +1,17 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import { Object3D } from "three";
-import { PortalData } from "../../../api/theGraph/portalQueries";
 import { Text } from "@react-three/drei";
+import { PortalWithScene } from "./useSavePortalScenes";
 
 const teleportDistance = 1;
 
 const Portal = ({
-  portal,
+  portal: { portal, scene },
   navigate,
   getWorldPath,
 }: {
-  portal: PortalData;
+  portal: PortalWithScene;
   navigate: (to: string) => void;
   getWorldPath: (tokenId: string) => string;
 }) => {
@@ -55,7 +55,7 @@ const WorldPortals = ({
   navigate,
   getWorldPath,
 }: {
-  portals: PortalData[];
+  portals: PortalWithScene[];
   navigate: (to: string) => void;
   getWorldPath: (tokenId: string) => string;
 }) => {
@@ -64,7 +64,7 @@ const WorldPortals = ({
       {portals.map((portal, i) => (
         <Portal
           portal={portal}
-          key={portal.id}
+          key={portal.portal.id}
           navigate={navigate}
           getWorldPath={getWorldPath}
         />

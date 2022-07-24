@@ -1,13 +1,13 @@
 import { SceneAndFiles } from "../../../types/scene";
-import { PortalData } from "../../../api/theGraph/portalQueries";
 import SceneViewerContents from "./SceneViewerContents";
+import { PortalWithScene } from "../Portals/useSavePortalScenes";
 
 const SceneViewerNft = ({
   sceneAndFiles,
   portals,
 }: {
   sceneAndFiles: SceneAndFiles;
-  portals: PortalData[] | undefined;
+  portals: PortalWithScene[] | undefined;
 }) => {
   // todo: share this code with SceneViewer and SceneBuilder
   return (

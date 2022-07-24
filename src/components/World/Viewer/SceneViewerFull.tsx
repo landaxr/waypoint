@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { SceneAndFiles } from "../../../types/scene";
 import { LinkKind, MenuItem } from "../../Nav/Navbar";
 import { filterUndefined } from "../../../api/sceneParser";
-import { PortalData } from "../../../api/theGraph/portalQueries";
 import SceneViewerContents from "./SceneViewerContents";
+import { PortalWithScene } from "../Portals/useSavePortalScenes";
 
 export const getWorldsPath = (tokenId: string) => `/worlds/${tokenId}`;
 
@@ -46,7 +46,7 @@ const SceneViewer = ({
   canEdit?: boolean;
   handleStartEdit: () => void;
   editText?: string;
-  portals: PortalData[] | undefined;
+  portals: PortalWithScene[] | undefined;
 }) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 

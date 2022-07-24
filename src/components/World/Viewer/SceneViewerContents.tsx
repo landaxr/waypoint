@@ -12,8 +12,8 @@ import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerTo
 import { Raycaster } from "three";
 import ViewerControls from "./ViewerControls";
 import { useNavigate } from "react-router";
-import { PortalData } from "../../../api/theGraph/portalQueries";
 import WorldPortals from "../Portals/WorldPortals";
+import { PortalWithScene } from "../Portals/useSavePortalScenes";
 
 const rootPath: string[] = [];
 
@@ -25,7 +25,7 @@ const SceneViewerContents = ({
   menuItems,
 }: {
   sceneAndFiles: SceneAndFiles;
-  portals: PortalData[] | undefined;
+  portals: PortalWithScene[] | undefined;
   menuItems: MenuItem[];
 }) => {
   const raycasterRef = useRef(new Raycaster());

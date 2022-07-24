@@ -22,6 +22,7 @@ import WorldPortals from "../Portals/WorldPortals";
 import { PortalData } from "../../../api/theGraph/portalQueries";
 import { useNavigate } from "react-router";
 import { getWorldsPath } from "../Viewer/SceneViewerContents";
+import { PortalWithScene } from "../Portals/useSavePortalScenes";
 
 const rootPath: string[] = [];
 
@@ -78,7 +79,7 @@ const SceneBuilder = ({
   cid?: string;
   tokenId?: string;
   pageTitle: string;
-  portals: PortalData[] | undefined;
+  portals: PortalWithScene[] | undefined;
 }) => {
   const builderState = useBuilder({ sceneAndFiles, tokenId });
 
