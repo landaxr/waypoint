@@ -6,6 +6,7 @@ import useClickedAndAudioListener, {
 import { ApolloProvider } from "@apollo/client";
 import WorldFromTokenIdViewOnly from "./components/World/WorldFromTokenIdViewOnly";
 import { client } from "./api/theGraph/client";
+import WorldFromIpfsViewOnly from "./components/World/WorldFromIpfsViewOnly";
 
 function IFrameAppForNfts() {
   const clickedAndAudiListener = useClickedAndAudioListener();
@@ -14,6 +15,8 @@ function IFrameAppForNfts() {
       <ClickedAndAudioContext.Provider value={clickedAndAudiListener}>
         <HashRouter>
           <Routes>
+            <Route path="ipfs/:cid" element={<WorldFromIpfsViewOnly />}/>
+
             <Route
               path=":tokenId"
               element={<WorldFromTokenIdViewOnly />}
