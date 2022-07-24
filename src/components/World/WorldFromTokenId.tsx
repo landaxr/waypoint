@@ -9,6 +9,11 @@ import GetPortalScenes from "./Portals/GetPortalScenes";
 import useSavePortalScenes from "./Portals/useSavePortalScenes";
 import SceneViewerFull from "./Viewer/SceneViewerFull";
 
+/**
+ * This loads a world from a token id, along with its scene
+ * @param param0 
+ * @returns 
+ */
 const WorldFromTokenId = ({
   tokenId,
   edit,
