@@ -27,7 +27,7 @@ The smart contract can be seen at [landaxr/waypoint_contracts](https://github.co
 - If you are an owner of a world create an on-chain portal between virtual worlds. Travel through the portal to go to the target world.
   todo: gif
 
-## Overview
+## How it Works 
 
 ### Technologies Used
 
