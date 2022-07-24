@@ -31,7 +31,9 @@ todo: gif
 
 ### Technologies Used
 
-* web3.storage to store erc721 token metadata, scene graphs, the scene files, and 
+#### web3.storage 
+
+We use web3.storage to store erc721 token metadata, scene graphs, the scene files, and assets.
 
 * Polygon (or any EVM compatible chain)
 * The Graph
