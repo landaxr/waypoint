@@ -155,14 +155,27 @@ export function useWorlds() {
 export function useExtendedWorlds() {
   const extendedWorldsGql = useMemo(()=> extendedSpacesQuery(),[]);
 
-  const { loading, data } = useQuery<ExtendedSpacesQueryData>(extendedWorldsGql, {
+
+  const {
+		loading: loading,
+		data: data,
+		startPolling: worldPoll,
+		stopPolling: worldStop
+	} = useQuery<ExtendedSpacesQueryData>(extendedWorldsGql, {
     pollInterval: 2500,
   });
 
-  return {
-    loading,
-    data,
-  };
+	useEffect(() => {
+		worldPoll(5000);
+		return () => {
+			worldStop();
+		};
+	}, [worldPoll, worldStop]);
+
+
+
+  return data
+  ;
 }
 
 export function useWorld(tokenId: string) {
