@@ -12,7 +12,7 @@ import useClickedAndAudioListener, {
 import { ApolloProvider } from "@apollo/client";
 import WorldFromTokenId from "./components/World/WorldFromTokenId";
 import Map from './components/Nav/Map'
-import client from "./web3/client";
+import { client } from "./api/theGraph/client";
 
 function App() {
   const clickedAndAudiListener = useClickedAndAudioListener();
