@@ -36,7 +36,7 @@ const VideoHtmlElement = ({
   return (
     <HtmlWrapper>
       <video
-        style={{ position: "absolute", zIndex: 100 }}
+        style={{ display: 'none' }}
         crossOrigin="anonymous"
         autoPlay={play}
         controls
