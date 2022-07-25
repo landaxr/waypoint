@@ -55,7 +55,7 @@ const Map = () => {
             
               tempEdges.push({
                 id: portal.id,
-                type: 'straight',
+                type: 'bezier',
                 source: space.id.toString(),
                 target: portal.targetId.toString(),
                 animated: true,
