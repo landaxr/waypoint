@@ -8,11 +8,21 @@ export const applicationCid = "QmSdXPrYd6FG5qRyERy9sfwRg7W8Sd19yWbF2KvGT2B7Lb";
 // todo: use ipfs url
 // const makeInteractiveApplicationUrl = (tokenId: string) =>
 //   `ipfs://${applicationCid}/#/${tokenId}`;
-const makeInteractiveApplicationUrlForTokenId = (tokenId: string) =>
-  `https://waypoint-nft.on.fleek.co/#/${tokenId}`;
+const makeInteractiveApplicationUrlForTokenId = ({
+  tokenId,
+  nftBaseUrl,
+}: {
+  tokenId: string;
+  nftBaseUrl: string;
+}) => `${nftBaseUrl}/#/${tokenId}`;
 
-const makeInteractiveApplicationUrlForCid = (cid: string) =>
-  `https://waypoint-nft.on.fleek.co/#/ipfs/${cid}`;
+const makeInteractiveApplicationUrlForCid = ({
+  cid,
+  nftBaseUrl,
+}: {
+  cid: string;
+  nftBaseUrl: string;
+}) => `${nftBaseUrl}/#/ipfs/${cid}`;
 
 export const erc721TokenFileName = "erc721.json";
 
@@ -32,19 +42,27 @@ export async function buildAndSaveTokenMetadataToIpfs({
   name,
   sceneImagePath,
   sceneGraphPath,
+  nftBaseUrl,
 }: {
   tokenId: string | undefined;
   cid: string | undefined;
   name: string;
   sceneImagePath?: string;
   sceneGraphPath?: string;
+  nftBaseUrl: string;
 }): Promise<{ cid: string; metadata: WorldErc721; url: string }> {
   let animationUrl: string | undefined;
 
   if (tokenId) {
-    animationUrl = makeInteractiveApplicationUrlForTokenId(tokenId);
+    animationUrl = makeInteractiveApplicationUrlForTokenId({
+      tokenId,
+      nftBaseUrl,
+    });
   } else if (sceneGraphCid) {
-    animationUrl = makeInteractiveApplicationUrlForCid(sceneGraphCid);
+    animationUrl = makeInteractiveApplicationUrlForCid({
+      cid: sceneGraphCid,
+      nftBaseUrl,
+    });
   }
 
   const erc721Metadata: WorldErc721 = {

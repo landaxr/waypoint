@@ -64,17 +64,6 @@ const YourWorlds = () => {
       <MainNavbar />
       <div className="container mx-auto flex flex-col items-center p-8 justify-center">
         <h1 className="text-2xl font-sans font-bold">Your Worlds</h1>
-        {/* <p>
-          <button
-            onClick={() => createWorld()}
-            disabled={
-              !status.canMint || !status.isAllowedToMint || status.minting
-            }
-            className="rounded-full bg-red text-white text-md font-medium active:bg-red focus:outline-none focus:ring focus:ring-red-light py-2 pr-4 pl-3 md:p-2 m-4 font-monospace"
-          >
-            Mint a New World
-          </button>
-        </p> */}
         <div className="grid grid-cols-3 gap-4">
           {worldsResponse.data?.spaces.map((world, id) => (
             <World world={world} key={id} />

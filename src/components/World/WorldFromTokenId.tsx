@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import useLoadWorldAndScene from "../../api/nft/useLoadWorldAndScene";
 import { usePortalsFromWorld } from "../../api/theGraph/portalQueries";
-import { ChainConfig } from "../../web3/chains";
+import { ChainConfig, chains } from "../../web3/chains";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
 import GetPortalScenes from "./Portals/GetPortalScenes";
@@ -18,7 +18,7 @@ import SceneViewerFull from "./Viewer/SceneViewerFull";
 const WorldFromTokenId = ({
   tokenId,
   edit,
-chain
+  chain,
 }: {
   tokenId: string;
   edit: boolean;
@@ -53,7 +53,7 @@ chain
             pageTitle={`Editing world at token ${tokenId}`}
             portals={portalsWithScenes}
             worldName={name}
-          chain={chain}
+            chain={chain}
           />
         ) : (
           <SceneViewerFull
@@ -83,7 +83,13 @@ chain
   );
 };
 
-const WorldFromTokenIdRoute = ({ build }: { build: boolean }) => {
+const WorldFromTokenIdRoute = ({
+  build,
+  chain,
+}: {
+  build: boolean;
+  chain: ChainConfig;
+}) => {
   let params = useParams();
 
   const { tokenId } = params;
@@ -91,8 +97,7 @@ const WorldFromTokenIdRoute = ({ build }: { build: boolean }) => {
   if (!tokenId) {
     throw new Error("should have had a token id in params");
   }
-
-  return <WorldFromTokenId tokenId={tokenId} edit={build} />;
+  return <WorldFromTokenId tokenId={tokenId} edit={build} chain={chain} />;
 };
 
 export default WorldFromTokenIdRoute;

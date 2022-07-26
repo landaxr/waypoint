@@ -9,6 +9,7 @@ import deployedContracts from "./contracts/Waypoint.json";
 import { SceneAndFiles } from "../../types/scene";
 import { WorldErc721 } from "../../types/world";
 import { makeNewScene } from "../../components/World/New";
+import { ChainConfig } from "../../web3/chains";
 
 export type MintedWorld = {
   erc721Cid: string;
@@ -25,10 +26,10 @@ export type MintWorldStatus = {
 
 export function useWorldTokenCreator({
   captureScreenshotFn,
-  contractAddress,
+  chain: { contractAddress, nftBaseUrl },
 }: {
   captureScreenshotFn: (() => string) | undefined;
-  contractAddress: string;
+  chain: Pick<ChainConfig, "contractAddress" | "nftBaseUrl">;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
     isAllowedToMint: false,
@@ -100,6 +101,7 @@ export function useWorldTokenCreator({
         sceneGraphPath: sceneGraphFileUrl,
         sceneImagePath: imageFileUrl,
         cid,
+        nftBaseUrl,
       });
 
       console.log("saved new: ", {
@@ -124,7 +126,7 @@ export function useWorldTokenCreator({
         },
       }));
     },
-    [canMint, minting, captureScreenshotFn, writeAsync]
+    [canMint, minting, captureScreenshotFn, nftBaseUrl, writeAsync]
   );
 
   const handleReset = useCallback(() => {
@@ -149,13 +151,12 @@ export function useWorldTokenUpdater({
   sceneAndFiles,
   captureScreenshotFn,
   existingSceneCid,
-  contractAddress,
+  chain: { contractAddress, nftBaseUrl },
 }: {
   sceneAndFiles: SceneAndFiles;
   captureScreenshotFn: (() => string) | undefined;
   existingSceneCid: string | undefined;
-
-  contractAddress: string;
+  chain: Pick<ChainConfig, "contractAddress" | "nftBaseUrl">;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
     isAllowedToMint: false,
@@ -225,6 +226,7 @@ export function useWorldTokenUpdater({
         sceneGraphPath: sceneGraphFileUrl,
         sceneImagePath: imageFileUrl,
         cid,
+        nftBaseUrl,
       });
 
       console.log("updated: ", {
@@ -254,6 +256,7 @@ export function useWorldTokenUpdater({
       changeURI,
       existingSceneCid,
       minting,
+      nftBaseUrl,
       sceneAndFiles,
     ]
   );

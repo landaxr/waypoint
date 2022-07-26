@@ -95,7 +95,7 @@ const SceneBuilder = ({
   pageTitle,
   portals,
   worldName,
-chain
+  chain,
 }: {
   sceneAndFiles: SceneAndFiles;
   isNew?: boolean;
@@ -104,9 +104,13 @@ chain
   pageTitle: string;
   portals: PortalWithScene[] | undefined;
   worldName: string | undefined;
-chain: ChainConfig
+  chain: ChainConfig;
 }) => {
-  const builderState = useBuilder({ sceneAndFiles, tokenId, contractAddress: chain.contractAddress });
+  const builderState = useBuilder({
+    sceneAndFiles,
+    tokenId,
+    chain,
+  });
 
   const cursorClass = useMemo(() => {
     return "cursor-pointer";
