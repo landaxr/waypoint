@@ -2,7 +2,7 @@ import { Select, useContextBridge } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
 import { Leva } from "leva";
-import { useEffect, useMemo, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { SceneAndFiles } from "../../../types/scene";
 import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
 import { useBuilder } from "./hooks/useBuilder";
@@ -144,6 +144,11 @@ const SceneBuilder = ({
 
   const navigate = useNavigate();
 
+  const stopPropagation = useCallback((e: SyntheticEvent) => {
+    e.stopPropagation();
+  }, []);
+
+
   return (
     <>
       <Navbar centerItems={menuItems} />
@@ -186,6 +191,7 @@ const SceneBuilder = ({
             ) : null}
           </ContextBridge>
         </Canvas>
+        <div onClick={stopPropagation}>
         <div className="absolute right-5 top-20">
           <Leva fill hidden={!builderState.transforming.isTransforming} />
         </div>
@@ -219,6 +225,7 @@ const SceneBuilder = ({
           />
         )}
       </div>
+</div>
     </>
   );
 };

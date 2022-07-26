@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import CreatePortalDialogModal from "../BuilderDialogs/CreatePortalDialog";
 import EditSkyboxDialog from "./EditSkyboxDialog";
 import { BuilderState, TransformMode } from "./hooks/useBuilder";
@@ -192,8 +192,12 @@ const BuilderMenu = ({
     if (creatingPortal) setEditingSkybox(false);
   }, [creatingPortal]);
 
+  const stopPropagation = useCallback((e: SyntheticEvent) => {
+    e.stopPropagation();
+  }, []);
+
   return (
-    <>
+    <div onClick={stopPropagation}>
       <div className="absolute m-2 top-15 left-0 z-10">
         {shouldBeTransforming && (
           <TransformControlButton
@@ -226,7 +230,7 @@ const BuilderMenu = ({
           camera={camera}
         />
       )}
-    </>
+    </div>
   );
 };
 

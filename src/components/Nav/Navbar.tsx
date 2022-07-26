@@ -1,6 +1,7 @@
 import Web3Login from "./Web3Login";
 import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
+import { SyntheticEvent, useCallback } from "react";
 
 export enum LinkKind {
   button = "button",
@@ -38,8 +39,12 @@ const linkClass = ({
     "block py-2 pr-4 pl-3 md:p-2 font-monospace dark:text-white"
   );
 
-const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => (
-  <nav className="bg-white dark:bg-black border-gray-200 px-2 sm:px-4 py-1 rounded">
+const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => {
+  const stopPropagation = useCallback((e: SyntheticEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  return <nav className="bg-white dark:bg-black border-gray-200 px-2 sm:px-4 py-1 rounded" onClick={stopPropagation}>
     <div className="container flex flex-wrap justify-between items-center mx-auto">
       <Link to="/" className="flex items-center">
         <img
@@ -112,6 +117,6 @@ const Navbar = ({ centerItems }: { centerItems: MenuItem[] }) => (
       </div>
     </div>
   </nav>
-);
+};
 
 export default Navbar;
