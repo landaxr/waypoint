@@ -25,6 +25,7 @@ import WorldPortals from "../Portals/WorldPortals";
 import { useNavigate } from "react-router";
 import { getWorldsPath } from "../Viewer/SceneViewerContents";
 import { PortalWithScene } from "../Portals/useSavePortalScenes";
+import GetCamera from "../../Shared/GetCamera";
 
 const rootPath: string[] = [];
 
@@ -159,6 +160,7 @@ const SceneBuilder = ({
           <SetCaptureScreenshotFn
             setCaptureScreenShotFn={builderState.setCaptureScreenShotFn}
           />
+          <GetCamera setCamera={builderState.setCamera} />
           <ContextBridge>
             <SetRaycasterFromCamera raycasterRef={raycasterRef} />
             <AttachAudioListenerToCamera />

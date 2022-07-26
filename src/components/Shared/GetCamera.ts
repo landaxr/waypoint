@@ -12,6 +12,8 @@ const GetCamera = ({ setCamera }: { setCamera: (camera: Camera) => void }) => {
   useEffect(() => {
     setCamera(camera);
   }, [camera, setCamera]);
+
+  return null;
 };
 
 export default GetCamera;
