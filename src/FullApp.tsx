@@ -1,6 +1,6 @@
 import "./App.css";
 import { WagmiConfig } from "wagmi";
-import web3Client from "./web3/client";
+import {client as web3Client, chains} from "./web3/client";
 import { HashRouter, Route, Routes, useSearchParams } from "react-router-dom";
 import Explore from "./components/Explore";
 import YourWorlds from "./components/World/YourWorlds";
@@ -15,6 +15,10 @@ import Map from "./components/Nav/Map";
 import { makeClient } from "./api/theGraph/client";
 import { getChain } from "./web3/chains";
 import { useMemo } from "react";
+import '@rainbow-me/rainbowkit/styles.css';
+import {
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit';
 
 function App() {
   const clickedAndAudiListener = useClickedAndAudioListener();
@@ -27,6 +31,7 @@ function App() {
 
   return (
     <WagmiConfig client={web3Client}>
+       <RainbowKitProvider chains={chains}>
       <ClickedAndAudioContext.Provider value={clickedAndAudiListener}>
         <HashRouter>
           <ApolloProvider client={client}>
@@ -61,6 +66,7 @@ function App() {
           </ApolloProvider>
         </HashRouter>
       </ClickedAndAudioContext.Provider>
+</RainbowKitProvider>
     </WagmiConfig>
   );
 }

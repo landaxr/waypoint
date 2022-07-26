@@ -6,6 +6,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@craco/craco": "^6.4.5",
+    "@rainbow-me/rainbowkit": "^0.4.4",
     "@react-three/drei": "^9.17.1",
     "@react-three/fiber": "^8.2.0",
     "@testing-library/jest-dom": "^5.16.4",
