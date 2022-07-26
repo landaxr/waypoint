@@ -51,6 +51,23 @@ const spacesQuery = gql`
   }
 `;
 
+const extendedSpacesQuery = () => gql`
+  {
+    spaces {
+      owner {
+        id
+      }
+      portals {
+        id
+        targetId
+        portalId
+      }
+      uri
+      id
+    }
+  }
+`;
+
 const spacesOfOwnerQuery = (ownerAddress: string) => gql`
 {
   spaces(
@@ -78,6 +95,23 @@ const spaceQuery = (tokenId: string) => gql`
   }
 }
 `;
+
+export type ExtendedWorldData = {
+  owner: {
+    id: string;
+  };
+  portals: {
+    id: string;
+    targetId: string;
+    portalId: string;
+  };
+  uri: string;
+  id: string;
+}
+
+export type ExtendedSpacesQueryData = {
+  spaces: ExtendedWorldData[];
+}
 
 export type WorldData = {
   owner: {
@@ -116,6 +150,32 @@ export function useWorlds() {
     loading,
     data,
   };
+}
+
+export function useExtendedWorlds() {
+  const extendedWorldsGql = useMemo(()=> extendedSpacesQuery(),[]);
+
+
+  const {
+		loading: loading,
+		data: data,
+		startPolling: worldPoll,
+		stopPolling: worldStop
+	} = useQuery<ExtendedSpacesQueryData>(extendedWorldsGql, {
+    pollInterval: 2500,
+  });
+
+	useEffect(() => {
+		worldPoll(5000);
+		return () => {
+			worldStop();
+		};
+	}, [worldPoll, worldStop]);
+
+
+
+  return data
+  ;
 }
 
 export function useWorld(tokenId: string) {

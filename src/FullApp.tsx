@@ -11,6 +11,7 @@ import useClickedAndAudioListener, {
 } from "./components/World/useClickedAndAudioListener";
 import { ApolloProvider } from "@apollo/client";
 import WorldFromTokenId from "./components/World/WorldFromTokenId";
+import Map from './components/Nav/Map'
 import { client } from "./api/theGraph/client";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
                   />
                 </Route>
               </Route>
+              <Route path="/map" element={<Map/>}/>
             </Routes>
           </HashRouter>
         </ClickedAndAudioContext.Provider>
