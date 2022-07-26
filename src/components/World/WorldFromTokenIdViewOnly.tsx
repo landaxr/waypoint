@@ -22,6 +22,7 @@ const WorldFromTokenIdViewOnly = ({ tokenId }: { tokenId: string }) => {
           sceneAndFiles={sceneAndFiles}
           portals={portalsWithScenes}
           menuItems={[]}
+        web3Enabled={false}
         />
         {portals && (
           <GetPortalScenes

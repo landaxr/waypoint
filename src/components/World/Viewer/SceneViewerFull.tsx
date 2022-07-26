@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SceneAndFiles } from "../../../types/scene";
-import { LinkKind, MenuItem } from "../../Nav/Navbar";
+import { LinkKind, MenuItem, UrlKind } from "../../Nav/Navbar";
 import { filterUndefined } from "../../../api/sceneParser";
 import SceneViewerContents from "./SceneViewerContents";
 import { PortalWithScene } from "../Portals/useSavePortalScenes";
@@ -19,7 +19,7 @@ const viewMenu = ({
   editText?: string;
 }): MenuItem[] => {
   const items: (MenuItem | undefined)[] = [
-    { link: "#", title: pageTitle, kind: LinkKind.link },
+    { link: "#", title: pageTitle, kind: LinkKind.link, urlKind: UrlKind.localRedirect },
     canEdit && editText
       ? {
           action: handleStartFork,
@@ -66,6 +66,7 @@ const SceneViewer = ({
       menuItems={menuItems}
       portals={portals}
       sceneAndFiles={sceneAndFiles}
+    web3Enabled
     />
   );
 };
