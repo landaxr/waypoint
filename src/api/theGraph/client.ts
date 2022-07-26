@@ -9,4 +9,3 @@ export const client = new ApolloClient({
   uri: subgraphUri,
   cache: new InMemoryCache(),
 });
-

@@ -15,7 +15,7 @@ function IFrameAppForNfts() {
       <ClickedAndAudioContext.Provider value={clickedAndAudiListener}>
         <HashRouter>
           <Routes>
-            <Route path="ipfs/:cid" element={<WorldFromIpfsViewOnly />}/>
+            <Route path="ipfs/:cid" element={<WorldFromIpfsViewOnly />} />
 
             <Route
               path=":tokenId"

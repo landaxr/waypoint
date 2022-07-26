@@ -11,12 +11,8 @@ export const applicationCid = "QmSdXPrYd6FG5qRyERy9sfwRg7W8Sd19yWbF2KvGT2B7Lb";
 const makeInteractiveApplicationUrlForTokenId = (tokenId: string) =>
   `https://waypoint-nft.on.fleek.co/#/${tokenId}`;
 
-
 const makeInteractiveApplicationUrlForCid = (cid: string) =>
   `https://waypoint-nft.on.fleek.co/#/ipfs/${cid}`;
-
-
-
 
 export const erc721TokenFileName = "erc721.json";
 
@@ -44,7 +40,7 @@ export async function buildAndSaveTokenMetadataToIpfs({
   sceneGraphPath?: string;
 }): Promise<{ cid: string; metadata: WorldErc721; url: string }> {
   let animationUrl: string | undefined;
-  
+
   if (tokenId) {
     animationUrl = makeInteractiveApplicationUrlForTokenId(tokenId);
   } else if (sceneGraphCid) {

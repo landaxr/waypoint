@@ -107,11 +107,11 @@ export type ExtendedWorldData = {
   };
   uri: string;
   id: string;
-}
+};
 
 export type ExtendedSpacesQueryData = {
   spaces: ExtendedWorldData[];
-}
+};
 
 export type WorldData = {
   owner: {
@@ -153,29 +153,25 @@ export function useWorlds() {
 }
 
 export function useExtendedWorlds() {
-  const extendedWorldsGql = useMemo(()=> extendedSpacesQuery(),[]);
-
+  const extendedWorldsGql = useMemo(() => extendedSpacesQuery(), []);
 
   const {
-		loading: loading,
-		data: data,
-		startPolling: worldPoll,
-		stopPolling: worldStop
-	} = useQuery<ExtendedSpacesQueryData>(extendedWorldsGql, {
+    loading: loading,
+    data: data,
+    startPolling: worldPoll,
+    stopPolling: worldStop,
+  } = useQuery<ExtendedSpacesQueryData>(extendedWorldsGql, {
     pollInterval: 2500,
   });
 
-	useEffect(() => {
-		worldPoll(5000);
-		return () => {
-			worldStop();
-		};
-	}, [worldPoll, worldStop]);
+  useEffect(() => {
+    worldPoll(5000);
+    return () => {
+      worldStop();
+    };
+  }, [worldPoll, worldStop]);
 
-
-
-  return data
-  ;
+  return data;
 }
 
 export function useWorld(tokenId: string) {

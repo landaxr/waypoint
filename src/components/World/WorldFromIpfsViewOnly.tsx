@@ -63,8 +63,8 @@ const WorldFromIpfsViewOnly = ({ cid }: { cid: string }) => {
     return (
       <SceneViewerContents
         sceneAndFiles={sceneAndFiles}
-      menuItems={[]}
-      portals={undefined}
+        menuItems={[]}
+        portals={undefined}
       />
     );
   }

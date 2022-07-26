@@ -90,7 +90,11 @@ export function useWorldTokenCreator({
         screenshotFile = await createImageFromDataUri(screenShot, "image.jpg");
       }
 
-      const { sceneGraphFileUrl, sceneImageUrl: imageFileUrl, cid } = await saveSceneToIpfs({
+      const {
+        sceneGraphFileUrl,
+        sceneImageUrl: imageFileUrl,
+        cid,
+      } = await saveSceneToIpfs({
         ...sceneAndFiles,
         sceneImage: screenshotFile,
       });
@@ -104,7 +108,7 @@ export function useWorldTokenCreator({
         tokenId: undefined,
         sceneGraphPath: sceneGraphFileUrl,
         sceneImagePath: imageFileUrl,
-      cid
+        cid,
       });
 
       console.log("saved new: ", {
@@ -197,12 +201,15 @@ export function useWorldTokenUpdater({
         screenshotFile = await createImageFromDataUri(screenShot, "image.jpg");
       }
 
-      const { sceneGraphFileUrl, sceneImageUrl: imageFileUrl, cid } =
-        await saveSceneToIpfs({
-          ...sceneAndFiles,
-          sceneImage: screenshotFile,
-          forkedFrom: existingSceneCid,
-        });
+      const {
+        sceneGraphFileUrl,
+        sceneImageUrl: imageFileUrl,
+        cid,
+      } = await saveSceneToIpfs({
+        ...sceneAndFiles,
+        sceneImage: screenshotFile,
+        forkedFrom: existingSceneCid,
+      });
 
       const {
         cid: erc721Cid,
@@ -213,7 +220,7 @@ export function useWorldTokenUpdater({
         name: newWorldName || "a World",
         sceneGraphPath: sceneGraphFileUrl,
         sceneImagePath: imageFileUrl,
-      cid
+        cid,
       });
 
       console.log("updated: ", {

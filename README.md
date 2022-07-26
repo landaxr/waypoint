@@ -21,7 +21,7 @@ The smart contract can be seen at [landaxr/waypoint_contracts](https://github.co
 - If you are the owner of a world, you can edit it and update the world via a smart contract operation.
 - If you are an owner of a world create an on-chain portal between virtual worlds. Travel through the portal to go to the target world.
 
-## How it Works 
+## How it Works
 
 ### Technologies Used
 
@@ -43,7 +43,7 @@ The scene can then be loaded from IPFS directly, without it needing to be tied t
 
 ##### Erc721 Token Metadata
 
-When a scene is minted it is uploaded to ipfs along with a screenshot captured from where the users is.  The the erc721 metadata then links to the screenshot that was taken, the metadata.json of the scene, and the interactive application hosted on ipfs which will load the 3d scene and let a user interact with it.
+When a scene is minted it is uploaded to ipfs along with a screenshot captured from where the users is. The the erc721 metadata then links to the screenshot that was taken, the metadata.json of the scene, and the interactive application hosted on ipfs which will load the 3d scene and let a user interact with it.
 
 - [Example erc721 metadata](https://ipfs.io/ipfs/bafybeicpqgb4r3pncxzsvpjb73ejjcza2az4f5pzlcgabnzm3feclnl6ja/erc721.json)
 

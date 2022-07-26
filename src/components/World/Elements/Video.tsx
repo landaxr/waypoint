@@ -36,7 +36,7 @@ const VideoHtmlElement = ({
   return (
     <HtmlWrapper>
       <video
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         crossOrigin="anonymous"
         autoPlay={play}
         controls
