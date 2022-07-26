@@ -1,19 +1,17 @@
 import { useWorlds } from "../api/theGraph/worldsQueries";
+import { ChainConfig } from "../web3/chains";
 import MainNavbar from "./Nav/MainNavbar";
 import { World } from "./World/YourWorlds";
 
-const Explore = () => {
+const Explore = ({ chain }: { chain: ChainConfig }) => {
   const worldsResponse = useWorlds();
   return (
     <>
       <MainNavbar />
       <div className="container mx-auto flex flex-col items-center p-4 justify-center">
         <h1 className="text-2xl font-monospace font-bold text-center mt-2 mb-4">
-          Explore Worlds Minted to Polygon{" "}
-          <a
-            href="https://testnets.opensea.io/collection/name-l3isedjj89"
-            className={"text-red underline"}
-          >
+          Explore Worlds Minted to {chain.name}{" "}
+          <a href={chain.openseaCollectionUrl} className={"text-red underline"}>
             (View on OpenSea)
           </a>
         </h1>

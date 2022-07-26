@@ -2,11 +2,20 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import loadSceneFromIpfs from "../../api/ipfs/ipfsSceneLoader";
 import { SceneAndFiles } from "../../types/scene";
+import { ChainConfig } from "../../web3/chains";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
 import SceneViewerFull from "./Viewer/SceneViewerFull";
 
-const WorldFromIpfs = ({ cid, edit }: { cid: string; edit: boolean }) => {
+const WorldFromIpfs = ({
+  cid,
+  edit,
+  chain,
+}: {
+  cid: string;
+  edit: boolean;
+  chain: ChainConfig;
+}) => {
   const [{ progress, sceneAndFiles }, setLoadedState] = useState<{
     loaded: boolean;
     progress: number;
@@ -75,6 +84,7 @@ const WorldFromIpfs = ({ cid, edit }: { cid: string; edit: boolean }) => {
           pageTitle={`Forking ipfs://${cid}`}
           portals={undefined}
           worldName={undefined}
+          chain={chain}
         />
       );
     return (
@@ -97,7 +107,13 @@ const WorldFromIpfs = ({ cid, edit }: { cid: string; edit: boolean }) => {
   );
 };
 
-const WorldFromIpfsRoute = ({ fork }: { fork: boolean }) => {
+const WorldFromIpfsRoute = ({
+  fork,
+  chain,
+}: {
+  fork: boolean;
+  chain: ChainConfig;
+}) => {
   let params = useParams();
 
   const { cid } = params;
@@ -106,7 +122,7 @@ const WorldFromIpfsRoute = ({ fork }: { fork: boolean }) => {
     throw new Error("should have had a cid in params");
   }
 
-  return <WorldFromIpfs cid={cid} edit={fork} />;
+  return <WorldFromIpfs cid={cid} edit={fork} chain={chain} />;
 };
 
 export default WorldFromIpfsRoute;

@@ -9,6 +9,7 @@ import deployedContracts from "./contracts/Waypoint.json";
 import { SceneAndFiles } from "../../types/scene";
 import { WorldErc721 } from "../../types/world";
 import { makeNewScene } from "../../components/World/New";
+import { ChainConfig } from "../../web3/chains";
 
 export type MintedWorld = {
   erc721Cid: string;
@@ -23,19 +24,12 @@ export type MintWorldStatus = {
   minting: boolean;
 };
 
-export const localContractAddress =
-  "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const rinkebyContractAddress =
-  "0x8f181e382dF37f4DAB729c1868D0A190A929D614";
-export const mumbaiContractAddress =
-  "0x9db2f20e541412292677aa43e8d09732f3998992";
-
-export const contractAddress = mumbaiContractAddress;
-
 export function useWorldTokenCreator({
   captureScreenshotFn,
+  chain: { contractAddress, nftBaseUrl },
 }: {
   captureScreenshotFn: (() => string) | undefined;
+  chain: Pick<ChainConfig, "contractAddress" | "nftBaseUrl">;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
     isAllowedToMint: false,
@@ -107,6 +101,7 @@ export function useWorldTokenCreator({
         sceneGraphPath: sceneGraphFileUrl,
         sceneImagePath: imageFileUrl,
         cid,
+        nftBaseUrl,
       });
 
       console.log("saved new: ", {
@@ -131,16 +126,16 @@ export function useWorldTokenCreator({
         },
       }));
     },
-    [canMint, minting, captureScreenshotFn, writeAsync]
+    [canMint, minting, captureScreenshotFn, nftBaseUrl, writeAsync]
   );
 
   const handleReset = useCallback(() => {
     reset();
-    setStatus(existing => ({
+    setStatus((existing) => ({
       ...existing,
-      minting: false
+      minting: false,
     }));
-  }, [reset])
+  }, [reset]);
 
   return {
     createWorld,
@@ -156,10 +151,12 @@ export function useWorldTokenUpdater({
   sceneAndFiles,
   captureScreenshotFn,
   existingSceneCid,
+  chain: { contractAddress, nftBaseUrl },
 }: {
   sceneAndFiles: SceneAndFiles;
   captureScreenshotFn: (() => string) | undefined;
   existingSceneCid: string | undefined;
+  chain: Pick<ChainConfig, "contractAddress" | "nftBaseUrl">;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
     isAllowedToMint: false,
@@ -229,6 +226,7 @@ export function useWorldTokenUpdater({
         sceneGraphPath: sceneGraphFileUrl,
         sceneImagePath: imageFileUrl,
         cid,
+        nftBaseUrl,
       });
 
       console.log("updated: ", {
@@ -258,17 +256,18 @@ export function useWorldTokenUpdater({
       changeURI,
       existingSceneCid,
       minting,
+      nftBaseUrl,
       sceneAndFiles,
     ]
   );
 
   const handleReset = useCallback(() => {
     reset();
-    setStatus(existing => ({
+    setStatus((existing) => ({
       ...existing,
-      minting: false
+      minting: false,
     }));
-  }, [reset])
+  }, [reset]);
 
   return {
     updateWorld,

@@ -11,6 +11,8 @@ import useWorldTokenUpdater, {
   useWorldTokenCreator,
 } from "../../../../api/smartContract/useWorldMinter";
 import usePortalCreator from "../../../../api/smartContract/usePortalCreator";
+import { chain } from "lodash";
+import { ChainConfig } from "../../../../web3/chains";
 
 export enum TransformMode {
   translate = "translate",
@@ -43,9 +45,11 @@ const toIVector3 = (vector3: Vector3 | Euler): IVector3 => ({
 export const useBuilder = ({
   sceneAndFiles,
   tokenId,
+  chain,
 }: {
   sceneAndFiles: SceneAndFiles;
   tokenId: string | undefined;
+  chain: ChainConfig;
 }) => {
   const raycasterRef = useRef<Raycaster>(new Raycaster());
 
@@ -70,12 +74,17 @@ export const useBuilder = ({
     sceneAndFiles: updatedSceneWithFiles,
     captureScreenshotFn: captureScreenshotFn?.fn,
     existingSceneCid: sceneAndFiles.cid,
+    chain,
   });
 
-  const portalCreator = usePortalCreator({ tokenId });
+  const portalCreator = usePortalCreator({
+    tokenId,
+    contractAddress: chain.contractAddress,
+  });
 
   const worldTokenCreator = useWorldTokenCreator({
     captureScreenshotFn: captureScreenshotFn?.fn,
+    chain,
   });
 
   const { handleSaveToIpfs, hasChangesToSave, saveSceneStatus } = useSaveToIpfs(

@@ -5,11 +5,20 @@ import useClickedAndAudioListener, {
 } from "./components/World/useClickedAndAudioListener";
 import { ApolloProvider } from "@apollo/client";
 import WorldFromTokenIdViewOnly from "./components/World/WorldFromTokenIdViewOnly";
-import { client } from "./api/theGraph/client";
 import WorldFromIpfsViewOnly from "./components/World/WorldFromIpfsViewOnly";
+import { getChain } from "./web3/chains";
+import { useMemo } from "react";
+import { makeClient } from "./api/theGraph/client";
 
 function IFrameAppForNfts() {
   const clickedAndAudiListener = useClickedAndAudioListener();
+  const chain = getChain();
+
+  const client = useMemo(
+    () => makeClient(chain.graphQlUrl),
+    [chain.graphQlUrl]
+  );
+
   return (
     <ApolloProvider client={client}>
       <ClickedAndAudioContext.Provider value={clickedAndAudiListener}>

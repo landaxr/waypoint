@@ -1,7 +1,7 @@
 import "./App.css";
 import { WagmiConfig } from "wagmi";
 import web3Client from "./web3/client";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes, useSearchParams } from "react-router-dom";
 import Explore from "./components/Explore";
 import YourWorlds from "./components/World/YourWorlds";
 import NewWorld from "./components/World/New";
@@ -12,43 +12,55 @@ import useClickedAndAudioListener, {
 import { ApolloProvider } from "@apollo/client";
 import WorldFromTokenId from "./components/World/WorldFromTokenId";
 import Map from "./components/Nav/Map";
-import { client } from "./api/theGraph/client";
+import { makeClient } from "./api/theGraph/client";
+import { getChain } from "./web3/chains";
+import { useMemo } from "react";
 
 function App() {
   const clickedAndAudiListener = useClickedAndAudioListener();
+  const chain = getChain();
+
+  const client = useMemo(
+    () => makeClient(chain.graphQlUrl),
+    [chain.graphQlUrl]
+  );
+
   return (
     <WagmiConfig client={web3Client}>
-      <ApolloProvider client={client}>
-        <ClickedAndAudioContext.Provider value={clickedAndAudiListener}>
-          <HashRouter>
+      <ClickedAndAudioContext.Provider value={clickedAndAudiListener}>
+        <HashRouter>
+          <ApolloProvider client={client}>
             <Routes>
-              <Route path="/" element={<Explore />} />
+              <Route path="/" element={<Explore chain={chain} />} />
               <Route path="/your-worlds" element={<YourWorlds />} />
               <Route path="/worlds">
-                <Route path="new" element={<NewWorld />} />
+                <Route path="new" element={<NewWorld chain={chain} />} />
                 <Route path="ipfs/:cid">
                   <Route
                     path=""
-                    element={<WorldFromIpfsRoute fork={false} />}
+                    element={<WorldFromIpfsRoute fork={false} chain={chain} />}
                   />
                   <Route
                     path="fork"
-                    element={<WorldFromIpfsRoute fork={true} />}
+                    element={<WorldFromIpfsRoute fork={true} chain={chain} />}
                   />
                 </Route>
                 <Route path=":tokenId">
-                  <Route path="" element={<WorldFromTokenId build={false} />} />
+                  <Route
+                    path=""
+                    element={<WorldFromTokenId build={false} chain={chain} />}
+                  />
                   <Route
                     path="edit"
-                    element={<WorldFromTokenId build={true} />}
+                    element={<WorldFromTokenId build={true} chain={chain} />}
                   />
                 </Route>
               </Route>
               <Route path="/map" element={<Map />} />
             </Routes>
-          </HashRouter>
-        </ClickedAndAudioContext.Provider>
-      </ApolloProvider>
+          </ApolloProvider>
+        </HashRouter>
+      </ClickedAndAudioContext.Provider>
     </WagmiConfig>
   );
 }

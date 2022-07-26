@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { useContractWrite, useSigner } from "wagmi";
 import deployedContracts from "./contracts/Waypoint.json";
-import { contractAddress } from "./useWorldMinter";
 
 export type CreatePortalArgs = {
   targetId: number;
@@ -13,7 +12,13 @@ export type CreatePortalArgs = {
   toZ: number;
 };
 
-const usePortalCreator = ({ tokenId }: { tokenId?: string }) => {
+const usePortalCreator = ({
+  tokenId,
+  contractAddress,
+}: {
+  tokenId?: string;
+  contractAddress: string;
+}) => {
   const { data: signerData } = useSigner();
 
   const {

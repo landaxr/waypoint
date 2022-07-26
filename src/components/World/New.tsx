@@ -7,6 +7,7 @@ import {
 import { SceneAndFiles } from "../../types/scene";
 import { FileLocationKindLocal, FileLocationLocal } from "../../types/shared";
 import SceneBuilder from "./Builder/SceneBuilder";
+import { ChainConfig } from "../../web3/chains";
 
 const randomEnvironmentFile = (): { file: FileLocationLocal; id: string } => {
   // todo: randomize
@@ -37,7 +38,7 @@ export const makeNewScene = (): SceneAndFiles => {
   };
 };
 
-const New = () => {
+const New = ({ chain }: { chain: ChainConfig }) => {
   const [sceneAndFiles] = useState<SceneAndFiles>(() => makeNewScene());
 
   return (
@@ -47,6 +48,7 @@ const New = () => {
       pageTitle="Building Draft World"
       portals={undefined}
       worldName={undefined}
+      chain={chain}
     />
   );
 };
