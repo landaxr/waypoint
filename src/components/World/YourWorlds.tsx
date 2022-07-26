@@ -7,7 +7,9 @@ import {
   useWorldsOwnedByAddress,
   WorldData,
 } from "../../api/theGraph/worldsQueries";
+import { ChainConfig } from "../../web3/chains";
 import MainNavbar from "../Nav/MainNavbar";
+import OpenSeaIcon from "../Shared/OpenSeaIcon";
 
 export const AccountDescriptionText = ({ address }: { address: string }) => {
   const { data, isError, isLoading } = useEnsName({
@@ -21,7 +23,9 @@ export const AccountDescriptionText = ({ address }: { address: string }) => {
   return <>{address}</>;
 };
 
-export const World = ({ world }: { world: WorldData }) => {
+const toOpenSeaAddress = ({tokenId, chain}:{tokenId: string; chain: ChainConfig}) => `https://testnets.opensea.io/assets/${chain.path}/${chain.contractAddress}/${tokenId}`
+
+export const World = ({ world, chain }: { world: WorldData; chain: ChainConfig }) => {
   // const { loading, error, data } = useQuery<WorldsData>(GET_LOCAL_WORLDS);
 
   const { erc721Token, loading } = useErc721TokenForFileUrl(world.uri);
@@ -39,11 +43,13 @@ export const World = ({ world }: { world: WorldData }) => {
         {imageUrl && <img className="rounded-t-lg" src={imageUrl} alt="" />}
       </Link>
       <div className="p-5">
-        <Link to={`/worlds/${world.id}`}>
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            {erc721Token?.name} (token {world.id})
+        <div className="flex align-middle mb-2"><Link to={`/worlds/${world.id}`}>
+          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            {erc721Token?.name ? erc721Token.name : `World token ${world.id}`}
           </h5>
         </Link>
+          <a href={toOpenSeaAddress({tokenId: world.id, chain})} className="ml-2 mt-1" title="View on Opensea"><OpenSeaIcon size={25} /></a>
+        </div>
         <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 truncate ...">
           Owner: <AccountDescriptionText address={world.owner.id} />
         </p>
@@ -52,7 +58,7 @@ export const World = ({ world }: { world: WorldData }) => {
   );
 };
 
-const YourWorlds = () => {
+const YourWorlds = ({chain}:{chain: ChainConfig}) => {
   const { address } = useAccount();
   const worldsResponse = useWorldsOwnedByAddress(address);
   // const { createWorld, status } = useWorldTokenCreator();
@@ -66,7 +72,7 @@ const YourWorlds = () => {
         <h1 className="text-2xl font-sans font-bold">Your Worlds</h1>
         <div className="grid grid-cols-3 gap-4">
           {worldsResponse.data?.spaces.map((world, id) => (
-            <World world={world} key={id} />
+            <World world={world} key={id} chain={chain} />
           ))}
         </div>
       </div>

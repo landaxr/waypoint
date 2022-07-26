@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { WalletConnectIcon, MetamaskIcon } from "../Shared/Icons";
 import { useConnect, useEnsName, useEnsAvatar } from "wagmi";
 import Modal, { ModalHeader3 } from "../Shared/Modal";
-     import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const Web3LoginModal = ({
   show,

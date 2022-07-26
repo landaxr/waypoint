@@ -17,7 +17,7 @@ const Explore = ({ chain }: { chain: ChainConfig }) => {
         </h1>
         <div className="grid grid-cols-3 gap-4">
           {worldsResponse.data?.spaces.map((world, id) => (
-            <World world={world} key={id} />
+            <World world={world} key={id} chain={chain} />
           ))}
         </div>
       </div>
