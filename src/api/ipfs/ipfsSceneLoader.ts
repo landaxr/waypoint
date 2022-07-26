@@ -81,8 +81,6 @@ async function storedFilesToLocal(
   );
 }
 
-// function localFilesToStored
-
 export const loadStoredSceneAndFilesFromIpfs = async (
   cid: string
 ): Promise<

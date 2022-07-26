@@ -2,7 +2,13 @@ import { Select, useContextBridge } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
 import { Leva } from "leva";
-import { useEffect, useMemo, useState } from "react";
+import {
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { SceneAndFiles } from "../../../types/scene";
 import SetRaycasterFromCamera from "./SetRaycasterFromCamera";
 import { useBuilder } from "./hooks/useBuilder";
@@ -25,6 +31,7 @@ import WorldPortals from "../Portals/WorldPortals";
 import { useNavigate } from "react-router";
 import { getWorldsPath } from "../Viewer/SceneViewerContents";
 import { PortalWithScene } from "../Portals/useSavePortalScenes";
+import GetCamera from "../../Shared/GetCamera";
 
 const rootPath: string[] = [];
 
@@ -143,6 +150,10 @@ const SceneBuilder = ({
 
   const navigate = useNavigate();
 
+  const stopPropagation = useCallback((e: SyntheticEvent) => {
+    e.stopPropagation();
+  }, []);
+
   return (
     <>
       <Navbar centerItems={menuItems} />
@@ -159,6 +170,7 @@ const SceneBuilder = ({
           <SetCaptureScreenshotFn
             setCaptureScreenShotFn={builderState.setCaptureScreenShotFn}
           />
+          <GetCamera setCamera={builderState.setCamera} />
           <ContextBridge>
             <SetRaycasterFromCamera raycasterRef={raycasterRef} />
             <AttachAudioListenerToCamera />
@@ -184,38 +196,40 @@ const SceneBuilder = ({
             ) : null}
           </ContextBridge>
         </Canvas>
-        <div className="absolute right-5 top-20">
-          <Leva fill hidden={!builderState.transforming.isTransforming} />
+        <div onClick={stopPropagation}>
+          <div className="absolute right-5 top-20">
+            <Leva fill hidden={!builderState.transforming.isTransforming} />
+          </div>
+          {builderState.saveSceneStatus.saved && (
+            <SavedSceneSuccessModal
+              savedCid={builderState.saveSceneStatus.savedCid}
+            />
+          )}
+          {updateWorldDialogOpen && (
+            <UpdateWorldDialogModal
+              currentWorldTokenId={tokenId}
+              handleClose={() => setUpdateWorldDialogOpen(false)}
+              updateWorld={builderState.updateWorld}
+              updateWorldStatus={builderState.mintWorldStatus}
+              currentWorldName={worldName}
+              sceneAndFiles={{
+                scene: builderState.scene,
+                files: builderState.files,
+              }}
+            />
+          )}
+          {mintNewWorldDialogOpen && (
+            <MintToNewWorldDialogModal
+              handleClose={() => setMintNewWorldDialogOpen(false)}
+              createNewWorld={builderState.createWorld}
+              status={builderState.createWorldStatus}
+              sceneAndFiles={{
+                scene: builderState.scene,
+                files: builderState.files,
+              }}
+            />
+          )}
         </div>
-        {builderState.saveSceneStatus.saved && (
-          <SavedSceneSuccessModal
-            savedCid={builderState.saveSceneStatus.savedCid}
-          />
-        )}
-        {updateWorldDialogOpen && (
-          <UpdateWorldDialogModal
-            currentWorldTokenId={tokenId}
-            handleClose={() => setUpdateWorldDialogOpen(false)}
-            updateWorld={builderState.updateWorld}
-            updateWorldStatus={builderState.mintWorldStatus}
-            currentWorldName={worldName}
-            sceneAndFiles={{
-              scene: builderState.scene,
-              files: builderState.files,
-            }}
-          />
-        )}
-        {mintNewWorldDialogOpen && (
-          <MintToNewWorldDialogModal
-            handleClose={() => setMintNewWorldDialogOpen(false)}
-            createNewWorld={builderState.createWorld}
-            status={builderState.createWorldStatus}
-            sceneAndFiles={{
-              scene: builderState.scene,
-              files: builderState.files,
-            }}
-          />
-        )}
       </div>
     </>
   );
