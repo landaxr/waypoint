@@ -1,4 +1,4 @@
-import { SyntheticEvent, useCallback, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useHttpsUriForIpfs } from "../../../api/ipfs/ipfsUrlUtils";
 import {
@@ -7,7 +7,10 @@ import {
   useWorldsOwnedByAddress,
 } from "../../../api/theGraph/worldsQueries";
 import Modal, { ModalActionButton, ModalHeader3 } from "../../Shared/Modal";
-import { MintWorldStatus } from "../../../api/smartContract/useWorldMinter";
+import {
+  WorldTokenCreator,
+  WorldTokenUpdater,
+} from "../../../api/smartContract/useWorldMinter";
 import { SceneAndFiles } from "../../../types/scene";
 
 export const SelectedWorld = ({
@@ -44,16 +47,14 @@ export const SelectedWorld = ({
 };
 
 export const UpdateWorldDialogModal = ({
-  updateWorldStatus,
+  worldTokenUpdater: { isSuccess, reset, status, updateWorld },
   handleClose,
-  updateWorld,
   currentWorldName,
   currentWorldTokenId,
   sceneAndFiles,
 }: {
-  updateWorldStatus: MintWorldStatus;
+  worldTokenUpdater: WorldTokenUpdater;
   handleClose: () => void;
-  updateWorld: (tokenId: string, newWorldName: string | undefined) => void;
   currentWorldName: string | undefined;
   currentWorldTokenId: string | undefined;
   sceneAndFiles: SceneAndFiles;
@@ -64,6 +65,13 @@ export const UpdateWorldDialogModal = ({
   const { address } = useAccount();
   const { data: worlds, loading } = useWorldsOwnedByAddress(address);
 
+  useEffect(() => {
+    reset();
+  }, [reset]);
+
+  const minted = isSuccess;
+  const minting = status.minting;
+
   return (
     <Modal
       handleClose={handleClose}
@@ -71,14 +79,14 @@ export const UpdateWorldDialogModal = ({
       header={<ModalHeader3 text="Update this World with this Scene" />}
       footer={
         <>
-          {!updateWorldStatus.minted ? (
+          {!minted ? (
             <div>
               <ModalActionButton
                 disabled={
                   !tokenId ||
-                  !updateWorldStatus.canMint ||
-                  !updateWorldStatus.isAllowedToMint ||
-                  updateWorldStatus.minting
+                  !status.canMint ||
+                  !status.isAllowedToMint ||
+                  minting
                 }
                 onClick={
                   tokenId
@@ -133,18 +141,13 @@ const SceneGraphRender = ({
 );
 
 export const MintToNewWorldDialogModal = ({
-  createNewWorld,
+  worldTokenCreator: { createWorld, isSuccess, reset, status },
   handleClose,
   sceneAndFiles,
-  status,
 }: {
-  createNewWorld: (args: {
-    sceneAndFiles?: SceneAndFiles;
-    name: string;
-  }) => void;
+  worldTokenCreator: WorldTokenCreator;
   handleClose: () => void;
   sceneAndFiles: SceneAndFiles;
-  status: MintWorldStatus;
 }) => {
   const [worldName, setWorldName] = useState<string>("A Whole new World");
 
@@ -158,24 +161,31 @@ export const MintToNewWorldDialogModal = ({
     []
   );
 
+  useEffect(() => {
+    reset();
+  }, [reset]);
+
+  const minted = isSuccess;
+  const minting = status.minting;
+
   return (
     <Modal
       handleClose={handleClose}
       show
-      disableClose={status.minted}
+      disableClose={minted}
       header={<ModalHeader3 text="Mint this Scene to a new World" />}
       footer={
         <>
           <div className="grid grid-rows-2 gap-4">
             <div>
-              {!status.minted ? (
+              {!minted ? (
                 <ModalActionButton
                   disabled={
-                    !status.canMint || !status.isAllowedToMint || status.minting
+                    !status.canMint || !status.isAllowedToMint || minting
                   }
                   text="Mint new World"
                   onClick={() => {
-                    createNewWorld({
+                    createWorld({
                       sceneAndFiles,
                       name: worldName,
                     });
@@ -204,7 +214,7 @@ export const MintToNewWorldDialogModal = ({
             className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             value={worldName}
             onChange={handleWorldTextChanged}
-            disabled={status.minted || status.minting}
+            disabled={minted || minting}
           />
         </div>
       </div>

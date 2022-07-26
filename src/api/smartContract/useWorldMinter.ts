@@ -6,7 +6,6 @@ import {
 } from "../ipfs/ipfsSceneSaver";
 import { buildAndSaveTokenMetadataToIpfs } from "../nft/tokenSaver";
 import deployedContracts from "./contracts/Waypoint.json";
-// import deployedContracts from "../../../contracts/WayPoint.json";
 import { SceneAndFiles } from "../../types/scene";
 import { WorldErc721 } from "../../types/world";
 import { makeNewScene } from "../../components/World/New";
@@ -18,11 +17,10 @@ export type MintedWorld = {
 };
 
 export type MintWorldStatus = {
-  minting: boolean;
   isAllowedToMint: boolean;
   canMint: boolean;
-  minted?: boolean;
   mintedWorld?: MintedWorld;
+  minting: boolean;
 };
 
 export const localContractAddress =
@@ -40,9 +38,9 @@ export function useWorldTokenCreator({
   captureScreenshotFn: (() => string) | undefined;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
-    minting: false,
     isAllowedToMint: false,
     canMint: true,
+    minting: false,
   });
 
   const { data: signerData } = useSigner();
@@ -55,7 +53,7 @@ export function useWorldTokenCreator({
     }));
   }, [isConnected]);
 
-  const { writeAsync } = useContractWrite({
+  const { writeAsync, isIdle, isSuccess, reset } = useContractWrite({
     addressOrName: contractAddress,
     contractInterface: deployedContracts,
     signerOrProvider: signerData,
@@ -136,11 +134,23 @@ export function useWorldTokenCreator({
     [canMint, minting, captureScreenshotFn, writeAsync]
   );
 
+  const handleReset = useCallback(() => {
+    reset();
+    setStatus(existing => ({
+      ...existing,
+      minting: false
+    }));
+  }, [reset])
+
   return {
     createWorld,
     status,
+    isSuccess,
+    reset: handleReset,
   };
 }
+
+export type WorldTokenCreator = ReturnType<typeof useWorldTokenCreator>;
 
 export function useWorldTokenUpdater({
   sceneAndFiles,
@@ -152,8 +162,8 @@ export function useWorldTokenUpdater({
   existingSceneCid: string | undefined;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
-    minting: false,
     isAllowedToMint: false,
+    minting: false,
     canMint: true,
   });
 
@@ -169,10 +179,8 @@ export function useWorldTokenUpdater({
 
   const {
     writeAsync: changeURI,
-    error,
-    data,
-    isError,
     isSuccess,
+    reset,
   } = useContractWrite({
     addressOrName: contractAddress,
     contractInterface: deployedContracts,
@@ -254,10 +262,22 @@ export function useWorldTokenUpdater({
     ]
   );
 
+  const handleReset = useCallback(() => {
+    reset();
+    setStatus(existing => ({
+      ...existing,
+      minting: false
+    }));
+  }, [reset])
+
   return {
     updateWorld,
     status,
+    isSuccess,
+    reset: handleReset,
   };
 }
+
+export type WorldTokenUpdater = ReturnType<typeof useWorldTokenUpdater>;
 
 export default useWorldTokenUpdater;

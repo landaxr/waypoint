@@ -1,7 +1,6 @@
 import { Select, useContextBridge } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
-import { Leva } from "leva";
 import {
   SyntheticEvent,
   useCallback,
@@ -128,8 +127,8 @@ const SceneBuilder = ({
         disabled: builderState.saveSceneStatus.saving || !builderState.canSave,
         // createWorld: builderState.createWorld,
         // updateWorld: builderState.updateWorld,
-        createWorldStatus: builderState.createWorldStatus,
-        updateWorldStatus: builderState.mintWorldStatus,
+        createWorldStatus: builderState.worldTokenCreator.status,
+        updateWorldStatus: builderState.worldTokenUpdater.status,
         handleOpenUpdateWorldDialog: () => setUpdateWorldDialogOpen(true),
         handleOpenCreateWorlDialog: () => setMintNewWorldDialogOpen(true),
       })
@@ -140,8 +139,8 @@ const SceneBuilder = ({
     builderState.canSave,
     isNew,
     cid,
-    builderState.createWorldStatus,
-    builderState.mintWorldStatus,
+    builderState.worldTokenCreator.status,
+    builderState.worldTokenUpdater.status,
     pageTitle,
     tokenId,
   ]);
@@ -197,9 +196,6 @@ const SceneBuilder = ({
           </ContextBridge>
         </Canvas>
         <div onClick={stopPropagation}>
-          <div className="absolute right-5 top-20">
-            <Leva fill hidden={!builderState.transforming.isTransforming} />
-          </div>
           {builderState.saveSceneStatus.saved && (
             <SavedSceneSuccessModal
               savedCid={builderState.saveSceneStatus.savedCid}
@@ -209,8 +205,7 @@ const SceneBuilder = ({
             <UpdateWorldDialogModal
               currentWorldTokenId={tokenId}
               handleClose={() => setUpdateWorldDialogOpen(false)}
-              updateWorld={builderState.updateWorld}
-              updateWorldStatus={builderState.mintWorldStatus}
+              worldTokenUpdater={builderState.worldTokenUpdater}
               currentWorldName={worldName}
               sceneAndFiles={{
                 scene: builderState.scene,
@@ -221,8 +216,7 @@ const SceneBuilder = ({
           {mintNewWorldDialogOpen && (
             <MintToNewWorldDialogModal
               handleClose={() => setMintNewWorldDialogOpen(false)}
-              createNewWorld={builderState.createWorld}
-              status={builderState.createWorldStatus}
+              worldTokenCreator={builderState.worldTokenCreator}
               sceneAndFiles={{
                 scene: builderState.scene,
                 files: builderState.files,

@@ -66,7 +66,7 @@ export const useBuilder = ({
     fn: () => string;
   }>();
 
-  const { updateWorld, status: mintWorldStatus } = useWorldTokenUpdater({
+  const worldTokenUpdater = useWorldTokenUpdater({
     sceneAndFiles: updatedSceneWithFiles,
     captureScreenshotFn: captureScreenshotFn?.fn,
     existingSceneCid: sceneAndFiles.cid,
@@ -74,7 +74,7 @@ export const useBuilder = ({
 
   const portalCreator = usePortalCreator({ tokenId });
 
-  const { createWorld, status: createWorldStatus } = useWorldTokenCreator({
+  const worldTokenCreator = useWorldTokenCreator({
     captureScreenshotFn: captureScreenshotFn?.fn,
   });
 
@@ -191,10 +191,8 @@ export const useBuilder = ({
     canSave: hasChangesToSave,
     ...updatedSceneWithFiles,
     setNewSkyboxFile,
-    updateWorld,
-    mintWorldStatus,
-    createWorld,
-    createWorldStatus,
+    worldTokenCreator,
+    worldTokenUpdater,
     setCaptureScreenShotFn,
     portalCreator,
     tokenId,
