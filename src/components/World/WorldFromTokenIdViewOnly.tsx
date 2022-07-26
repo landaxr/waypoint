@@ -1,12 +1,16 @@
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
+import { makeExternalUrl } from "../../api/nft/tokenSaver";
 import useLoadWorldAndScene from "../../api/nft/useLoadWorldAndScene";
 import { usePortalsFromWorld } from "../../api/theGraph/portalQueries";
+import { ChainConfig } from "../../web3/chains";
+import { LinkKind, MenuItem, UrlKind } from "../Nav/Navbar";
 import LoadingScreen from "../Shared/LoadingScreen";
 import GetPortalScenes from "./Portals/GetPortalScenes";
 import useSavePortalScenes from "./Portals/useSavePortalScenes";
 import SceneViewerContents from "./Viewer/SceneViewerContents";
 
-const WorldFromTokenIdViewOnly = ({ tokenId }: { tokenId: string }) => {
+const WorldFromTokenIdViewOnly = ({ tokenId, chain }: { tokenId: string, chain: ChainConfig }) => {
   const { sceneAndFiles, worldsCid, world, progress } = useLoadWorldAndScene({
     tokenId,
   });
@@ -15,13 +19,26 @@ const WorldFromTokenIdViewOnly = ({ tokenId }: { tokenId: string }) => {
   const portals = portalsOfWorld.data?.portals;
   const { portalsWithScenes, setPortalScene } = useSavePortalScenes(portals);
 
+  const menuItems = useMemo(() => {
+    const externalUrl = makeExternalUrl({externalBaseUrl: chain.externalBaseUrl, tokenId}) as string;
+  
+  const result: MenuItem = {
+    title: "View Full Application",
+    urlKind: UrlKind.externalUrl,
+    kind: LinkKind.link,
+    link: externalUrl
+  }
+  
+  return [result];
+  }, [chain.externalBaseUrl, tokenId]);
+
   if (sceneAndFiles && worldsCid && world) {
     return (
       <>
         <SceneViewerContents
           sceneAndFiles={sceneAndFiles}
           portals={portalsWithScenes}
-          menuItems={[]}
+          menuItems={menuItems}
         web3Enabled={false}
         />
         {portals && (
@@ -42,7 +59,7 @@ const WorldFromTokenIdViewOnly = ({ tokenId }: { tokenId: string }) => {
   );
 };
 
-const WorldFromTokenIdViewOnlyRoute = () => {
+const WorldFromTokenIdViewOnlyRoute = ({chain}:{chain: ChainConfig}) => {
   let params = useParams();
 
   const { tokenId } = params;
@@ -51,7 +68,7 @@ const WorldFromTokenIdViewOnlyRoute = () => {
     throw new Error("should have had a token id in params");
   }
 
-  return <WorldFromTokenIdViewOnly tokenId={tokenId} />;
+  return <WorldFromTokenIdViewOnly tokenId={tokenId} chain={chain} />;
 };
 
 export default WorldFromTokenIdViewOnlyRoute;

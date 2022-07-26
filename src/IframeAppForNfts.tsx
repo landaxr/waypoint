@@ -28,7 +28,7 @@ function IFrameAppForNfts() {
 
             <Route
               path=":tokenId"
-              element={<WorldFromTokenIdViewOnly />}
+              element={<WorldFromTokenIdViewOnly chain={chain} />}
             ></Route>
           </Routes>
         </HashRouter>

@@ -36,7 +36,7 @@ export async function saveErc721ToIpfs(toSave: object) {
   return cid;
 }
 
-function makeExternalUrl({
+export function makeExternalUrl({
   externalBaseUrl,
   tokenId,
 }: {
