@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { Object3D, DoubleSide } from "three";
-import { Text } from "@react-three/drei";
+import { Billboard, Text } from "@react-three/drei";
 import { PortalWithScene } from "./useSavePortalScenes";
 import {
   IpfsImageTextureLoader,
@@ -78,7 +78,7 @@ const Portal = ({
   });
   return (
     <>
-      <group
+      <Billboard
         position-x={portal.x}
         position-y={portal.y}
         position-z={portal.z}
@@ -136,7 +136,7 @@ const Portal = ({
             args={cylinderArgs(portalSize[0])}
           />
         </mesh>
-      </group>
+      </Billboard>
       <IpfsImageTextureLoader
         fileUrl={scene?.token.image}
         setTexture={setTextureAndDimensions}
