@@ -35,7 +35,10 @@ function App() {
             <ApolloProvider client={client}>
               <Routes>
                 <Route path="/" element={<Explore chain={chain} />} />
-                <Route path="/your-worlds" element={<YourWorlds chain={chain} />} />
+                <Route
+                  path="/your-worlds"
+                  element={<YourWorlds chain={chain} />}
+                />
                 <Route path="/worlds">
                   <Route path="new" element={<NewWorld chain={chain} />} />
                   <Route path="ipfs/:cid">

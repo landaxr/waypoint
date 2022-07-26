@@ -36,6 +36,18 @@ export async function saveErc721ToIpfs(toSave: object) {
   return cid;
 }
 
+function makeExternalUrl({
+  externalBaseUrl,
+  tokenId,
+}: {
+  externalBaseUrl: string;
+  tokenId: string | undefined;
+}): string | undefined {
+  if (!tokenId) return undefined;
+
+  return `${externalBaseUrl}/#/worlds/${tokenId}`;
+}
+
 export async function buildAndSaveTokenMetadataToIpfs({
   tokenId,
   cid: sceneGraphCid,
@@ -43,6 +55,7 @@ export async function buildAndSaveTokenMetadataToIpfs({
   sceneImagePath,
   sceneGraphPath,
   nftBaseUrl,
+  externalBaseUrl,
 }: {
   tokenId: string | undefined;
   cid: string | undefined;
@@ -50,6 +63,7 @@ export async function buildAndSaveTokenMetadataToIpfs({
   sceneImagePath?: string;
   sceneGraphPath?: string;
   nftBaseUrl: string;
+  externalBaseUrl: string;
 }): Promise<{ cid: string; metadata: WorldErc721; url: string }> {
   let animationUrl: string | undefined;
 
@@ -70,6 +84,10 @@ export async function buildAndSaveTokenMetadataToIpfs({
     name,
     animation_url: animationUrl,
     scene_graph_url: sceneGraphPath,
+    external_url: makeExternalUrl({
+      externalBaseUrl,
+      tokenId,
+    }),
   };
 
   const erc721MetadataFile = createJsonFileFromObject(
