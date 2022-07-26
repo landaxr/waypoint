@@ -27,7 +27,7 @@ const linkClass = ({
       "font-bold active": isActive,
       "rounded-full bg-red text-white text-md font-medium active:bg-red focus:outline-none focus:ring focus:ring-red-light":
         kind === LinkKind.button,
-      "bg-red-700 rounded md:bg-transparent text-red text-white":
+      "bg-red-700 rounded md:bg-transparent text-red":
         kind === LinkKind.link,
     },
     {
