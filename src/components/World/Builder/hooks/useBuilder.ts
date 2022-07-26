@@ -1,4 +1,3 @@
-import { useControls } from "leva";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Camera, Euler, Object3D, Raycaster, Vector3 } from "three";
 import { Transform, Element, IVector3 } from "../../../../types/elements";
@@ -24,12 +23,6 @@ export type SceneSaveStatus = {
   saved?: boolean;
   error?: Error;
   savedCid?: string;
-};
-
-const transformOptions: { [key: string]: TransformMode } = {
-  translate: TransformMode.translate,
-  rotate: TransformMode.rotate,
-  scale: TransformMode.scale,
 };
 
 function findParentElement(selectedMesh: Object3D): Object3D | null {
@@ -147,24 +140,9 @@ export const useBuilder = ({
     return () => document.removeEventListener("keydown", cb);
   }, [stopTransforming]);
 
-  const [values, set] = useControls(() => ({
-    transform: {
-      options: transformOptions,
-    },
-  }));
-
-  useEffect(() => {
-    set({ transform: TransformMode.translate });
-  }, [set]);
-
-  const setTransformMode = useCallback(
-    (mode: TransformMode) => {
-      set({ transform: mode });
-    },
-    [set]
+  const [transformMode, setTransformMode] = useState<TransformMode>(
+    TransformMode.translate
   );
-
-  const transformMode = values.transform;
 
   const handleTransformComplete = useCallback(() => {
     if (!targetElement || !transforming.elementPath) return;
