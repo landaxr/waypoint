@@ -21,6 +21,7 @@ const usePortalCreator = ({ tokenId }: { tokenId?: string }) => {
     isError,
     isSuccess,
     isIdle,
+    reset,
   } = useContractWrite({
     addressOrName: contractAddress,
     contractInterface: deployedContracts,
@@ -32,7 +33,18 @@ const usePortalCreator = ({ tokenId }: { tokenId?: string }) => {
     ({ targetId, x, y, z, toX, toY, toZ }: CreatePortalArgs) => {
       if (!tokenId) throw new Error("cannot create portal without from portal");
 
-      const args = [tokenId, targetId, x, y, z, toX, toY, toZ];
+      const args = [
+        tokenId,
+        targetId,
+        Math.round(x),
+        Math.round(y),
+        Math.round(z),
+        Math.round(toX),
+        Math.round(toY),
+        Math.round(toZ),
+      ];
+
+      console.log("creating portal with args", args);
 
       createPortalContractFn({
         args,
@@ -47,6 +59,7 @@ const usePortalCreator = ({ tokenId }: { tokenId?: string }) => {
     isError,
     isSuccess,
     isRunning: !isIdle,
+    reset,
   };
 };
 

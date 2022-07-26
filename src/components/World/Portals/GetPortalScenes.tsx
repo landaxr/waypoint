@@ -16,7 +16,7 @@ const PortalSceneLoader = ({
   const worldId = portal.targetId;
   const world = useWorld(worldId);
 
-  const { erc721Token, loading } = useErc721TokenForFileUrl(world.world?.uri);
+  const { erc721Token } = useErc721TokenForFileUrl(world.world?.uri);
 
   useEffect(() => {
     if (erc721Token) {

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { convertURIToHTTPS } from "../../../api/ipfs/ipfsUrlUtils";
 import {
   useErc721TokenForFileUrl,
@@ -14,18 +14,23 @@ import clsx from "clsx";
 const WorldEntry = ({
   world,
   onSelect,
-selected
+  selected,
+  canSelect,
 }: {
   world: WorldData;
   onSelect: (tokenId: string) => void;
-selected: boolean;
+  selected: boolean;
+  canSelect: boolean;
 }) => {
   const { erc721Token } = useErc721TokenForFileUrl(world.uri);
 
   if (!erc721Token) return <p>loading...</p>;
 
   return (
-    <li className={clsx("cursor-pointer", {"bg-gray-400": selected})} onClick={() => !selected ? onSelect(world.id) : undefined}>
+    <li
+      className={clsx("cursor-pointer", { "bg-gray-400": selected })}
+      onClick={() => (!selected && canSelect ? onSelect(world.id) : undefined)}
+    >
       <div className="flex items-center space-x-4">
         <div className="flex-shrink-0">
           <img
@@ -48,11 +53,13 @@ selected: boolean;
 const SelectWorldToPortalTo = ({
   setTokenId,
   worlds,
-selectedWorld
+  selectedWorld,
+  canSelect,
 }: {
   setTokenId: (tokenId: string) => void;
   worlds: WorldData[];
-selectedWorld: string | undefined;
+  selectedWorld: string | undefined;
+  canSelect: boolean;
 }) => {
   return (
     <>
@@ -62,7 +69,13 @@ selectedWorld: string | undefined;
         <ul className="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-scroll">
           {worlds.map((world, id) => (
             <ErrorBoundary key={id}>
-              <WorldEntry key={id} world={world} onSelect={setTokenId} selected={selectedWorld===world.id} />
+              <WorldEntry
+                key={id}
+                world={world}
+                onSelect={setTokenId}
+                selected={selectedWorld === world.id}
+                canSelect={canSelect}
+              />
             </ErrorBoundary>
           ))}
         </ul>
@@ -71,38 +84,13 @@ selectedWorld: string | undefined;
   );
 };
 
-const SelectedWorld = ({
-  tokenId,
-  worlds,
-}: {
-  tokenId: string;
-  worlds: WorldData[];
-}) => {
-  const world = worlds.find((x) => x.id === tokenId);
-
-  const { erc721Token } = useErc721TokenForFileUrl(world?.uri);
-
-  if (!world) return null;
-
-  return (
-    <div className="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-      <img className="rounded-t-lg" src={erc721Token?.image || ""} alt="" />
-      <div className="p-5">
-        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          World at Token {world.id}
-        </h5>
-      </div>
-    </div>
-  );
-};
-
-const PORTAL_POSITION_OFFSET = 2;
+const PORTAL_POSITION_OFFSET = 7;
 
 const CreatePortalDialogModal = ({
-  portalCreator: { canCreatePortal, createPortal, isRunning },
+  portalCreator: { canCreatePortal, createPortal, isRunning, isSuccess, reset },
   currentWorldTokenId,
   handleClose,
-  camera
+  camera,
 }: {
   portalCreator: CreatePortalResponse;
   currentWorldTokenId: string | undefined;
@@ -117,6 +105,10 @@ const CreatePortalDialogModal = ({
   const worldsWithoutCurrent = worldsResult?.spaces.filter(
     (x) => x.id !== currentWorldTokenId
   );
+
+  useEffect(() => {
+    reset();
+  }, [reset]);
 
   const handleCreatePortal = useCallback(() => {
     if (!selectedWorldTokenId) return;
@@ -140,31 +132,38 @@ const CreatePortalDialogModal = ({
     });
   }, [createPortal, camera, selectedWorldTokenId]);
 
+  const footerControls = isSuccess ? (
+    <>
+      Your Create Portal transaction has been submitted. Please wait for it to
+      propagate.
+    </>
+  ) : (
+    <button
+      className="text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red dark:hover:bg-red-light dark:focus:ring-red-light disabled:bg-gray-300"
+      disabled={!canCreatePortal || isRunning || !selectedWorldTokenId}
+      onClick={handleCreatePortal}
+    >
+      Create a Portal to This World
+    </button>
+  );
+
   return (
     <Modal
       handleClose={handleClose}
       show
       header={<ModalHeader3 text="Create a Portal to Another World" />}
-      footer={
-        <button
-          className="text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red dark:hover:bg-red-light dark:focus:ring-red-light disabled:bg-gray-300"
-          disabled={!canCreatePortal || isRunning || !selectedWorldTokenId}
-          onClick={handleCreatePortal}
-        >
-          Create a Portal to This World
-        </button>
-      }
+      footer={footerControls}
       size={"lg"}
     >
       <div className="text-base leading-relaxed text-gray-500 dark:text-gray-400 space-y-6">
-        {worldsWithoutCurrent && (
+        {worldsWithoutCurrent && !isSuccess && (
           <>
-              <SelectWorldToPortalTo
-                setTokenId={setSelectedWorldTokenId}
-                worlds={worldsWithoutCurrent}
-selectedWorld={selectedWorldTokenId}
-
-              />
+            <SelectWorldToPortalTo
+              setTokenId={setSelectedWorldTokenId}
+              worlds={worldsWithoutCurrent}
+              selectedWorld={selectedWorldTokenId}
+              canSelect={!isRunning}
+            />
           </>
         )}
       </div>
