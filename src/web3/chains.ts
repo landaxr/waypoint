@@ -6,8 +6,9 @@ export type ChainConfig = {
   name: string;
   path: string;
   nftBaseUrl: string;
+  externalBaseUrl: string;
   openseaCollectionUrl: string;
-allowedChains: Chain[];
+  allowedChains: Chain[];
 };
 
 export const contractAddresses = {
@@ -35,9 +36,10 @@ export const chains: { [chainId: string]: ChainConfig } = {
     name: "Polygon (Mumbai)",
     path: "mumbai",
     nftBaseUrl: "https://waypoint-nft.on.fleek.co",
+    externalBaseUrl: "https://waypoint.on.fleek.co",
     openseaCollectionUrl:
       "https://testnets.opensea.io/collection/name-l3isedjj89",
-      allowedChains: [chain.polygonMumbai]
+    allowedChains: [chain.polygonMumbai],
   },
   rinkeby: {
     graphQlUrl: subgrapUrls.rinkeby,
@@ -45,9 +47,10 @@ export const chains: { [chainId: string]: ChainConfig } = {
     name: "Rinkeby",
     path: "rinkeby",
     nftBaseUrl: "https://rinkeby-waypoint-nft.on.fleek.co",
+    externalBaseUrl: "https://rinkeby-waypoint.on.fleek.co",
     openseaCollectionUrl:
       "https://testnets.opensea.io/collection/name-mozmnwk4sh",
-      allowedChains: [chain.rinkeby]
+    allowedChains: [chain.rinkeby],
   },
 };
 

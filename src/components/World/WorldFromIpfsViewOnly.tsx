@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import loadSceneFromIpfs from "../../api/ipfs/ipfsSceneLoader";
 import { SceneAndFiles } from "../../types/scene";
@@ -65,6 +65,7 @@ const WorldFromIpfsViewOnly = ({ cid }: { cid: string }) => {
         sceneAndFiles={sceneAndFiles}
         menuItems={[]}
         portals={undefined}
+      web3Enabled={false}
       />
     );
   }

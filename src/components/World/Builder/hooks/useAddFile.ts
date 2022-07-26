@@ -17,9 +17,9 @@ const getAddElementTransform = (
 
   const refObject = new Object3D();
   refObject.position.copy(target);
-  
+
   const toLookAt = ray.origin.clone();
-  // move target to same heigh as ref object, and then look at it; 
+  // move target to same heigh as ref object, and then look at it;
   // that way its not turned vertically
   toLookAt.setY(refObject.position.y);
   refObject.lookAt(toLookAt);

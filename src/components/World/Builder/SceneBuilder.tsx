@@ -15,7 +15,7 @@ import BuilderControls from "./BuilderControls";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";
 import BuilderMenu from "./BuilderMenu";
-import Navbar, { LinkKind, MenuItem } from "../../Nav/Navbar";
+import Navbar, { LinkKind, MenuItem, UrlKind } from "../../Nav/Navbar";
 import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
 import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
 import AttachAudioListenerToCamera from "../Elements/utils/AttachAudioListenerToCamera";
@@ -76,7 +76,7 @@ const buildMenu = ({
   ]);
 
   return [
-    { link: "#", title: pageTitle, kind: LinkKind.link },
+    { link: "#", title: pageTitle, kind: LinkKind.link, urlKind: UrlKind.localRedirect },
     {
       action: handleSaveToIpfs,
       title: savingScene ? "Saving to IPFS" : "Save to IPFS",
@@ -162,7 +162,7 @@ const SceneBuilder = ({
 
   return (
     <>
-      <Navbar centerItems={menuItems} />
+      <Navbar centerItems={menuItems} web3Enabled />
       <div
         className={clsx("w-screen h-screen", cursorClass, {
           "border-2": isDragging,

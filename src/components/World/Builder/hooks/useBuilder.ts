@@ -11,7 +11,6 @@ import useWorldTokenUpdater, {
   useWorldTokenCreator,
 } from "../../../../api/smartContract/useWorldMinter";
 import usePortalCreator from "../../../../api/smartContract/usePortalCreator";
-import { chain } from "lodash";
 import { ChainConfig } from "../../../../web3/chains";
 
 export enum TransformMode {

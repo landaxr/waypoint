@@ -26,10 +26,13 @@ export type MintWorldStatus = {
 
 export function useWorldTokenCreator({
   captureScreenshotFn,
-  chain: { contractAddress, nftBaseUrl },
+  chain: { contractAddress, nftBaseUrl, externalBaseUrl },
 }: {
   captureScreenshotFn: (() => string) | undefined;
-  chain: Pick<ChainConfig, "contractAddress" | "nftBaseUrl">;
+  chain: Pick<
+    ChainConfig,
+    "contractAddress" | "nftBaseUrl" | "externalBaseUrl"
+  >;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
     isAllowedToMint: false,
@@ -102,6 +105,7 @@ export function useWorldTokenCreator({
         sceneImagePath: imageFileUrl,
         cid,
         nftBaseUrl,
+        externalBaseUrl,
       });
 
       console.log("saved new: ", {
@@ -126,7 +130,14 @@ export function useWorldTokenCreator({
         },
       }));
     },
-    [canMint, minting, captureScreenshotFn, nftBaseUrl, writeAsync]
+    [
+      canMint,
+      minting,
+      captureScreenshotFn,
+      nftBaseUrl,
+      externalBaseUrl,
+      writeAsync,
+    ]
   );
 
   const handleReset = useCallback(() => {
@@ -151,12 +162,15 @@ export function useWorldTokenUpdater({
   sceneAndFiles,
   captureScreenshotFn,
   existingSceneCid,
-  chain: { contractAddress, nftBaseUrl },
+  chain: { contractAddress, nftBaseUrl, externalBaseUrl },
 }: {
   sceneAndFiles: SceneAndFiles;
   captureScreenshotFn: (() => string) | undefined;
   existingSceneCid: string | undefined;
-  chain: Pick<ChainConfig, "contractAddress" | "nftBaseUrl">;
+  chain: Pick<
+    ChainConfig,
+    "contractAddress" | "nftBaseUrl" | "externalBaseUrl"
+  >;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
     isAllowedToMint: false,
@@ -227,6 +241,7 @@ export function useWorldTokenUpdater({
         sceneImagePath: imageFileUrl,
         cid,
         nftBaseUrl,
+        externalBaseUrl,
       });
 
       console.log("updated: ", {
@@ -255,6 +270,7 @@ export function useWorldTokenUpdater({
       captureScreenshotFn,
       changeURI,
       existingSceneCid,
+      externalBaseUrl,
       minting,
       nftBaseUrl,
       sceneAndFiles,

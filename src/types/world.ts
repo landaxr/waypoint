@@ -13,4 +13,5 @@ export type WorldErc721 = {
   image?: string;
   name: string;
   scene_graph_url?: string;
+  external_url?: string;
 };
