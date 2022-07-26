@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import useLoadWorldAndScene from "../../api/nft/useLoadWorldAndScene";
 import { usePortalsFromWorld } from "../../api/theGraph/portalQueries";
-import { ChainConfig, chains } from "../../web3/chains";
+import { ChainConfig } from "../../web3/chains";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
 import GetPortalScenes from "./Portals/GetPortalScenes";
