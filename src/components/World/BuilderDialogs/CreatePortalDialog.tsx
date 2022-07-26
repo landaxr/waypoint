@@ -9,24 +9,27 @@ import Modal, { ModalHeader3 } from "../../Shared/Modal";
 import { CreatePortalResponse } from "../../../api/smartContract/usePortalCreator";
 import ErrorBoundary from "../../Shared/ErrorBoundary";
 import { Camera, Vector3 } from "three";
+import clsx from "clsx";
 
 const WorldEntry = ({
   world,
   onSelect,
+selected
 }: {
   world: WorldData;
   onSelect: (tokenId: string) => void;
+selected: boolean;
 }) => {
   const { erc721Token } = useErc721TokenForFileUrl(world.uri);
 
   if (!erc721Token) return <p>loading...</p>;
 
   return (
-    <li className="py-3 sm:py-4" onClick={() => onSelect(world.id)}>
+    <li className={clsx("cursor-pointer", {"bg-gray-400": selected})} onClick={() => !selected ? onSelect(world.id) : undefined}>
       <div className="flex items-center space-x-4">
         <div className="flex-shrink-0">
           <img
-            className="w-8 h-8 rounded-full"
+            className="w-20 h-20"
             src={convertURIToHTTPS({ url: erc721Token.image })}
             crossOrigin="anonymous"
             alt="World"
@@ -34,14 +37,8 @@ const WorldEntry = ({
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-            World: {erc721Token.name} ({world.id})
+            {erc721Token.name} (Token {world.id})
           </p>
-          <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-            Has a scene?: {erc721Token.scene_graph_url ? "Yes" : "No"}
-          </p>
-        </div>
-        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-          Select &gt;&gt;
         </div>
       </div>
     </li>
@@ -51,19 +48,21 @@ const WorldEntry = ({
 const SelectWorldToPortalTo = ({
   setTokenId,
   worlds,
+selectedWorld
 }: {
   setTokenId: (tokenId: string) => void;
   worlds: WorldData[];
+selectedWorld: string | undefined;
 }) => {
   return (
     <>
       <p>Select a world to portal to:</p>
 
       <div className="flow-root">
-        <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+        <ul className="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-scroll">
           {worlds.map((world, id) => (
             <ErrorBoundary key={id}>
-              <WorldEntry key={id} world={world} onSelect={setTokenId} />
+              <WorldEntry key={id} world={world} onSelect={setTokenId} selected={selectedWorld===world.id} />
             </ErrorBoundary>
           ))}
         </ul>
@@ -92,9 +91,6 @@ const SelectedWorld = ({
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           World at Token {world.id}
         </h5>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          Has scene? {!!erc721Token?.scene_graph_url ? "Yes" : "No"}
-        </p>
       </div>
     </div>
   );
@@ -163,18 +159,12 @@ const CreatePortalDialogModal = ({
       <div className="text-base leading-relaxed text-gray-500 dark:text-gray-400 space-y-6">
         {worldsWithoutCurrent && (
           <>
-            {worldsWithoutCurrent && (
               <SelectWorldToPortalTo
                 setTokenId={setSelectedWorldTokenId}
                 worlds={worldsWithoutCurrent}
+selectedWorld={selectedWorldTokenId}
+
               />
-            )}
-            {selectedWorldTokenId && worldsWithoutCurrent && (
-              <SelectedWorld
-                tokenId={selectedWorldTokenId}
-                worlds={worldsWithoutCurrent}
-              />
-            )}
           </>
         )}
       </div>
