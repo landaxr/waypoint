@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import useLoadWorldAndScene from "../../api/nft/useLoadWorldAndScene";
 import { usePortalsFromWorld } from "../../api/theGraph/portalQueries";
+import { ChainConfig } from "../../web3/chains";
 import LoadingScreen from "../Shared/LoadingScreen";
 import SceneBuilder from "./Builder/SceneBuilder";
 import GetPortalScenes from "./Portals/GetPortalScenes";
@@ -17,9 +18,11 @@ import SceneViewerFull from "./Viewer/SceneViewerFull";
 const WorldFromTokenId = ({
   tokenId,
   edit,
+chain
 }: {
   tokenId: string;
   edit: boolean;
+  chain: ChainConfig;
 }) => {
   const { progress, sceneAndFiles, world, worldsCid, name } =
     useLoadWorldAndScene({
@@ -50,6 +53,7 @@ const WorldFromTokenId = ({
             pageTitle={`Editing world at token ${tokenId}`}
             portals={portalsWithScenes}
             worldName={name}
+          chain={chain}
           />
         ) : (
           <SceneViewerFull

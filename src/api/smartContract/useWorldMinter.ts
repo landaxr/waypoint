@@ -23,19 +23,12 @@ export type MintWorldStatus = {
   minting: boolean;
 };
 
-export const localContractAddress =
-  "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const rinkebyContractAddress =
-  "0x8f181e382dF37f4DAB729c1868D0A190A929D614";
-export const mumbaiContractAddress =
-  "0x9db2f20e541412292677aa43e8d09732f3998992";
-
-export const contractAddress = mumbaiContractAddress;
-
 export function useWorldTokenCreator({
   captureScreenshotFn,
+  contractAddress,
 }: {
   captureScreenshotFn: (() => string) | undefined;
+  contractAddress: string;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
     isAllowedToMint: false,
@@ -136,11 +129,11 @@ export function useWorldTokenCreator({
 
   const handleReset = useCallback(() => {
     reset();
-    setStatus(existing => ({
+    setStatus((existing) => ({
       ...existing,
-      minting: false
+      minting: false,
     }));
-  }, [reset])
+  }, [reset]);
 
   return {
     createWorld,
@@ -156,10 +149,13 @@ export function useWorldTokenUpdater({
   sceneAndFiles,
   captureScreenshotFn,
   existingSceneCid,
+  contractAddress,
 }: {
   sceneAndFiles: SceneAndFiles;
   captureScreenshotFn: (() => string) | undefined;
   existingSceneCid: string | undefined;
+
+  contractAddress: string;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
     isAllowedToMint: false,
@@ -264,11 +260,11 @@ export function useWorldTokenUpdater({
 
   const handleReset = useCallback(() => {
     reset();
-    setStatus(existing => ({
+    setStatus((existing) => ({
       ...existing,
-      minting: false
+      minting: false,
     }));
-  }, [reset])
+  }, [reset]);
 
   return {
     updateWorld,

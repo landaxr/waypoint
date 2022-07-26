@@ -31,6 +31,7 @@ import { useNavigate } from "react-router";
 import { getWorldsPath } from "../Viewer/SceneViewerContents";
 import { PortalWithScene } from "../Portals/useSavePortalScenes";
 import GetCamera from "../../Shared/GetCamera";
+import { ChainConfig } from "../../../web3/chains";
 
 const rootPath: string[] = [];
 
@@ -94,6 +95,7 @@ const SceneBuilder = ({
   pageTitle,
   portals,
   worldName,
+chain
 }: {
   sceneAndFiles: SceneAndFiles;
   isNew?: boolean;
@@ -102,8 +104,9 @@ const SceneBuilder = ({
   pageTitle: string;
   portals: PortalWithScene[] | undefined;
   worldName: string | undefined;
+chain: ChainConfig
 }) => {
-  const builderState = useBuilder({ sceneAndFiles, tokenId });
+  const builderState = useBuilder({ sceneAndFiles, tokenId, contractAddress: chain.contractAddress });
 
   const cursorClass = useMemo(() => {
     return "cursor-pointer";
