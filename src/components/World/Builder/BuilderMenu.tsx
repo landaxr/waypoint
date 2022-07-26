@@ -177,6 +177,7 @@ const BuilderMenu = ({
   setNewSkyboxFile,
   tokenId,
   portalCreator,
+  camera,
 }: BuilderState) => {
   const shouldBeTransforming = isTransforming && elementPath && targetElement;
   const [editingSkybox, setEditingSkybox] = useState(false);
@@ -217,11 +218,12 @@ const BuilderMenu = ({
           handleClose={() => setEditingSkybox(false)}
         />
       )}
-      {creatingPortal && (
+      {creatingPortal && camera && (
         <CreatePortalDialogModal
           currentWorldTokenId={tokenId}
           handleClose={() => setCreatingPortal(false)}
           portalCreator={portalCreator}
+          camera={camera}
         />
       )}
     </>

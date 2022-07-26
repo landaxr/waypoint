@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { convertURIToHTTPS } from "../../../api/ipfs/ipfsUrlUtils";
 import {
   useErc721TokenForFileUrl,
@@ -8,6 +8,7 @@ import {
 import Modal, { ModalHeader3 } from "../../Shared/Modal";
 import { CreatePortalResponse } from "../../../api/smartContract/usePortalCreator";
 import ErrorBoundary from "../../Shared/ErrorBoundary";
+import { Camera, Vector3 } from "three";
 
 const WorldEntry = ({
   world,
@@ -80,8 +81,7 @@ const SelectedWorld = ({
 }) => {
   const world = worlds.find((x) => x.id === tokenId);
 
-  const { erc721Token, loading } = useErc721TokenForFileUrl(world?.uri);
-  // const worldImageUrl = useHttpsUriForIpfs(world?.tokenErc721.image);
+  const { erc721Token } = useErc721TokenForFileUrl(world?.uri);
 
   if (!world) return null;
 
@@ -100,14 +100,18 @@ const SelectedWorld = ({
   );
 };
 
+const PORTAL_POSITION_OFFSET = 2;
+
 const CreatePortalDialogModal = ({
   portalCreator: { canCreatePortal, createPortal, isRunning },
   currentWorldTokenId,
   handleClose,
+  camera
 }: {
   portalCreator: CreatePortalResponse;
   currentWorldTokenId: string | undefined;
   handleClose: () => void;
+  camera: Camera;
 }) => {
   const [selectedWorldTokenId, setSelectedWorldTokenId] = useState<
     string | undefined
@@ -118,6 +122,28 @@ const CreatePortalDialogModal = ({
     (x) => x.id !== currentWorldTokenId
   );
 
+  const handleCreatePortal = useCallback(() => {
+    if (!selectedWorldTokenId) return;
+
+    const position = camera.position.clone();
+    const lookAt = new Vector3();
+    camera.getWorldDirection(lookAt);
+    lookAt.normalize();
+
+    const portalPosition = position.add(
+      lookAt.multiplyScalar(PORTAL_POSITION_OFFSET)
+    );
+    createPortal({
+      targetId: +selectedWorldTokenId,
+      x: portalPosition.x,
+      y: portalPosition.y,
+      z: portalPosition.z,
+      toX: 0,
+      toY: 0,
+      toZ: 0,
+    });
+  }, [createPortal, camera, selectedWorldTokenId]);
+
   return (
     <Modal
       handleClose={handleClose}
@@ -127,19 +153,7 @@ const CreatePortalDialogModal = ({
         <button
           className="text-white bg-red hover:bg-red-light focus:ring-4 focus:outline-none focus:ring-red-light font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red dark:hover:bg-red-light dark:focus:ring-red-light disabled:bg-gray-300"
           disabled={!canCreatePortal || isRunning || !selectedWorldTokenId}
-          onClick={() =>
-            selectedWorldTokenId
-              ? createPortal({
-                  targetId: +selectedWorldTokenId,
-                  x: 0,
-                  y: 0,
-                  z: 0,
-                  toX: 0,
-                  toY: 0,
-                  toZ: 0,
-                })
-              : undefined
-          }
+          onClick={handleCreatePortal}
         >
           Create a Portal to This World
         </button>

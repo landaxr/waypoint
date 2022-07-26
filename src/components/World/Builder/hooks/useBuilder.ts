@@ -1,6 +1,6 @@
 import { useControls } from "leva";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Euler, Object3D, Raycaster, Vector3 } from "three";
+import { Camera, Euler, Object3D, Raycaster, Vector3 } from "three";
 import { Transform, Element, IVector3 } from "../../../../types/elements";
 import { SceneAndFiles } from "../../../../types/scene";
 import { Optional } from "../../../../types/shared";
@@ -196,6 +196,8 @@ export const useBuilder = ({
     updateElement({ id: elementId, elementConfig: toUpdate });
   }, [targetElement, transforming.elementPath, transformMode, updateElement]);
 
+  const [camera, setCamera] = useState<Camera>();
+
   return {
     ...addFile,
     transforming,
@@ -218,6 +220,8 @@ export const useBuilder = ({
     setCaptureScreenShotFn,
     portalCreator,
     tokenId,
+    camera,
+    setCamera,
   };
 };
 
