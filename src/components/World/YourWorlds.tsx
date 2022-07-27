@@ -12,12 +12,10 @@ import MainNavbar from "../Nav/MainNavbar";
 import OpenSeaIcon from "../Shared/OpenSeaIcon";
 
 export const AccountDescriptionText = ({ address }: { address: string }) => {
-  const { data, isError, isLoading } = useEnsName({
+  const { data } = useEnsName({
     address,
   });
 
-  if (isLoading) return <>Fetching name…</>;
-  if (isError) return <>Error fetching name</>;
   if (data) return <>{data}</>;
 
   return <>{address}</>;
@@ -39,8 +37,6 @@ export const World = ({
   world: WorldData;
   chain: ChainConfig;
 }) => {
-  // const { loading, error, data } = useQuery<WorldsData>(GET_LOCAL_WORLDS);
-
   const { erc721Token, loading } = useErc721TokenForFileUrl(world.uri);
 
   const imageUrl = useHttpsUriForIpfs(erc721Token?.image);
