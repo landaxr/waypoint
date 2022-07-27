@@ -42,7 +42,7 @@ web3Enabled: boolean;
 
   return (
     <>
-      {<Navbar centerItems={menuItems} web3Enabled={web3Enabled}/>}
+      {menuItems.length > 0 && <Navbar centerItems={menuItems} web3Enabled={web3Enabled}/>}
       <div className={clsx("w-screen h-screen", cursorClass)}>
         <Canvas>
           <ContextBridge>

@@ -19,26 +19,13 @@ const WorldFromTokenIdViewOnly = ({ tokenId, chain }: { tokenId: string, chain: 
   const portals = portalsOfWorld.data?.portals;
   const { portalsWithScenes, setPortalScene } = useSavePortalScenes(portals);
 
-  const menuItems = useMemo(() => {
-    const externalUrl = makeExternalUrl({externalBaseUrl: chain.externalBaseUrl, tokenId}) as string;
-  
-  const result: MenuItem = {
-    title: "View Full Application",
-    urlKind: UrlKind.externalUrl,
-    kind: LinkKind.link,
-    link: externalUrl
-  }
-  
-  return [result];
-  }, [chain.externalBaseUrl, tokenId]);
-
   if (sceneAndFiles && worldsCid && world) {
     return (
       <>
         <SceneViewerContents
           sceneAndFiles={sceneAndFiles}
           portals={portalsWithScenes}
-          menuItems={menuItems}
+          menuItems={[]}
         web3Enabled={false}
         />
         {portals && (
