@@ -32,6 +32,7 @@ import { getWorldsPath } from "../Viewer/SceneViewerContents";
 import { PortalWithScene } from "../Portals/useSavePortalScenes";
 import GetCamera from "../../Shared/GetCamera";
 import { ChainConfig } from "../../../web3/chains";
+import { Physics } from "@react-three/rapier";
 
 const rootPath: string[] = [];
 
@@ -76,7 +77,12 @@ const buildMenu = ({
   ]);
 
   return [
-    { link: "#", title: pageTitle, kind: LinkKind.link, urlKind: UrlKind.localRedirect },
+    {
+      link: "#",
+      title: pageTitle,
+      kind: LinkKind.link,
+      urlKind: UrlKind.localRedirect,
+    },
     {
       action: handleSaveToIpfs,
       title: savingScene ? "Saving to IPFS" : "Save to IPFS",
@@ -185,12 +191,14 @@ const SceneBuilder = ({
               files={builderState.files}
             />
             <Select onChange={builderState.selectTargetElement}>
-              <ElementsTree
-                elements={builderState.scene.elements}
-                parentId={null}
-                parentPath={rootPath}
-                files={builderState.files}
-              />
+              <Physics>
+                <ElementsTree
+                  elements={builderState.scene.elements}
+                  parentId={null}
+                  parentPath={rootPath}
+                  files={builderState.files}
+                />
+              </Physics>
             </Select>
             <BuilderControls {...builderState} />
             {portals ? (
