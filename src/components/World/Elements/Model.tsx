@@ -2,6 +2,7 @@ import { ModelConfig } from "../../../types/elements";
 import { useGLTF } from "@react-three/drei";
 import { useHttpsUrl } from "../../../api/ipfs/ipfsUrlUtils";
 import { SceneFilesLocal } from "../../../types/shared";
+import ModelColliders from "../Physics/ModelColliders";
 
 const Model = ({
   config,
@@ -12,7 +13,12 @@ const Model = ({
 }) => {
   const model = useGLTF(fileUrl, true);
 
-  return <primitive object={model.scene} />;
+  return (
+    <>
+      <primitive object={model.scene} />
+      <ModelColliders model={model} />
+    </>
+  );
 };
 
 const ModelNullGuard = ({
