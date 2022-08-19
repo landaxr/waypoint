@@ -120,9 +120,12 @@ export const useBuilder = ({
     });
   }, []);
 
+  const [selectedElement, selectElement] = useState<string | null>();
+
   const stopTransforming = useCallback(() => {
     setTransforming({ isTransforming: false, elementPath: null });
     setTargetElement(null);
+    selectElement(null);
   }, []);
 
   const addFile = useAddFile({
@@ -131,7 +134,6 @@ export const useBuilder = ({
     startTransforming,
   });
 
-  const [selectedElement, selectElement] = useState<string | null>();
 
   const selectTargetElement = useCallback(
     (selected: Object3D[] | null | undefined) => {

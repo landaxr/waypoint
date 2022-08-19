@@ -19,8 +19,6 @@ const ContentTree = ({
     e.stopPropagation();
   }, []);
 
-  console.log(selectedElement);
-
   return (
     <div
       id="drawer-navigation"

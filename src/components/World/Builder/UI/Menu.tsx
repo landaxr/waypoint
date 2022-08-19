@@ -177,7 +177,7 @@ const TopMenu = ({
 
   return (
     <div
-      className={clsx("absolute mx-0 pl-2 my-2 left-0 top-15 z-10 transition-transform", {
+      className={clsx("absolute mx-0 pl-2 mt-4 left-0 top-15 z-10 transition-transform", {
         "translate-x-80": showContentTree,
       })}
     >
