@@ -14,7 +14,6 @@ import { useBuilder } from "./hooks/useBuilder";
 import BuilderControls from "./BuilderControls";
 import DynamicEnvironment from "../DynamicEnvironment";
 import ElementsTree from "../Elements/ElementsTree";
-import BuilderMenu from "./BuilderMenu";
 import Navbar, { LinkKind, MenuItem, UrlKind } from "../../Nav/Navbar";
 import SavedSceneSuccessModal from "./SavedSceneSuccessModal";
 import { ClickedAndAudioContext } from "../useClickedAndAudioListener";
@@ -32,6 +31,7 @@ import { getWorldsPath } from "../Viewer/SceneViewerContents";
 import { PortalWithScene } from "../Portals/useSavePortalScenes";
 import GetCamera from "../../Shared/GetCamera";
 import { ChainConfig } from "../../../web3/chains";
+import BuilderUI from "./UI";
 
 const rootPath: string[] = [];
 
@@ -171,7 +171,7 @@ const SceneBuilder = ({
         {...getRootProps()}
       >
         <input type="hidden" {...getInputProps()} />
-        <BuilderMenu {...builderState} />
+        <BuilderUI {...builderState} />
         <Canvas>
           <SetCaptureScreenshotFn
             setCaptureScreenShotFn={builderState.setCaptureScreenShotFn}

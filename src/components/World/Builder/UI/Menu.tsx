@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { SyntheticEvent, useCallback, useEffect, useState } from "react";
-import CreatePortalDialogModal from "../BuilderDialogs/CreatePortalDialog";
-import EditSkyboxDialog from "./EditSkyboxDialog";
-import { BuilderState, TransformMode } from "./hooks/useBuilder";
+import CreatePortalDialogModal from "../../BuilderDialogs/CreatePortalDialog";
+import EditSkyboxDialog from "../EditSkyboxDialog";
+import { BuilderState, TransformMode } from "../hooks/useBuilder";
 
 const transformIconClass = "mr-2 w-4 h-4 fill-current";
 
