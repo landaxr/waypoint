@@ -21,6 +21,7 @@ export type Transform = {
 
 export type BaseElement = {
   transform?: Optional<Transform>;
+  name?: string;
   elementType: ElementType;
   children?: Optional<ElementNodes>;
 };

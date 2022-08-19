@@ -9,12 +9,12 @@ export enum LinkKind {
 }
 
 export enum UrlKind {
-  localRedirect = 'localRedirect',
-  externalUrl = 'externalUrl'
+  localRedirect = "localRedirect",
+  externalUrl = "externalUrl",
 }
 
 export type MenuItem = (
-  | { link: string; action?: undefined, urlKind: UrlKind }
+  | { link: string; action?: undefined; urlKind: UrlKind }
   | { action: () => any; link?: undefined; disabled?: boolean }
 ) & { title: string | JSX.Element; kind?: LinkKind };
 
@@ -43,7 +43,13 @@ const linkClass = ({
     "block py-2 pr-4 pl-3 md:p-2 font-monospace dark:text-white"
   );
 
-const Navbar = ({ centerItems, web3Enabled }: { centerItems: MenuItem[], web3Enabled: boolean }) => {
+const Navbar = ({
+  centerItems,
+  web3Enabled,
+}: {
+  centerItems: MenuItem[];
+  web3Enabled: boolean;
+}) => {
   const stopPropagation = useCallback((e: SyntheticEvent) => {
     e.stopPropagation();
   }, []);
@@ -65,7 +71,7 @@ const Navbar = ({ centerItems, web3Enabled }: { centerItems: MenuItem[], web3Ena
           </span>
         </Link>
         <div className="flex md:order-2">
-          {web3Enabled && (<Web3Login />)}
+          {web3Enabled && <Web3Login />}
           <button
             data-collapse-toggle="navbar-cta"
             type="button"
@@ -96,24 +102,29 @@ const Navbar = ({ centerItems, web3Enabled }: { centerItems: MenuItem[], web3Ena
           <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
             {centerItems.map((menuItem) => (
               <li key={menuItem.link}>
-                {menuItem.link && (
-                  menuItem.urlKind === UrlKind.localRedirect ? (<NavLink
-                    className={({ isActive }) =>
-                      linkClass({ isActive, kind: menuItem.kind })
-                    }
-                    to={menuItem.link}
-                  >
-                    {menuItem.title}
-                  </NavLink>) : (<>
-                  <a className={
-                      linkClass({ isActive: false, kind: menuItem.kind })
-                    }
-                    href={menuItem.link}
-                  >
-                    {menuItem.title}
-                  </a>
-                  </>)
-                )}
+                {menuItem.link &&
+                  (menuItem.urlKind === UrlKind.localRedirect ? (
+                    <NavLink
+                      className={({ isActive }) =>
+                        linkClass({ isActive, kind: menuItem.kind })
+                      }
+                      to={menuItem.link}
+                    >
+                      {menuItem.title}
+                    </NavLink>
+                  ) : (
+                    <>
+                      <a
+                        className={linkClass({
+                          isActive: false,
+                          kind: menuItem.kind,
+                        })}
+                        href={menuItem.link}
+                      >
+                        {menuItem.title}
+                      </a>
+                    </>
+                  ))}
                 {menuItem.action && (
                   <button
                     className={linkClass({

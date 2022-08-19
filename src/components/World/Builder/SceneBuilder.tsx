@@ -76,7 +76,12 @@ const buildMenu = ({
   ]);
 
   return [
-    { link: "#", title: pageTitle, kind: LinkKind.link, urlKind: UrlKind.localRedirect },
+    {
+      link: "#",
+      title: pageTitle,
+      kind: LinkKind.link,
+      urlKind: UrlKind.localRedirect,
+    },
     {
       action: handleSaveToIpfs,
       title: savingScene ? "Saving to IPFS" : "Save to IPFS",
@@ -184,14 +189,15 @@ const SceneBuilder = ({
               environment={builderState.scene.environment}
               files={builderState.files}
             />
-            <Select onChange={builderState.selectTargetElement}>
-              <ElementsTree
-                elements={builderState.scene.elements}
-                parentId={null}
-                parentPath={rootPath}
-                files={builderState.files}
-              />
-            </Select>
+            {/* <Select onChange={builderState.selectTargetElement}> */}
+            <ElementsTree
+              elements={builderState.scene.elements}
+              parentId={null}
+              parentPath={rootPath}
+              files={builderState.files}
+              builderState={builderState}
+            />
+            {/* </Select> */}
             <BuilderControls {...builderState} />
             {portals ? (
               <WorldPortals
