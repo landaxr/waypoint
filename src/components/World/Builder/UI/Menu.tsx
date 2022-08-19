@@ -3,7 +3,7 @@ import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import CreatePortalDialogModal from "../../BuilderDialogs/CreatePortalDialog";
 import EditSkyboxDialog from "../EditSkyboxDialog";
 import { BuilderState, TransformMode } from "../hooks/useBuilder";
-import { GiTransform, GiResize } from "react-icons/gi";
+import { GiTransform, GiResize, GiCheckboxTree } from "react-icons/gi";
 import { Tb3DRotate } from "react-icons/tb";
 
 const transformIconClass = "m-0 w-6 h-6";
@@ -49,6 +49,19 @@ const MenuButton = ({
   </button>
 );
 
+const MenuSection = ({
+  children,
+}: {
+  children: JSX.Element | JSX.Element[];
+}) => (
+  <div
+    className="inline-flex shadow-sm text-white dark:text-gray-900 mr-2"
+    role="group"
+  >
+    {children}
+  </div>
+);
+
 const TransformControlButton = ({
   setTransformMode,
   transformMode,
@@ -76,27 +89,28 @@ const TransformControlButton = ({
   ];
 
   return (
-    <div
-      className="inline-flex shadow-sm text-white dark:text-gray-900"
-      role="group"
-    >
+    <MenuSection>
       {buttons.map((button, i) => (
         <MenuButton
           key={i}
-          active={button.transformMode !== transformMode}
+          active={button.transformMode === transformMode}
           onClick={() => setTransformMode(button.transformMode)}
           icon={button.icon}
         />
       ))}
-    </div>
+    </MenuSection>
   );
 };
+
 const EditSkyboxButton = ({ editSkybox }: { editSkybox: () => void }) => {
   return (
-    <>
-      <MenuButton onClick={editSkybox} icon={
-        <svg
-            className={transformIconClass}            fill="none"
+    <MenuSection>
+      <MenuButton
+        onClick={editSkybox}
+        icon={
+          <svg
+            className={transformIconClass}
+            fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
@@ -108,9 +122,9 @@ const EditSkyboxButton = ({ editSkybox }: { editSkybox: () => void }) => {
               d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
             ></path>
           </svg>
-      }
+        }
       />
-    </>
+    </MenuSection>
   );
 };
 
@@ -134,20 +148,63 @@ const CreatePortalButton = ({ openDialog }: { openDialog: () => void }) => {
   );
 };
 
-const BuilderMenu = ({
-  scene,
+const TopMenu = ({
+  showContentTree,
+  setShowContentTree,
+  transformMode,
   setTransformMode,
-  files,
+  setEditingSkybox,
+  portalCreator,
   transforming: { isTransforming, elementPath },
   targetElement,
-  transformMode,
-  setNewSkyboxFile,
-  tokenId,
-  portalCreator,
-  camera,
-  showContentTree,
-}: BuilderState) => {
+  setCreatingPortal,
+}: Pick<
+  BuilderState,
+  | "showContentTree"
+  | "setShowContentTree"
+  | "transformMode"
+  | "setTransformMode"
+  | "portalCreator"
+  | "transforming"
+  | "targetElement"
+> & {
+  editingSkybox: boolean;
+  setEditingSkybox: (editing: boolean) => void;
+
+  setCreatingPortal: (creating: boolean) => void;
+}) => {
   const shouldBeTransforming = isTransforming && elementPath && targetElement;
+
+  return (
+    <div
+      className={clsx("absolute mx-0 pl-2 my-2 left-0 top-15 z-10 transition-transform", {
+        "translate-x-80": showContentTree,
+      })}
+    >
+      <MenuSection>
+        <MenuButton onClick={() => setShowContentTree(existing => !existing)} icon={<GiCheckboxTree className={transformIconClass}/>} active={showContentTree}  />
+      </MenuSection>
+      {shouldBeTransforming && (
+        <TransformControlButton
+          setTransformMode={setTransformMode}
+          transformMode={transformMode}
+        />
+      )}
+      {!shouldBeTransforming && (
+        <>
+          <EditSkyboxButton editSkybox={() => setEditingSkybox(true)} />
+          {portalCreator.canCreatePortal && (
+            <CreatePortalButton openDialog={() => setCreatingPortal(true)} />
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+const BuilderMenu = (builderState: BuilderState) => {
+  const { scene, files, setNewSkyboxFile, tokenId, portalCreator, camera } =
+    builderState;
   const [editingSkybox, setEditingSkybox] = useState(false);
 
   const [creatingPortal, setCreatingPortal] = useState(false);
@@ -166,29 +223,12 @@ const BuilderMenu = ({
 
   return (
     <div onClick={stopPropagation}>
-      <div
-        className={clsx(
-          "absolute m-2 left-0 top-15 z-10 transition-transform",
-          {
-            "translate-x-80": showContentTree,
-          }
-        )}
-      >
-        {shouldBeTransforming && (
-          <TransformControlButton
-            setTransformMode={setTransformMode}
-            transformMode={transformMode}
-          />
-        )}
-        {!shouldBeTransforming && (
-          <>
-            <EditSkyboxButton editSkybox={() => setEditingSkybox(true)} />
-            {portalCreator.canCreatePortal && (
-              <CreatePortalButton openDialog={() => setCreatingPortal(true)} />
-            )}
-          </>
-        )}
-      </div>
+      <TopMenu
+        {...builderState}
+        editingSkybox={editingSkybox}
+        setEditingSkybox={setEditingSkybox}
+        setCreatingPortal={setCreatingPortal}
+      />
       {editingSkybox && (
         <EditSkyboxDialog
           setNewSkybox={setNewSkyboxFile}
