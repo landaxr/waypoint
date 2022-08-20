@@ -37,9 +37,9 @@ const MenuButton = ({
   <button
     type="button"
     className={clsx(
-      "inline-flex rounded-full items-center mx-2 p-2 text-sm font-medium border border-gray-900 hover:bg-gray-900 hover:text-red dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700",
+      "inline-flex rounded-full items-center mx-2 p-2 text-sm font-medium border border-gray-900 hover:bg-gray-900 dark:focus:bg-gray-700",
       {
-        "bg-white text-gray-900": !active,
+        "bg-white dark:bg-gray-900 text-gray-900 dark:border-white dark:text-white dark:hover:text-white hover:text-red  dark:hover:bg-gray-700 ": !active,
         "ring-gray-500 bg-gray-900 text-red": active,
       }
     )}

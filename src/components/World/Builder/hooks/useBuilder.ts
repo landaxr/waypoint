@@ -156,7 +156,7 @@ export const useBuilder = ({
 
   useKeyPressEvent("Escape", stopTransforming);
 
-  const [showContentTree, setShowContentTree] = useState(true);
+  const [showContentTree, setShowContentTree] = useState(false);
 
   const [transformMode, setTransformMode] = useState<TransformMode>(
     TransformMode.translate
