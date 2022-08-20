@@ -1,6 +1,8 @@
 import { Object3D } from "three";
 import { TransformControls, OrbitControls } from "@react-three/drei";
 import { TransformMode } from "../Builder/hooks/useBuilder";
+import { useThree } from "@react-three/fiber";
+import { useEffect, useState } from "react";
 
 const TransformAndOrbitControls = ({
   targetElement,
@@ -13,10 +15,10 @@ const TransformAndOrbitControls = ({
 }) => {
   return (
     <>
-      <OrbitControls
-        target0={targetElement.position || undefined}
+      {<OrbitControls
+        target={targetElement.position || undefined}
         makeDefault
-      />
+      />}
       <TransformControls
         object={targetElement || undefined}
         mode={transformMode}

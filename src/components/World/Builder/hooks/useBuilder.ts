@@ -134,7 +134,6 @@ export const useBuilder = ({
     startTransforming,
   });
 
-
   const selectTargetElement = useCallback(
     (selected: Object3D[] | null | undefined) => {
       if (selected && selected[0]) {
