@@ -13,10 +13,10 @@ const TransformAndOrbitControls = ({
 }) => {
   return (
     <>
-      <OrbitControls
-        target0={targetElement.position || undefined}
+      {<OrbitControls
+        target={targetElement.position || undefined}
         makeDefault
-      />
+      />}
       <TransformControls
         object={targetElement || undefined}
         mode={transformMode}

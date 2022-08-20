@@ -41,6 +41,18 @@ const toIVector3 = (vector3: Vector3 | Euler): IVector3 => ({
   z: vector3.z,
 });
 
+const useKeyPressEvent = (key: string, cb: () => any) => {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === key) {
+        cb();
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [cb]);
+};
+
 export const useBuilder = ({
   sceneAndFiles,
   tokenId,
@@ -108,9 +120,12 @@ export const useBuilder = ({
     });
   }, []);
 
+  const [selectedElement, selectElement] = useState<string | null>();
+
   const stopTransforming = useCallback(() => {
     setTransforming({ isTransforming: false, elementPath: null });
     setTargetElement(null);
+    selectElement(null);
   }, []);
 
   const addFile = useAddFile({
@@ -138,15 +153,9 @@ export const useBuilder = ({
     [startTransforming]
   );
 
-  useEffect(() => {
-    const cb = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        stopTransforming();
-      }
-    };
-    document.addEventListener("keydown", cb);
-    return () => document.removeEventListener("keydown", cb);
-  }, [stopTransforming]);
+  useKeyPressEvent("Escape", stopTransforming);
+
+  const [showContentTree, setShowContentTree] = useState(false);
 
   const [transformMode, setTransformMode] = useState<TransformMode>(
     TransformMode.translate
@@ -206,6 +215,10 @@ export const useBuilder = ({
     tokenId,
     camera,
     setCamera,
+    showContentTree,
+    setShowContentTree,
+    selectElement,
+    selectedElement,
   };
 };
 

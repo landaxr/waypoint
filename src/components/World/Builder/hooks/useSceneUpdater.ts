@@ -23,7 +23,7 @@ enum FileType {
   glb = "glb",
 }
 
-const getFieType = (file: File) => {
+const getFileType = (file: File) => {
   if (file.type.includes("image")) return FileType.image;
   if (file.type.includes("video")) return FileType.video;
   if (file.type.includes("glb")) return FileType.glb;
@@ -32,6 +32,12 @@ const getFieType = (file: File) => {
     return FileType.glb;
 
   alert("Unkown file type");
+};
+
+const getFileName = (file: File) => {
+  const lastIndex = file.name.lastIndexOf(".");
+
+  return file.name.substring(0, lastIndex);
 };
 
 const newFileToElementConfig = ({
@@ -43,10 +49,12 @@ const newFileToElementConfig = ({
   transform: Optional<Transform>;
   fileId: string;
 }) => {
-  const fileType = getFieType(file);
+  const fileType = getFileType(file);
 
+  const fileName = getFileName(file);
   if (fileType === FileType.glb) {
     const result: ModelElement = {
+      name: fileName,
       elementType: ElementType.Model,
       transform,
       modelConfig: {
@@ -58,6 +66,7 @@ const newFileToElementConfig = ({
     return result;
   } else if (fileType === FileType.image) {
     const result: ImageElement = {
+      name: fileName,
       elementType: ElementType.Image,
       transform,
       imageConfig: {
@@ -69,6 +78,7 @@ const newFileToElementConfig = ({
     return result;
   } else if (fileType === FileType.video) {
     const result: VideoElement = {
+      name: fileName,
       elementType: ElementType.Video,
       transform,
       videoConfig: {

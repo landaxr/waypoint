@@ -47,7 +47,12 @@ export const addElement =
       ...scene,
       elements: {
         ...(scene.elements || {}),
-        [id]: elementConfig,
+        [id]: {
+          ...elementConfig,
+          builder: {
+            isNew: true
+          }
+        }
       },
     };
   };
@@ -60,7 +65,12 @@ export const createNewElement =
       ...scene,
       elements: {
         ...(scene.elements || {}),
-        [id]: elementConfig,
+        [id]: {
+          ...elementConfig,
+          builder: {
+            isNew: true
+          }
+        },
       },
     };
   };

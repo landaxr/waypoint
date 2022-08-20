@@ -19,10 +19,16 @@ export type Transform = {
   scale?: IVector3;
 };
 
+export type BuilderState = {
+  isNew?: boolean;
+}
+
 export type BaseElement = {
   transform?: Optional<Transform>;
+  name?: string;
   elementType: ElementType;
   children?: Optional<ElementNodes>;
+builder?: BuilderState;
 };
 
 export type ModelElement = BaseElement & {
