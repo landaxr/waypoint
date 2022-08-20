@@ -1,11 +1,8 @@
 import { ElementType } from "../../../../types/elements";
 
-const iconClasses =
-  "w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white";
-
 const SvgIcon = ({ children }: { children: JSX.Element }) => (
   <svg
-    className={iconClasses}
+    className={"w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -15,7 +12,7 @@ const SvgIcon = ({ children }: { children: JSX.Element }) => (
   </svg>
 );
 
-const ElementIcon = ({ elementType }: { elementType: ElementType }) => {
+const ElementIcon = ({ elementType, isNew }: { elementType: ElementType, isNew?: boolean }) => {
   if (elementType === ElementType.Image)
     return (
       <SvgIcon>

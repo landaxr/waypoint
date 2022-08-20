@@ -71,6 +71,7 @@ const ContentTree = ({
                       elementId !== selectedElement,
                     "rounded-lg dark:text-white bg-gray-200 dark:bg-gray-700":
                       elementId === selectedElement,
+                    "text-green-400 dark:text-green-400": element.builder?.isNew
                   }
                 )}
                 onClick={(e) => {
@@ -78,7 +79,7 @@ const ContentTree = ({
                   selectElement(elementId);
                 }}
               >
-                <ElementIcon elementType={element.elementType} />
+                <ElementIcon elementType={element.elementType} isNew={element.builder?.isNew} />
 
                 <span className="ml-3">{elementName(element)}</span>
               </a>
