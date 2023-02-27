@@ -1,4 +1,3 @@
-import "./App.css";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import useClickedAndAudioListener, {
   ClickedAndAudioContext,
