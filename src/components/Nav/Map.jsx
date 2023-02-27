@@ -3,17 +3,12 @@ import ReactFlow, {
   MiniMap,
   Controls,
   Background,
-  useReactFlow,
-  useStore,
-  ReactFlowProvider,
   applyNodeChanges,
   applyEdgeChanges,
   addEdge,
 } from "react-flow-renderer";
 import {
   useExtendedWorlds,
-  ExtendedSpacesQueryData,
-  ExtendedWorldData,
 } from "../../api/theGraph/worldsQueries";
 
 const Map = () => {
