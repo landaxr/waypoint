@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAccount, useEnsName } from "wagmi";
 import { useHttpsUriForIpfs } from "../../api/ipfs/ipfsUrlUtils";
@@ -7,13 +6,14 @@ import {
   useWorldsOwnedByAddress,
   WorldData,
 } from "../../api/theGraph/worldsQueries";
+import { useWayPoint } from "../../generated";
 import { ChainConfig } from "../../web3/chains";
 import MainNavbar from "../Nav/MainNavbar";
 import OpenSeaIcon from "../Shared/OpenSeaIcon";
 
 export const AccountDescriptionText = ({ address }: { address: string }) => {
   const { data } = useEnsName({
-    address,
+    address: (address as `0x${string}`),
   });
 
   if (data) return <>{data}</>;
@@ -23,28 +23,27 @@ export const AccountDescriptionText = ({ address }: { address: string }) => {
 
 const toOpenSeaAddress = ({
   tokenId,
-  chain,
+  path,
+  contractAddress,
 }: {
   tokenId: string;
-  chain: ChainConfig;
+  path: string;
+  contractAddress: string;
 }) =>
-  `https://testnets.opensea.io/assets/${chain.path}/${chain.contractAddress}/${tokenId}`;
+  `https://testnets.opensea.io/assets/${path}/${contractAddress}/${tokenId}`;
 
 export const World = ({
   world,
-  chain,
+  chain
 }: {
   world: WorldData;
   chain: ChainConfig;
 }) => {
-  const { erc721Token, loading } = useErc721TokenForFileUrl(world.uri);
+  const { erc721Token } = useErc721TokenForFileUrl(world.uri);
 
   const imageUrl = useHttpsUriForIpfs(erc721Token?.image);
-
-  useEffect(() => {
-    if (world.id === "3")
-      console.log(world.uri, erc721Token, imageUrl, loading);
-  }, [world.uri, imageUrl, world.id, erc721Token, loading]);
+  
+  const contractAddress = useWayPoint()?.address;
 
   return (
     <div className="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
@@ -58,13 +57,13 @@ export const World = ({
               {erc721Token?.name ? erc721Token.name : `World token ${world.id}`}
             </h5>
           </Link>
-          <a
-            href={toOpenSeaAddress({ tokenId: world.id, chain })}
+          {contractAddress && (<a
+            href={toOpenSeaAddress({ tokenId: world.id, path: chain.path, contractAddress})}
             className="ml-2 mt-1"
             title="View on Opensea"
           >
             <OpenSeaIcon size={25} />
-          </a>
+          </a>)}
         </div>
         <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 truncate ...">
           Owner: <AccountDescriptionText address={world.owner.id} />
@@ -88,7 +87,7 @@ const YourWorlds = ({ chain }: { chain: ChainConfig }) => {
         <h1 className="text-2xl font-sans font-bold">Your Worlds</h1>
         <div className="grid grid-cols-3 gap-4">
           {worldsResponse.data?.spaces.map((world, id) => (
-            <World world={world} key={id} chain={chain} />
+            <World world={world} key={id} chain={chain}  />
           ))}
         </div>
       </div>

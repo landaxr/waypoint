@@ -1,22 +1,18 @@
-import { createClient, configureChains } from "wagmi";
+import { createClient, configureChains, } from "wagmi";
+import { polygonMumbai } from 'wagmi/chains';
 
 import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
 
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { getChain } from "./chains";
 import { getDefaultWallets } from "@rainbow-me/rainbowkit";
 
-const alchemyId = process.env.ALCHEMY_ID;
 
-const chain = getChain();
+const allowedChains = () => ([polygonMumbai]);
 
 // Configure chains & providers with the Alchemy provider.
 // Two popular providers are Alchemy (alchemy.com) and Infura (infura.io)
 const { chains, provider, webSocketProvider } = configureChains(
-  chain.allowedChains,
-  [alchemyProvider({ alchemyId }), publicProvider()]
+  allowedChains(), 
+  [alchemyProvider({ apiKey: import.meta.env.VITE_APP_ALCHEMY_ID! })],
 );
 
 const { connectors } = getDefaultWallets({

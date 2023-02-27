@@ -1,10 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import reportWebVitals from "./reportWebVitals";
 
 function importBuildTarget() {
-  if (process.env.REACT_APP_BUILD_TARGET === "nft")
+  if (import.meta.env.VITE_APP_BUILD_TARGET === "nft")
     return import("./IframeAppForNfts");
   return import("./FullApp");
 }
