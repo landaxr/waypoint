@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import { useContractWrite, useSigner, useAccount } from "wagmi";
 import {
   createImageFromDataUri,
   saveSceneToIpfs,
 } from "../ipfs/ipfsSceneSaver";
 import { buildAndSaveTokenMetadataToIpfs } from "../nft/tokenSaver";
-import deployedContracts from "./contracts/Waypoint.json";
 import { SceneAndFiles } from "../../types/scene";
 import { WorldErc721 } from "../../types/world";
 import { makeNewScene } from "../../components/World/New";
 import { ChainConfig } from "../../web3/chains";
+import { useWayPointChangeUri, useWayPointMintNewSpace } from "../../generated";
+import { BigNumber } from "ethers";
+import { useAccount } from "wagmi";
 
 export type MintedWorld = {
   erc721Cid: string;
@@ -26,12 +27,11 @@ export type MintWorldStatus = {
 
 export function useWorldTokenCreator({
   captureScreenshotFn,
-  chain: { contractAddress, nftBaseUrl, externalBaseUrl },
+  chain: { nftBaseUrl, externalBaseUrl },
 }: {
   captureScreenshotFn: (() => string) | undefined;
   chain: Pick<
-    ChainConfig,
-    "contractAddress" | "nftBaseUrl" | "externalBaseUrl"
+    ChainConfig, "nftBaseUrl" | "externalBaseUrl"
   >;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
@@ -40,7 +40,6 @@ export function useWorldTokenCreator({
     minting: false,
   });
 
-  const { data: signerData } = useSigner();
   const { isConnected } = useAccount();
 
   useEffect(() => {
@@ -50,12 +49,7 @@ export function useWorldTokenCreator({
     }));
   }, [isConnected]);
 
-  const { writeAsync, isIdle, isSuccess, reset } = useContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: deployedContracts,
-    signerOrProvider: signerData,
-    functionName: "mintNewSpace",
-  });
+  const { writeAsync: mintNewSpaceContractWrite, isIdle, isSuccess, reset } = useWayPointMintNewSpace();
 
   const { canMint, minting } = status;
 
@@ -68,6 +62,7 @@ export function useWorldTokenCreator({
       name: string;
     }) => {
       console.log("minting world");
+      if (!mintNewSpaceContractWrite) throw new Error("no contract function");
       if (!canMint) throw new Error("Cannot mint!");
 
       if (minting) return;
@@ -115,8 +110,8 @@ export function useWorldTokenCreator({
         sceneGraphFileUrl,
       });
 
-      await writeAsync({
-        args: [url],
+      await mintNewSpaceContractWrite({
+        recklesslySetUnpreparedArgs: [url]
       });
 
       setStatus((existing) => ({
@@ -136,7 +131,7 @@ export function useWorldTokenCreator({
       captureScreenshotFn,
       nftBaseUrl,
       externalBaseUrl,
-      writeAsync,
+      mintNewSpaceContractWrite,
     ]
   );
 
@@ -162,14 +157,14 @@ export function useWorldTokenUpdater({
   sceneAndFiles,
   captureScreenshotFn,
   existingSceneCid,
-  chain: { contractAddress, nftBaseUrl, externalBaseUrl },
+  chain: { nftBaseUrl, externalBaseUrl },
 }: {
   sceneAndFiles: SceneAndFiles;
   captureScreenshotFn: (() => string) | undefined;
   existingSceneCid: string | undefined;
   chain: Pick<
     ChainConfig,
-    "contractAddress" | "nftBaseUrl" | "externalBaseUrl"
+    "nftBaseUrl" | "externalBaseUrl"
   >;
 }) {
   const [status, setStatus] = useState<MintWorldStatus>({
@@ -178,7 +173,6 @@ export function useWorldTokenUpdater({
     canMint: true,
   });
 
-  const { data: signerData } = useSigner();
   const { isConnected } = useAccount();
 
   useEffect(() => {
@@ -189,20 +183,16 @@ export function useWorldTokenUpdater({
   }, [isConnected]);
 
   const {
-    writeAsync: changeURI,
+    writeAsync: changeURIContractWrite,
     isSuccess,
     reset,
-  } = useContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: deployedContracts,
-    signerOrProvider: signerData,
-    functionName: "changeURI",
-  });
+  } = useWayPointChangeUri();
 
   const { canMint, minting } = status;
 
   const updateWorld = useCallback(
     async (tokenId: string, newWorldName: string | undefined) => {
+      if (!changeURIContractWrite) throw new Error("no contract function");
       if (!canMint) throw new Error("Cannot mint!");
 
       if (minting) return;
@@ -251,8 +241,8 @@ export function useWorldTokenUpdater({
         sceneGraphFileUrl,
       });
 
-      await changeURI({
-        args: [tokenId, erc721Url],
+      await changeURIContractWrite({
+        recklesslySetUnpreparedArgs: [BigNumber.from(tokenId), erc721Url],
       });
 
       setStatus((existing) => ({
@@ -268,7 +258,7 @@ export function useWorldTokenUpdater({
     [
       canMint,
       captureScreenshotFn,
-      changeURI,
+      changeURIContractWrite,
       existingSceneCid,
       externalBaseUrl,
       minting,

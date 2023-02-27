@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useContractWrite, useSigner } from "wagmi";
-import deployedContracts from "./contracts/Waypoint.json";
+import { useSigner } from "wagmi";
+import { useWayPointCreatePortal } from "../../generated";
 
 export type CreatePortalArgs = {
   targetId: number;
@@ -14,10 +14,8 @@ export type CreatePortalArgs = {
 
 const usePortalCreator = ({
   tokenId,
-  contractAddress,
 }: {
   tokenId?: string;
-  contractAddress: string;
 }) => {
   const { data: signerData } = useSigner();
 
@@ -27,15 +25,12 @@ const usePortalCreator = ({
     isSuccess,
     isIdle,
     reset,
-  } = useContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: deployedContracts,
-    signerOrProvider: signerData,
-    functionName: "createPortal",
-  });
+  } = useWayPointCreatePortal();
+
 
   const createPortal = useCallback(
     ({ targetId, x, y, z, toX, toY, toZ }: CreatePortalArgs) => {
+      if (!createPortalContractFn) throw new Error("no contract function");
       if (!tokenId) throw new Error("cannot create portal without from portal");
 
       const args = [
@@ -52,7 +47,8 @@ const usePortalCreator = ({
       console.log("creating portal with args", args);
 
       createPortalContractFn({
-        args,
+        // @ts-ignore
+        recklesslySetUnpreparedArgs: args
       });
     },
     [createPortalContractFn, tokenId]

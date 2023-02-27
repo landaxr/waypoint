@@ -77,8 +77,7 @@ export const useBuilder = ({
   });
 
   const portalCreator = usePortalCreator({
-    tokenId,
-    contractAddress: chain.contractAddress,
+    tokenId
   });
 
   const worldTokenCreator = useWorldTokenCreator({

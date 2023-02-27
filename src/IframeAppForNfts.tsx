@@ -6,13 +6,13 @@ import useClickedAndAudioListener, {
 import { ApolloProvider } from "@apollo/client";
 import WorldFromTokenIdViewOnly from "./components/World/WorldFromTokenIdViewOnly";
 import WorldFromIpfsViewOnly from "./components/World/WorldFromIpfsViewOnly";
-import { getChain } from "./web3/chains";
+import { useChainConfig } from "./web3/chains";
 import { useMemo } from "react";
 import { makeClient } from "./api/theGraph/client";
 
 function IFrameAppForNfts() {
   const clickedAndAudiListener = useClickedAndAudioListener();
-  const chain = getChain();
+  const chain = useChainConfig();
 
   const client = useMemo(
     () => makeClient(chain.graphQlUrl),

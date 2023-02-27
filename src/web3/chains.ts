@@ -1,8 +1,8 @@
-import { chain, Chain } from "wagmi";
+import { polygonMumbai } from 'wagmi/chains';
+import { Chain, useChainId } from "wagmi";
 
 export type ChainConfig = {
   graphQlUrl: string;
-  contractAddress: string;
   name: string;
   path: string;
   nftBaseUrl: string;
@@ -11,11 +11,7 @@ export type ChainConfig = {
   allowedChains: Chain[];
 };
 
-export const contractAddresses = {
-  localHost: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-  rinkeby: "0x8f181e382dF37f4DAB729c1868D0A190A929D614",
-  mumbai: "0x9db2f20e541412292677aa43e8d09732f3998992",
-};
+
 // export const localContractAddress =
 //   "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 // export const rinkebyContractAddress =
@@ -29,39 +25,35 @@ export const subgrapUrls = {
   mumbai: "https://api.thegraph.com/subgraphs/name/lpscrypt/waypointmumbai",
 };
 
-export const chains: { [chainId: string]: ChainConfig } = {
-  mumbai: {
+export const chains: { [chainId: number]: ChainConfig } = {
+  [polygonMumbai.id]: {
     graphQlUrl: subgrapUrls.mumbai,
-    contractAddress: contractAddresses.mumbai,
     name: "Polygon (Mumbai)",
     path: "mumbai",
     nftBaseUrl: "https://waypoint-nft.on.fleek.co",
     externalBaseUrl: "https://waypoint.on.fleek.co",
     openseaCollectionUrl:
       "https://testnets.opensea.io/collection/name-l3isedjj89",
-    allowedChains: [chain.polygonMumbai],
+    allowedChains: [polygonMumbai],
   },
-  rinkeby: {
-    graphQlUrl: subgrapUrls.rinkeby,
-    contractAddress: contractAddresses.rinkeby,
-    name: "Rinkeby",
-    path: "rinkeby",
-    nftBaseUrl: "https://rinkeby-waypoint-nft.on.fleek.co",
-    externalBaseUrl: "https://rinkeby-waypoint.on.fleek.co",
-    openseaCollectionUrl:
-      "https://testnets.opensea.io/collection/name-mozmnwk4sh",
-    allowedChains: [chain.rinkeby],
-  },
+  // rinkeby: {
+  //   graphQlUrl: subgrapUrls.rinkeby,
+  //   name: "Rinkeby",
+  //   path: "rinkeby",
+  //   nftBaseUrl: "https://rinkeby-waypoint-nft.on.fleek.co",
+  //   externalBaseUrl: "https://rinkeby-waypoint.on.fleek.co",
+  //   openseaCollectionUrl:
+  //     "https://testnets.opensea.io/collection/name-mozmnwk4sh",
+  //   allowedChains: [chain.rinkeby],
+  // },
 };
 
-export const defaultChain: string = "mumbai";
+export const useChainConfig = (): ChainConfig => {
+  const chainId = useChainId();
 
-export const getChain = () => {
-  const chainId = process.env.REACT_APP_CHAIN || defaultChain;
+  console.log(chainId);
 
-  const chain = chains[chainId];
-
-  if (!chain) throw new Error(`invalid chain of ${chainId}`);
+  const chain = chainId ? chains[chainId]! : chains[polygonMumbai.id];
 
   return chain;
 };

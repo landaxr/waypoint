@@ -1,4 +1,4 @@
-import "./App.css";
+// import "./App.css";
 import { WagmiConfig } from "wagmi";
 import { client as web3Client, chains } from "./web3/client";
 import { HashRouter, Route, Routes, useSearchParams } from "react-router-dom";
@@ -13,14 +13,14 @@ import { ApolloProvider } from "@apollo/client";
 import WorldFromTokenId from "./components/World/WorldFromTokenId";
 import Map from "./components/Nav/Map";
 import { makeClient } from "./api/theGraph/client";
-import { getChain } from "./web3/chains";
+import { useChainConfig } from "./web3/chains";
 import { useMemo } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 
 function App() {
   const clickedAndAudiListener = useClickedAndAudioListener();
-  const chain = getChain();
+  const chain = useChainConfig();
 
   const client = useMemo(
     () => makeClient(chain.graphQlUrl),

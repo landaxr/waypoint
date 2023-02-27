@@ -1,0 +1,3 @@
+[submodule "waypoint_contracts"]
+	path = waypoint_contracts
+	url = https://github.com/landaxr/waypoint_contracts
