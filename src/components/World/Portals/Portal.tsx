@@ -85,6 +85,7 @@ const Portal = ({
         // @ts-ignore
         ref={meshRef}
       >
+        {/* @ts-ignore */}
         <Text
           position-z={0.1}
           fontSize={0.15}

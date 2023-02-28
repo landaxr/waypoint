@@ -20,8 +20,7 @@ const TransformAndOrbitControls = ({
       <TransformControls
         object={targetElement || undefined}
         mode={transformMode}
-        onMouseUp={handleTransformComplete}
-      />
+        onMouseUp={handleTransformComplete} matrixWorldAutoUpdate={undefined} getObjectsByProperty={undefined}      />
     </>
   );
 };
