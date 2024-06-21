@@ -23,12 +23,12 @@ const SceneViewerContents = ({
   sceneAndFiles: { scene, files },
   portals,
   menuItems,
-web3Enabled
+  web3Enabled,
 }: {
   sceneAndFiles: SceneAndFiles;
   portals: PortalWithScene[] | undefined;
   menuItems: MenuItem[];
-web3Enabled: boolean;
+  web3Enabled: boolean;
 }) => {
   const raycasterRef = useRef(new Raycaster());
 
@@ -42,7 +42,9 @@ web3Enabled: boolean;
 
   return (
     <>
-      {menuItems.length > 0 && <Navbar centerItems={menuItems} web3Enabled={web3Enabled}/>}
+      {menuItems.length > 0 && (
+        <Navbar centerItems={menuItems} web3Enabled={web3Enabled} />
+      )}
       <div className={clsx("w-screen h-screen", cursorClass)}>
         <Canvas>
           <ContextBridge>

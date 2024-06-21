@@ -2,9 +2,11 @@ import { SceneConfiguration } from "../../../types/scene";
 import { Element, ElementType, Transform } from "../../../types/elements";
 import Model from "./Model";
 import Image from "./Image";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Video from "./Video";
 import { SceneFilesLocal } from "../../../types/shared";
+import { BuilderState } from "../Builder/hooks/useBuilder";
+import { Object3D } from "three";
 
 const emptyTransform: Transform = {};
 
@@ -20,15 +22,30 @@ const TransformedElement = ({
   transform,
   id,
   children,
+  selectedElementId,
+  selectTargetElement,
 }: {
   transform?: Transform | null;
   id: string;
   children: JSX.Element | JSX.Element[];
+  selectedElementId?: string | null;
+  selectTargetElement?: (selected: Object3D[] | null | undefined) => void;
 }) => {
   const { position, rotation, scale } = transform || emptyTransform;
 
+  const [groupRef, setGroupRef] = useState<Object3D | null>(null);
+
+  useEffect(() => {
+    if (!groupRef || !selectTargetElement) return;
+
+    if (id === selectedElementId) {
+      selectTargetElement([groupRef]);
+    }
+  }, [selectTargetElement, id, selectedElementId, groupRef]);
+
   return (
     <group
+      ref={setGroupRef}
       userData={isElementUserDataIsTrue}
       name={id}
       position-x={position?.x}
@@ -51,14 +68,21 @@ const ElementNode = ({
   element,
   parentPath,
   files,
+  builderState,
 }: {
   id: string;
   element: Element;
   parentPath: string[];
   files: SceneFilesLocal;
+  builderState?: BuilderState;
 }) => {
   return (
-    <TransformedElement id={id} transform={element.transform}>
+    <TransformedElement
+      id={id}
+      transform={element.transform}
+      selectedElementId={builderState?.selectedElement}
+      selectTargetElement={builderState?.selectTargetElement}
+    >
       <>
         {element.elementType === ElementType.Model && (
           <Model config={element.modelConfig} files={files} />
@@ -76,6 +100,7 @@ const ElementNode = ({
             parentId={id}
             parentPath={parentPath}
             files={files}
+            builderState={builderState}
           />
         )}
       </>
@@ -88,10 +113,12 @@ const ElementsTree = ({
   parentId,
   parentPath,
   files,
+  builderState,
 }: Pick<SceneConfiguration, "elements"> & {
   parentId: string | null;
   parentPath: string[];
   files: SceneFilesLocal;
+  builderState?: BuilderState;
 }) => {
   const path = useMemo(() => {
     if (parentId) return [...parentPath, parentId];
@@ -109,6 +136,7 @@ const ElementsTree = ({
           key={id}
           parentPath={path}
           files={files}
+          builderState={builderState}
         />
       ))}
     </>

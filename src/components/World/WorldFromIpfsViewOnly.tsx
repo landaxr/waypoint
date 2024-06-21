@@ -65,7 +65,7 @@ const WorldFromIpfsViewOnly = ({ cid }: { cid: string }) => {
         sceneAndFiles={sceneAndFiles}
         menuItems={[]}
         portals={undefined}
-      web3Enabled={false}
+        web3Enabled={false}
       />
     );
   }

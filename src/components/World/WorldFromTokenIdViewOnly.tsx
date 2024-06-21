@@ -10,7 +10,13 @@ import GetPortalScenes from "./Portals/GetPortalScenes";
 import useSavePortalScenes from "./Portals/useSavePortalScenes";
 import SceneViewerContents from "./Viewer/SceneViewerContents";
 
-const WorldFromTokenIdViewOnly = ({ tokenId, chain }: { tokenId: string, chain: ChainConfig }) => {
+const WorldFromTokenIdViewOnly = ({
+  tokenId,
+  chain,
+}: {
+  tokenId: string;
+  chain: ChainConfig;
+}) => {
   const { sceneAndFiles, worldsCid, world, progress } = useLoadWorldAndScene({
     tokenId,
   });
@@ -26,7 +32,7 @@ const WorldFromTokenIdViewOnly = ({ tokenId, chain }: { tokenId: string, chain: 
           sceneAndFiles={sceneAndFiles}
           portals={portalsWithScenes}
           menuItems={[]}
-        web3Enabled={false}
+          web3Enabled={false}
         />
         {portals && (
           <GetPortalScenes
@@ -46,7 +52,7 @@ const WorldFromTokenIdViewOnly = ({ tokenId, chain }: { tokenId: string, chain: 
   );
 };
 
-const WorldFromTokenIdViewOnlyRoute = ({chain}:{chain: ChainConfig}) => {
+const WorldFromTokenIdViewOnlyRoute = ({ chain }: { chain: ChainConfig }) => {
   let params = useParams();
 
   const { tokenId } = params;

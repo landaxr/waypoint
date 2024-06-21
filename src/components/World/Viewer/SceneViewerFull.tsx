@@ -19,7 +19,12 @@ const viewMenu = ({
   editText?: string;
 }): MenuItem[] => {
   const items: (MenuItem | undefined)[] = [
-    { link: "#", title: pageTitle, kind: LinkKind.link, urlKind: UrlKind.localRedirect },
+    {
+      link: "#",
+      title: pageTitle,
+      kind: LinkKind.link,
+      urlKind: UrlKind.localRedirect,
+    },
     canEdit && editText
       ? {
           action: handleStartFork,
@@ -66,7 +71,7 @@ const SceneViewer = ({
       menuItems={menuItems}
       portals={portals}
       sceneAndFiles={sceneAndFiles}
-    web3Enabled
+      web3Enabled
     />
   );
 };
